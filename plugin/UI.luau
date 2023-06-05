@@ -11,7 +11,7 @@ return function(Toolbar:PluginToolbar,Button:PluginToolbarButton,Widget)
 		Ui.TextBox;
 	}
 
-	Widget.Title = "Connect azul"
+	Widget.Title = "Connect to azul"
 	Ui.Parent = Widget
 	Button.ClickableWhenViewportHidden = true
 	Ui.Size = UDim2.fromScale(1,1)
