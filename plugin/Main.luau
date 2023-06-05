@@ -26,7 +26,7 @@ Frame.Connect.Activated:Connect(function(Input)
 	if not Address or not Port or Port > 65_535 or Port == 0 then
 		Frame.TextBox.Text = ""
 		
-		for _,V in pairs(Frame.Status:GetChildren()) do V.Visible = false end
+		for _,V in Frame.Status:GetChildren() do V.Visible = false end
 		Frame.Status.InvalidAddress.Visible = true
 		task.wait(2)
 		Frame.Status.InvalidAddress.Visible = false

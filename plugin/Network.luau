@@ -17,14 +17,14 @@ return function(Frame:typeof(script.Parent.Parent.Frame))
 
 	Network.Connect = function(Address:string)
 		if Network.Connecting or Network.Connected then return end
-		for _,V in pairs(Frame.Status:GetChildren()) do V.Visible = false end
+		for _,V in Frame.Status:GetChildren() do V.Visible = false end
 		
 		Frame.Status.Connecting.Visible = true
 		local Success,Response = pcall(HttpService.GetAsync,HttpService,"http://"..Address.."/requestconnection")
 		Frame.Status.Connecting.Visible = false
 		print(Success,Response)
 		if Success and Response == "azulOK" then
-			for _,V in pairs(Frame.Status:GetChildren()) do V.Visible = false end
+			for _,V in Frame.Status:GetChildren() do V.Visible = false end
 			Frame.Status.Connected.Visible = true
 			Frame.Status.Connected.Text = "Connected to "..Address
 			
@@ -36,7 +36,7 @@ return function(Frame:typeof(script.Parent.Parent.Frame))
 			return true
 		end
 		
-		for _,V in pairs(Frame.Status:GetChildren()) do V.Visible = false end
+		for _,V in Frame.Status:GetChildren() do V.Visible = false end
 		Frame.Status.Error.Visible = true
 		Frame.Status.Error.Text = Response or "Error"
 		task.wait(2)
@@ -46,7 +46,7 @@ return function(Frame:typeof(script.Parent.Parent.Frame))
 	
 	Network.Disconnect = function()
 		if Network.Connected then
-			for _,V in pairs(Frame.Status:GetChildren()) do V.Visible = false end
+			for _,V in Frame.Status:GetChildren() do V.Visible = false end
 			Frame.Status.Disconnected.Visible = true
 			Frame.Status.Disconnected.Text = "Disconnected from "..Network.Address
 
