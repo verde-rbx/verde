@@ -3,7 +3,6 @@ return function(Toolbar:PluginToolbar,Button:PluginToolbarButton,Widget)
 
 	local TextElements : {TextLabel} = {
 		Ui.Status.Connecting;
-		Ui.Connect;
 		Ui.TextBox;
 		Ui.Version;
 	}
