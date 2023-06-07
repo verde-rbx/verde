@@ -3,5 +3,6 @@
     ".\\Cargo.toml",
     ".\\Cargo.toml"
   ],
-  "debug.allowBreakpointsEverywhere": true
+  "debug.allowBreakpointsEverywhere": true,
+  "editor.indentSize": 4
 }
