@@ -1,8 +1,12 @@
 [package]
 name = "azul"
 version = "0.1.0"
+authors = ["quantix <me@quantix.dev>"]
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Syncs file systems between roblox studio and your editor of choice"
+repository = "https://github.com/quantix-dev/azul"
+license = "MPL-2.0"
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
+clap = { version = "4.3.1", features = ["derive"] }
