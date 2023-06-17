@@ -1,6 +1,6 @@
-local Toolbar : PluginToolbar = plugin:CreateToolbar("azul")
-local Button : PluginToolbarButton = Toolbar:CreateButton("azul","","rbxassetid://13657629843")
-local Widget = plugin:CreateDockWidgetPluginGui("azulWidget",DockWidgetPluginGuiInfo.new(
+local Toolbar : PluginToolbar = plugin:CreateToolbar("Verde")
+local Button : PluginToolbarButton = Toolbar:CreateButton("Verde","","")
+local Widget = plugin:CreateDockWidgetPluginGui("VerdeWidget",DockWidgetPluginGuiInfo.new(
 	Enum.InitialDockState.Right,
 	false,
 	false,

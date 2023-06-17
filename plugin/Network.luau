@@ -40,7 +40,7 @@ return function(Frame:typeof(script.Parent.Parent.Frame))
 		Frame.Status.Connecting.Visible = false
 		Network.Connecting = false
 		
-		if Success and Response == "azulOK" then
+		if Success and Response == "VerdeOK" then
 			Network.URL = URL
 			Network.Connected = true
 			
