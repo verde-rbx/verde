@@ -40,6 +40,15 @@
             },
             "args": [],
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Start documentation server",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": ["docs:dev"],
         }
     ]
 }
