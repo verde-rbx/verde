@@ -1,10 +1,10 @@
 [package]
-name = "azul"
+name = "verde"
 version = "0.1.0"
 authors = ["quantix <me@quantix.dev>"]
 edition = "2021"
 description = "Syncs file systems between roblox studio and your editor of choice"
-repository = "https://github.com/quantix-dev/azul"
+repository = "https://github.com/quantix-dev/verde"
 license = "MPL-2.0"
 categories = ["command-line-utilities", "development-tools"]
 

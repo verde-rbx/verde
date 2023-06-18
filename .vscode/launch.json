@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'azul'",
+            "name": "Debug executable 'Verde'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=azul",
-                    "--package=azul"
+                    "--bin=verde",
+                    "--package=verde"
                 ],
                 "filter": {
-                    "name": "azul",
+                    "name": "verde",
                     "kind": "bin"
                 }
             },
@@ -25,16 +25,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'azul'",
+            "name": "Debug unit tests in executable 'Verde'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=azul",
-                    "--package=azul"
+                    "--bin=verde",
+                    "--package=verde"
                 ],
                 "filter": {
-                    "name": "azul",
+                    "name": "verde",
                     "kind": "bin"
                 }
             },
