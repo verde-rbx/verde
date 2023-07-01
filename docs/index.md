@@ -21,7 +21,7 @@ features:
     details: Effortlessly synchronise your local file system with Roblox.
   - icon: 👌
     title: Easy to use
-    details: Well documented and user friendly with verde quick.
+    details: Well documented and user friendly with Verde quickstart.
   - icon: 🤝
     title: Collaborate
     details: Designed with collaboration in mind. Setup a multi-user project in seconds.

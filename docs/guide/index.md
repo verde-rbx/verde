@@ -14,7 +14,7 @@ Gone are the days of mindlessly using Team Create. Verde removes this requiremen
 ## Why?
 - Synchronize
   
-  Verde, in its basic form, is just a file synchronization tool. If this is all you're after it may be worth looking into [Rojo](https://rojo.space)
+  Verde, in its basic form, is just a file synchronization tool. However, if this is all you're after it may be worth looking into [Rojo](https://rojo.space)
   as this is a more mature and well-rounded tool.
 
 - Collaborate
