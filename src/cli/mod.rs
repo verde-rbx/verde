@@ -26,10 +26,6 @@ impl VerdeCli {
     }
 }
 
-pub trait VerdeCommand {
-    fn execute(self);
-}
-
 #[derive(Parser)]
 pub enum Commands {
     Serve(ServeArgs),
