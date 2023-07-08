@@ -2,7 +2,7 @@
 Welcome to Verde. This introduction will serve as the gateway to understanding all about the project and whats next.
 
 ::: tip
-🥱 Skip the boring stuff an get started with our [Quick Start](./quick-start) guide
+🥱 Skip the boring stuff and get started with our [Quick Start](./quick-start) guide
 :::
 
 ## What is Verde?
@@ -19,15 +19,15 @@ Gone are the days of mindlessly using Team Create. Verde removes this requiremen
 
 - Collaborate
 
-  A core feature of Verde is it's ability to improve collaboration for developers. If you want to support multiple devs working on one project
-  without the hassle of Team Create, Verde has you covered.
+  Collaboration is at the center of Verde with it's ability to remove hassle for developers. If you want to support multiple devs working on one project
+  without the headaches of Team Create, Verde has you covered.
 
 ## Features
-Verde is **early in development** meaning there will be a number of features that are missing but planned for the future.
+Verde is **early in development**. The below list is not comprehensive and only includes features that are planned short-term or are determined as important to the project.
 
 | Feature | Description | State |
 | :-----: | :---------: | :---: |
-| File Synchronisation | The most important feature and a core feature of Verde. | ⌛ |
+| File Synchronisation | The most important core feature of Verde. | ⌛ |
 | Rojo Backwards Compatible | Verde aims to be fully backwards compatible with Rojo, down to the project.json and sourcemap files. | ⌛ |
 | Native Editor Integration | Natively support code editors such as Visual Studio Code, and, Sublime Text by creating extensions. | ❌ |
 | Project Building | An important aspect of Verdes collaboration features. Support for building Roblox place files. | ❌ |
