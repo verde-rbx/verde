@@ -45,7 +45,7 @@
             "name": "Start documentation server",
             "type": "node",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/docs",
             "console": "integratedTerminal",
             "runtimeExecutable": "yarn",
             "runtimeArgs": ["docs:dev"],
