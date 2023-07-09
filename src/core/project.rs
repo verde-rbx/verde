@@ -6,6 +6,18 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+/// Project Structure
+///
+/// ```yaml
+/// name: "A Verde Project"
+///
+/// tree:
+///  ReplicatedStorage:
+///    .path: src/shared
+///
+///  ServerScriptService:
+///    .path: src/server
+/// ````
 #[derive(Serialize, Deserialize)]
 pub struct VerdeProject {
     /// Name of project
@@ -15,35 +27,59 @@ pub struct VerdeProject {
     pub tree: BTreeMap<String, Node>,
 }
 
-impl Default for VerdeProject {
-    fn default() -> Self {
-        Self {
-            name: "A Verde Project".to_string(),
-            tree: BTreeMap::<String, Node>::new(),
-        }
-    }
-}
-
+/// An instance node.
 #[derive(Serialize, Deserialize)]
 pub struct Node {
     /// Path (relative to source directory)
     #[serde(rename = ".path", skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
 
+    // Properties applied to the related Roblox instance
     #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<BTreeMap<String, String>>,
 
-    /// Additional Contents
-    #[serde(flatten)]
-    pub contents: BTreeMap<String, Node>,
+    /// Additonal instance tree
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    pub contents: Option<BTreeMap<String, Node>>,
 }
 
-impl Default for Node {
+impl Default for VerdeProject {
     fn default() -> Self {
         Self {
-            path: Some("".to_string()),
-            properties: None,
-            contents: BTreeMap::new(),
+            name: String::from("A Verde Project"),
+            tree: BTreeMap::<String, Node>::from([
+                (
+                    String::from("ServerScriptService"),
+                    Node {
+                        path: Some(String::from("src/server")),
+                        properties: None,
+                        contents: None,
+                    },
+                ),
+                (
+                    String::from("ReplicatedStorage"),
+                    Node {
+                        path: Some(String::from("src/shared")),
+                        properties: None,
+                        contents: None,
+                    },
+                ),
+                (
+                    String::from("StarterPlayer"),
+                    Node {
+                        path: None,
+                        properties: None,
+                        contents: Some(BTreeMap::<String, Node>::from([(
+                            String::from("StarterPlayerScripts"),
+                            Node {
+                                path: Some(String::from("src/client")),
+                                properties: None,
+                                contents: None,
+                            },
+                        )])),
+                    },
+                ),
+            ]),
         }
     }
 }
