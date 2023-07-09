@@ -7,7 +7,7 @@ use crate::core::VerdeCore;
 use clap::{Parser, ValueHint};
 use std::{net::IpAddr, path::PathBuf};
 
-const DEFAULT_PROJECT: &str = "default.project.json";
+const DEFAULT_PROJECT: &str = "default.project.yaml";
 const DEFAULT_PORT: u32 = 3000;
 
 #[derive(Parser)]
