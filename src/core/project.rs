@@ -6,6 +6,8 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+pub const DEFAULT_PROJECT: &str = "default.project.yaml";
+
 /// Project Structure
 ///
 /// ```yaml
