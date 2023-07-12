@@ -8,7 +8,7 @@ pub mod session;
 
 use self::project::VerdeProject;
 use self::session::{SessionState, VerdeSession};
-use std::{error::Error, fs, path::Path};
+use std::error::Error;
 
 pub struct VerdeCore {
     /// Current loaded project file
@@ -17,12 +17,11 @@ pub struct VerdeCore {
     pub session: VerdeSession,
 }
 
+// TODO: Builder syntax? VerdeCore.project(Path).start_session()
 impl VerdeCore {
-    pub fn new(src: &Path) -> Result<VerdeCore, Box<dyn Error>> {
-        let project_file = fs::read_to_string(src)?;
-
+    pub fn new() -> Result<VerdeCore, Box<dyn Error>> {
         Ok(VerdeCore {
-            project: serde_yaml::from_str(project_file.as_ref()).unwrap(),
+            project: VerdeProject::new(None),
             session: VerdeSession::default(),
         })
     }
