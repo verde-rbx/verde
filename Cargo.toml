@@ -9,8 +9,10 @@ license = "MPL-2.0"
 categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
+tokio = { version = "1", features = ["full"] }
 clap = { version = "4.3.1", features = ["derive"] }
-actix-web = "4"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_yaml = "0.9.21"
+warp = "0.3"
 notify = "6.0.1"
+tui = "0.19.0"
