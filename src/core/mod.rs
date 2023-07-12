@@ -4,12 +4,11 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 pub mod project;
-mod session;
-
-use std::{error::Error, fs, path::Path};
+pub mod session;
 
 use self::project::VerdeProject;
 use self::session::{SessionState, VerdeSession};
+use std::{error::Error, fs, path::Path};
 
 pub struct VerdeCore {
     /// Current loaded project file
@@ -31,10 +30,9 @@ impl VerdeCore {
     /// Starts a new Verde Session
     pub fn start_session(self) {
         match self.session.state {
-            SessionState::Active => return,
-            SessionState::Offline => return,
-            SessionState::Error => return,
-            _ => println!("Unknown state."),
-        }
+            SessionState::Active => println!(""),
+            SessionState::Offline => self.session.start(),
+            SessionState::Error => self.session.get_latest_error(),
+        };
     }
 }

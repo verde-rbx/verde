@@ -32,7 +32,23 @@ pub enum SessionState {
     Error,
 }
 
-/// Adds the default implementation for VerdeSession
+impl VerdeSession {
+    /// Creates a new VerdeSession.
+    ///
+    /// This is the same as calling
+    /// ```rs
+    /// VerdeSession::default()
+    /// ```
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Starts the session and begins listening
+    pub fn start(self) {}
+
+    pub fn get_latest_error(self) {}
+}
+
 impl Default for VerdeSession {
     fn default() -> Self {
         Self {
