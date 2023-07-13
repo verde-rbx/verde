@@ -20,13 +20,13 @@ pub struct ServeArgs {
 
     /// The port to serve and listen to requests on
     #[arg(short, long, default_value_t = session::DEFAULT_PORT)]
-    port: u32,
+    port: u16,
 }
 
 impl ServeArgs {
     pub fn execute(self) {
         let session = VerdeCore::new().unwrap();
+        session.start_session();
         println!("Serving on port {}", self.port);
-        println!("Project Name: {}", session.project.name);
     }
 }
