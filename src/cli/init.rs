@@ -7,7 +7,7 @@ use crate::core::project::VerdeProject;
 use clap::Parser;
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
+/// Initialises a new Verde project with defaults
 pub struct InitArgs {}
 
 impl InitArgs {

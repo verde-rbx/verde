@@ -8,14 +8,17 @@ use clap::{Parser, ValueHint};
 use std::{net::IpAddr, path::PathBuf};
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
+/// Starts the Verde server to begin the synchronisation process
 pub struct ServeArgs {
+    /// The project file to configure the server with
     #[arg(long, alias="path", value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
     project: PathBuf,
 
+    /// The host ip address to serve and listen to requests on
     #[arg(long, alias="address", value_hint=ValueHint::Hostname, default_value_t = session::DEFAULT_HOST)]
     host: IpAddr,
 
+    /// The port to serve and listen to requests on
     #[arg(short, long, default_value_t = session::DEFAULT_PORT)]
     port: u32,
 }
