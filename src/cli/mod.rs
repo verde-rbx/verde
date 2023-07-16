@@ -3,9 +3,11 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
+mod convert;
 mod init;
 mod serve;
 
+use self::convert::ConvertArgs;
 use self::init::InitArgs;
 use self::serve::ServeArgs;
 use clap::Parser;
@@ -20,14 +22,16 @@ pub struct VerdeCli {
 impl VerdeCli {
     pub fn execute(self) {
         match self.command {
-            Commands::Serve(command) => command.execute(),
+            Commands::Convert(command) => command.execute(),
             Commands::Init(command) => command.execute(),
+            Commands::Serve(command) => command.execute(),
         }
     }
 }
 
 #[derive(Parser)]
 pub enum Commands {
-    Serve(ServeArgs),
+    Convert(ConvertArgs),
     Init(InitArgs),
+    Serve(ServeArgs),
 }
