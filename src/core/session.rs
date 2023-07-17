@@ -50,6 +50,7 @@ impl VerdeSession {
 
     /// Starts the session and begins listening
     pub fn start(&self) {
+        println!("Serving on port {}", self.port);
         self.runtime.block_on(async {
             let hello = warp::path!("verde").map(|| format!("Verde is serving"));
             warp::serve(hello).run(SocketAddr::new(self.host, self.port)).await;
