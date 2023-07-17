@@ -56,8 +56,8 @@ impl VerdeProject {
     }
 
     /// Saves the VerdeProject to the file system.
-    pub fn save(self) {
-        match serde_yaml::to_string(&self) {
+    pub fn save(&self) {
+        match serde_yaml::to_string(self) {
             Ok(yaml) => {
                 fs::write(DEFAULT_PROJECT, yaml).expect("Failed to write.");
             }
