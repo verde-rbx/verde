@@ -4,7 +4,11 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 use serde::{Deserialize, Serialize};
-use std::{collections::BTreeMap, fs, path::Path};
+use std::{
+    collections::BTreeMap,
+    fs::{self, File},
+    io::Read,
+};
 
 pub const DEFAULT_PROJECT: &str = "verde.yaml";
 
@@ -47,11 +51,14 @@ pub struct Node {
 
 impl VerdeProject {
     /// Loads a VerdeProject from the specified file path.
-    pub fn new(path: Option<&Path>) -> Self {
-        if let Ok(val) = fs::read_to_string(path.unwrap_or(Path::new(DEFAULT_PROJECT))) {
-            serde_yaml::from_str(&val).expect("")
-        } else {
-            VerdeProject::default()
+    pub fn new(project: Option<&File>) -> Self {
+        match project {
+            Some(mut proj) => {
+                let mut buffer = String::new();
+                proj.read_to_string(&mut buffer).unwrap();
+                serde_yaml::from_str(&buffer).unwrap()
+            }
+            None => VerdeProject::default(),
         }
     }
 
