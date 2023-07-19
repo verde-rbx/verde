@@ -57,5 +57,9 @@ fn new_project_from_path() {
 
 #[test]
 fn save_project() {
-    let _project = create_mock_project();
+    let project = create_mock_project();
+
+    assert!(!Path::new("verde.yaml").exists());
+    project.save();
+    assert!(Path::new("verde.yaml").exists());
 }
