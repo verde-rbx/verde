@@ -5,14 +5,17 @@
  */
 use std::{
     collections::BTreeMap,
-    fs,
-    path::{Path, PathBuf},
+    fs::{self, File},
+    io::{Seek, Write},
+    path::Path,
+    str,
 };
-use verde::core::project::{self, VerdeProject};
+use tempfile::tempfile;
+use verde::core::project::{self, Node, VerdeProject};
 
 /// Saves a mock project
-fn save_mock_project() -> PathBuf {
-    let path = Path::new("test.verde.yaml");
+fn save_mock_project() -> File {
+    let mut temp_file = tempfile().unwrap();
     let project_contents = r#"
       name: Verde Test Project
       tree:
@@ -25,23 +28,31 @@ fn save_mock_project() -> PathBuf {
             .path: src/client
     "#;
 
-    fs::write(path, project_contents).expect("Failed to create temp project");
-    path.to_path_buf()
+    temp_file.write_all(project_contents.as_bytes()).unwrap();
+    temp_file.seek(std::io::SeekFrom::Start(0)).unwrap();
+    temp_file
 }
 
 /// Creates a mock project
 fn create_mock_project() -> VerdeProject {
     VerdeProject {
         name: String::from("Verde Test Project"),
-        tree: BTreeMap::new(),
+        tree: BTreeMap::<String, Node>::from([(
+            String::from("ServerScriptService"),
+            Node {
+                path: Some(String::from("src/server")),
+                properties: None,
+                contents: None,
+            },
+        )]),
     }
 }
 
 #[test]
 /// Test to ensure a project can be deserialised correctly
 fn new_project_from_path() {
-    let project_path = save_mock_project();
-    let project = project::VerdeProject::new(Some(Path::new(&project_path)));
+    let project_file = save_mock_project();
+    let project = project::VerdeProject::new(Some(&project_file));
 
     // Checking to ensure the project name is deserialised correctly
     assert_eq!(project.name, "Verde Test Project");
@@ -56,10 +67,23 @@ fn new_project_from_path() {
 }
 
 #[test]
+/// Test to ensure a project can be serialised and saved to the filesystem correctly
 fn save_project() {
+    let project_path = Path::new("verde.yaml");
     let project = create_mock_project();
 
-    assert!(!Path::new("verde.yaml").exists());
+    // Checking to ensure the file is created
+    assert!(!project_path.exists());
     project.save();
-    assert!(Path::new("verde.yaml").exists());
+    assert!(project_path.exists());
+
+    // Checking file content to ensure it is as expected
+    let file_content = fs::read(project_path).unwrap();
+    assert_eq!(
+        str::from_utf8(&file_content).unwrap(),
+        "name: Verde Test Project\ntree:\n  ServerScriptService:\n    .path: src/server\n"
+    );
+
+    // Cleanup and delete file
+    fs::remove_file(project_path).unwrap();
 }
