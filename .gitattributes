@@ -1,0 +1,5 @@
+*.luau linguist-language=Lua
+*.png binary
+*.svg binary
+*.jpg binary
+*.jpeg binaryy

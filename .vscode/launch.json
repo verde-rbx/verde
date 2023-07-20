@@ -1,0 +1,54 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'Verde'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=verde",
+                    "--package=verde"
+                ],
+                "filter": {
+                    "name": "verde",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'Verde'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=verde",
+                    "--package=verde"
+                ],
+                "filter": {
+                    "name": "verde",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Start documentation server",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/docs",
+            "console": "integratedTerminal",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": ["docs:dev"],
+        }
+    ]
+}
