@@ -1,0 +1,21 @@
+[package]
+name = "verde"
+version = "0.1.0"
+authors = ["quantix <me@quantix.dev>"]
+edition = "2021"
+description = "Syncs file systems between roblox studio and your editor of choice"
+repository = "https://github.com/quantix-dev/verde"
+license = "MPL-2.0"
+categories = ["command-line-utilities", "development-tools"]
+
+[dev-dependencies]
+tempfile = "3.6.0"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+clap = { version = "4.3.1", features = ["derive"] }
+serde = { version = "1.0.164", features = ["derive"] }
+serde_yaml = "0.9.21"
+warp = "0.3"
+notify = "6.0.1"
+tui = "0.19.0"
