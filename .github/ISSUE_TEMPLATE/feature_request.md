@@ -7,14 +7,17 @@ assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Affected Areas**
+<!-- Check the areas that this apply to -->
+- [ ] Verde CLI
+- [ ] Verde Studio Plugin
+- [ ] Verde VSC Extension
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Reason for change**
+<!-- A clear and concise description of why a change needs to be made. E.x. Currently unable to use sourcemap.json -->
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**Describe the solution**
+<!-- A clear and concise description of what you want to happen. -->
 
 **Additional context**
-Add any other context or screenshots about the feature request here.
+<!-- Add any other context or screenshots about the feature request here. -->
