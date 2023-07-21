@@ -4,7 +4,7 @@
     </a>
 </p>
 
-> [!IMPORTANT]
+> [!IMPORTANT]\
 > Verde is under heavy development and no stable release has been made yet.
 
 # 📗 Verde
