@@ -8,7 +8,7 @@ hero:
   text: Streamlined Roblox Development
   tagline: Empowering developers with improved collaboration and productivity for Roblox.
   image:
-    src: public/Verde_Logo.svg
+    src: ./assets/Verde_Logo.svg
     alt: Verde
     width: 300
   actions:
