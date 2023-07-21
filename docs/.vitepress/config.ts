@@ -14,7 +14,7 @@ export default defineConfig({
     },
 
     themeConfig: {
-        logo: "./assets/Verde_Icon.svg",
+        logo: "/Verde_Icon.svg",
         search: {
             // TODO: Change to algolia once released
             provider: "local"
