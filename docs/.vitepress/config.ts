@@ -5,7 +5,7 @@ export default defineConfig({
     lang: "en-GB",
     title: "Verde",
     description: "Syncs file systems between roblox studio and your editor of choice",
-    base: "/verde",
+    base: "/",
     lastUpdated: true,
 
     markdown: {
@@ -14,6 +14,11 @@ export default defineConfig({
     },
 
     themeConfig: {
+        logo: "public/Verde_Icon.svg",
+        search: {
+            // TODO: Change to algolia once released
+            provider: "local"
+        },
         nav: [
             { text: 'Docs', link: '/docs' },
             { text: 'Quick Start', link: '/guide/quick-start' }
@@ -41,8 +46,7 @@ export default defineConfig({
                 text: 'Studio Plugin',
                 items: [
                     { text: "Introduction", link: '/plugin/' },
-                    { text: "Setup", link: '/plugin/setup' },
-                    { text: "Features", link: '/plugin/features' },
+                    { text: "Setup", link: '/plugin/setup' }
                 ]
             },
             { text: 'Reference', link: '/reference/' }
