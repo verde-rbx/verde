@@ -13,11 +13,13 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: ./docs
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: cd docs
       - uses: actions/setup-node@v3
         with:
           node-version: 16
