@@ -1,0 +1,9 @@
+# This file lists tools managed by Aftman, a cross-platform toolchain manager.
+# For more information, see https://github.com/LPGhatguy/aftman
+
+# To add a new tool, add an entry to this table.
+[tools]
+# Bootstrap with Verde in the future
+rojo = "rojo-rbx/rojo@7.3.0"
+wally = "UpliftGames/wally@0.3.2"
+stylua = "JohnnyMorganz/StyLua@0.18.1"

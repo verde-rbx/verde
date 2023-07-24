@@ -1,0 +1,12 @@
+# Project place file
+/plugin.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+# Dependencies
+Packages/*
+
+# Sourcemap (should auto generate)
+sourcemap.json

@@ -1,0 +1,13 @@
+{
+  "name": "plugin",
+  "tree": {
+    "$className": "DataModel",
+
+    "Verde": {
+      "$path": "src/",
+      "packages": {
+        "$path": "Packages/"
+      }
+    }
+  }
+}
