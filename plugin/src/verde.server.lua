@@ -17,7 +17,7 @@ verdeWidget.Title = "Verde"
 
 -- Setup plugin toolbar
 local verdeToolbar = plugin:CreateToolbar("Verde")
-local uiToggleBtn = verdeToolbar:CreateButton("VerdeUI", "Toggle Verde UI", "rbxassetid://1507949215")
+local uiToggleBtn = verdeToolbar:CreateButton("VerdeUI", "Toggle Verde UI", "rbxassetid://14205439269")
 
 uiToggleBtn.Click:Connect(function()
 	local isShown = Store.getValue("UIShown") :: boolean
