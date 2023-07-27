@@ -17,13 +17,17 @@ verdeWidget.Title = "Verde"
 
 -- Setup plugin toolbar
 local verdeToolbar = plugin:CreateToolbar("Verde")
-local uiToggleBtn = verdeToolbar:CreateButton("VerdeUI", "Toggle Verde UI", "rbxassetid://14205439269")
+local uiToggleBtn = verdeToolbar:CreateButton("Verde", "Toggle Verde UI", "rbxassetid://14205439269")
+uiToggleBtn:SetActive(false)
 
 uiToggleBtn.Click:Connect(function()
-	local isShown = Store.getValue("UIShown") :: boolean
-	Store.set("UIShown", not isShown)
+	local isShown = not (Store.getValue("UIShown") :: boolean)
+	Store.set("UIShown", isShown)
 	verdeWidget.Enabled = isShown
 end)
+
+-- Set initial states
+Store.set("UIShown", false)
 
 -- Initialise UI
 require(script.Parent.ui.menu)(verdeWidget)
