@@ -4,11 +4,16 @@ local Types = require(script.Parent.Parent.Parent.types)
 local New = Fusion.New
 local Children = Fusion.Children
 
-return function()
+export type ButtonProps = {
+	Text: string,
+}
+
+return function(_props)
 	return New("TextButton") {
+		Text = _props.Text,
 
 		[Children] = {
 			New("UICorner") {},
 		},
 	}
-end :: Types.Component<{}>
+end :: Types.Component<ButtonProps>

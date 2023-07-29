@@ -9,6 +9,7 @@ local ForValues = Fusion.ForValues
 local OnEvent = Fusion.OnEvent
 
 local Panels = script.Parent.panels
+local Logo = require(script.Parent.components.logo)
 
 return function(_widget: DockWidgetPluginGui)
 	local panelBtns = ForValues(Panels:GetChildren(), function(_moduleName: ModuleScript)
@@ -46,16 +47,32 @@ return function(_widget: DockWidgetPluginGui)
 			New("Frame") {
 				BackgroundTransparency = 0,
 				BackgroundColor3 = Color3.fromRGB(255, 0, 0), -- DEBUG REMOVE
-				Size = UDim2.fromScale(1, 0.25),
+				Size = UDim2.new(1, 0, 0, 75),
 
 				[Children] = {
-					New("UIListLayout") {
-						FillDirection = Enum.FillDirection.Horizontal,
-						VerticalAlignment = Enum.VerticalAlignment.Center,
+					New("UIPadding") {
+						PaddingLeft = UDim.new(0, 5),
+						PaddingRight = UDim.new(0, 5),
 					},
 
-					-- Buttons
-					panelBtns,
+					-- Left: Tabs
+					New("Frame") {
+						BackgroundTransparency = 1,
+						Size = UDim2.fromScale(1, 1),
+
+						[Children] = {
+							New("UIListLayout") {
+								FillDirection = Enum.FillDirection.Horizontal,
+								VerticalAlignment = Enum.VerticalAlignment.Center,
+							},
+
+							-- Buttons
+							panelBtns,
+						},
+					},
+
+					-- Right: Logo
+					Logo {},
 				},
 			},
 
@@ -65,7 +82,7 @@ return function(_widget: DockWidgetPluginGui)
 				BackgroundTransparency = 0,
 				BackgroundColor3 = Color3.fromRGB(0, 255, 0), -- DEBUG REMOVE
 				Position = UDim2.fromScale(0, 1),
-				Size = UDim2.fromScale(1, 0.75),
+				Size = UDim2.new(1, 0, 1, -75),
 
 				[Children] = {
 					chosenPanel,
