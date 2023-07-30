@@ -7,10 +7,10 @@ local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local ForValues = Fusion.ForValues
-local OnEvent = Fusion.OnEvent
 
 local Panels = script.Parent.panels
 local Logo = require(script.Parent.components.logo)
+local Tab = require(script.Parent.components.tab)
 local Version = require(script.Parent.components.version)
 
 local PanelMapping = {
@@ -25,19 +25,14 @@ local PanelMapping = {
 }
 
 return function(_widget: DockWidgetPluginGui)
+	-- Create panel tab buttons based on panel mappings
 	local panelBtns = ForValues(PanelMapping, function(_panel)
-		return New("TextButton") {
-			Name = _panel.panel,
-			Size = UDim2.fromScale(0.15, 1),
-			Text = _panel.panel,
-			TextColor3 = Theme.MainText,
-
-			[OnEvent("Activated")] = function()
-				Store.set("CurrentMenu", _panel.panel)
-			end,
+		return Tab {
+			Panel = _panel,
 		}
 	end, Fusion.cleanup)
 
+	-- Select the chosen panel to display based on active tab
 	local chosenPanel = Computed(function()
 		local activePanel = Store.getValue("CurrentMenu") :: Types.Menus
 
