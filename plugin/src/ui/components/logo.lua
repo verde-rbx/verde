@@ -7,7 +7,7 @@ return function(_props)
 	return New("ImageLabel") {
 		AnchorPoint = Vector2.new(1, 0),
 		BackgroundTransparency = 1,
-		Image = "rbxassetid://14205441392",
+		Image = "rbxassetid://14245984416",
 		Name = "VerdeLogo",
 		Position = UDim2.fromScale(1, 0),
 		ScaleType = Enum.ScaleType.Fit,
