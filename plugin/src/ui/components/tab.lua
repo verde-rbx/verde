@@ -17,9 +17,9 @@ export type TabButtonProps = {
 return function(_props)
 	return New("TextButton") {
 		Name = _props.Panel.panel,
-		Size = UDim2.fromScale(0.25, 1),
-		Text = _props.Panel.panel,
-		TextColor3 = Theme.MainText,
+		Size = UDim2.fromScale(1, 1),
+		SizeConstraint = Enum.SizeConstraint.RelativeYY,
+		TextTransparency = 1,
 
 		[OnEvent("Activated")] = function()
 			Store.set("CurrentMenu", _props.Panel.panel)
@@ -30,6 +30,15 @@ return function(_props)
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				Color = Theme.MainBackground,
 				Name = "AppliedStroke",
+			},
+
+			-- Icon
+			New("ImageLabel") {
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundTransparency = 1,
+				Image = _props.Panel.icon,
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromScale(0.5, 0.5),
 			},
 		},
 	}

@@ -15,11 +15,11 @@ local Version = require(script.Parent.components.version)
 
 local PanelMapping = {
 	{
-		icon = "rbxassetid://",
+		icon = "rbxassetid://10734940825",
 		panel = "home",
 	},
 	{
-		icon = "rbxassetid://",
+		icon = "rbxassetid://10734950309",
 		panel = "settings",
 	},
 }
