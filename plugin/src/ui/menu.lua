@@ -10,15 +10,27 @@ local OnEvent = Fusion.OnEvent
 
 local Panels = script.Parent.panels
 local Logo = require(script.Parent.components.logo)
+local Version = require(script.Parent.components.version)
+
+local PanelMapping = {
+	{
+		icon = "rbxassetid://",
+		panel = "home",
+	},
+	{
+		icon = "rbxassetid://",
+		panel = "settings",
+	},
+}
 
 return function(_widget: DockWidgetPluginGui)
-	local panelBtns = ForValues(Panels:GetChildren(), function(_moduleName: ModuleScript)
+	local panelBtns = ForValues(PanelMapping, function(_panel)
 		return New("TextButton") {
-			Name = _moduleName.Name,
+			Name = _panel.panel,
 			Size = UDim2.fromScale(0.15, 1),
-			Text = _moduleName.Name,
+			Text = _panel.panel,
 			[OnEvent("Activated")] = function()
-				Store.set("CurrentMenu", _moduleName.Name)
+				Store.set("CurrentMenu", _panel.panel)
 			end,
 		}
 	end, Fusion.cleanup)
@@ -38,16 +50,15 @@ return function(_widget: DockWidgetPluginGui)
 	end, Fusion.cleanup)
 
 	return New("Frame") {
-		BackgroundTransparency = 0,
+		BackgroundTransparency = 1,
 		Parent = _widget,
 		Size = UDim2.fromScale(1, 1),
 
 		[Children] = {
 			-- Topbar
 			New("Frame") {
-				BackgroundTransparency = 0,
-				BackgroundColor3 = Color3.fromRGB(255, 0, 0), -- DEBUG REMOVE
-				Size = UDim2.new(1, 0, 0, 75),
+				BackgroundTransparency = 1,
+				Size = UDim2.new(1, 0, 0, 40),
 
 				[Children] = {
 					New("UIPadding") {
@@ -64,6 +75,7 @@ return function(_widget: DockWidgetPluginGui)
 							New("UIListLayout") {
 								FillDirection = Enum.FillDirection.Horizontal,
 								VerticalAlignment = Enum.VerticalAlignment.Center,
+								Padding = UDim.new(0, 15),
 							},
 
 							-- Buttons
@@ -79,15 +91,17 @@ return function(_widget: DockWidgetPluginGui)
 			-- Layout
 			New("Frame") {
 				AnchorPoint = Vector2.new(0, 1),
-				BackgroundTransparency = 0,
-				BackgroundColor3 = Color3.fromRGB(0, 255, 0), -- DEBUG REMOVE
+				BackgroundTransparency = 1,
 				Position = UDim2.fromScale(0, 1),
-				Size = UDim2.new(1, 0, 1, -75),
+				Size = UDim2.new(1, 0, 1, -40),
 
 				[Children] = {
 					chosenPanel,
 				},
 			},
+
+			-- Version Text
+			Version {},
 		},
 	}
 end
