@@ -5,6 +5,7 @@ local Types = require(script.Parent.Parent.Parent.types)
 
 local New = Fusion.New
 local OnEvent = Fusion.OnEvent
+local Children = Fusion.Children
 
 export type TabButtonProps = {
 	Panel: {
@@ -23,5 +24,13 @@ return function(_props)
 		[OnEvent("Activated")] = function()
 			Store.set("CurrentMenu", _props.Panel.panel)
 		end,
+
+		[Children] = {
+			New("UIStroke") {
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				Color = Theme.MainBackground,
+				Name = "AppliedStroke",
+			},
+		},
 	}
 end :: Types.Component<TabButtonProps>

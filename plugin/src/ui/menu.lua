@@ -39,6 +39,7 @@ return function(_widget: DockWidgetPluginGui)
 		-- Update tab button colours
 		for _, btn in panelBtns:get() do
 			btn.BackgroundColor3 = if btn.Name == activePanel then Theme.MainBackground:get() else Theme.Tab:get()
+			btn.AppliedStroke.Enabled = btn.Name == activePanel
 		end
 
 		-- Check if active panel is set
@@ -71,6 +72,11 @@ return function(_widget: DockWidgetPluginGui)
 					New("UIPadding") {
 						PaddingLeft = UDim.new(0, 5),
 						PaddingRight = UDim.new(0, 5),
+					},
+
+					New("UIStroke") {
+						ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+						Color = Theme.Separator,
 					},
 
 					-- Left: Tabs
