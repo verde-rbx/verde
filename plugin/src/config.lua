@@ -6,9 +6,11 @@
 ]]
 
 local DEFAULT_CONFIG = table.freeze {
+	-- Plugin
 	PLUGIN_NAME = "Verde",
 	HOST = "localhost",
 	PORT = 34872,
+	VERSION = "0.1.0",
 }
 
 local DEFAULT_SETTINGS = table.freeze {}
