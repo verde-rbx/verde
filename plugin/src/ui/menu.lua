@@ -1,5 +1,6 @@
 local Fusion = require(script.Parent.Parent.packages.fusion)
 local Store = require(script.Parent.Parent.store)
+local Theme = require(script.Parent.Parent.theme)
 local Types = require(script.Parent.Parent.types)
 
 local New = Fusion.New
@@ -29,6 +30,8 @@ return function(_widget: DockWidgetPluginGui)
 			Name = _panel.panel,
 			Size = UDim2.fromScale(0.15, 1),
 			Text = _panel.panel,
+			TextColor3 = Theme.MainText,
+
 			[OnEvent("Activated")] = function()
 				Store.set("CurrentMenu", _panel.panel)
 			end,
@@ -37,10 +40,18 @@ return function(_widget: DockWidgetPluginGui)
 
 	local chosenPanel = Computed(function()
 		local activePanel = Store.getValue("CurrentMenu") :: Types.Menus
+
+		-- Update tab button colours
+		for _, btn in panelBtns:get() do
+			btn.BackgroundColor3 = if btn.Name == activePanel then Theme.MainBackground:get() else Theme.Tab:get()
+		end
+
+		-- Check if active panel is set
 		if not activePanel then
 			return
 		end
 
+		-- Check if panel exists
 		local chosenPanel = Panels:FindFirstChild(activePanel)
 		if not chosenPanel then
 			return
@@ -57,7 +68,8 @@ return function(_widget: DockWidgetPluginGui)
 		[Children] = {
 			-- Topbar
 			New("Frame") {
-				BackgroundTransparency = 1,
+				BackgroundColor3 = Theme.Titlebar,
+				BackgroundTransparency = 0,
 				Size = UDim2.new(1, 0, 0, 40),
 
 				[Children] = {

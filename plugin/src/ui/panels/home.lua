@@ -6,6 +6,7 @@ local Children = Fusion.Children
 
 return function()
 	return New("Frame") {
+		BackgroundTransparency = 1,
 		Name = "Home",
 		Size = UDim2.fromScale(1, 1),
 
