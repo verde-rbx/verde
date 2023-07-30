@@ -16,7 +16,7 @@ export type TabButtonProps = {
 return function(_props)
 	return New("TextButton") {
 		Name = _props.Panel.panel,
-		Size = UDim2.fromScale(0.15, 1),
+		Size = UDim2.fromScale(0.25, 1),
 		Text = _props.Panel.panel,
 		TextColor3 = Theme.MainText,
 
