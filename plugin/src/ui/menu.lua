@@ -108,6 +108,13 @@ return function(_widget: DockWidgetPluginGui)
 				Size = UDim2.new(1, 0, 1, -40),
 
 				[Children] = {
+					New("UIPadding") {
+						PaddingBottom = UDim.new(0, 25),
+						PaddingLeft = UDim.new(0, 25),
+						PaddingRight = UDim.new(0, 25),
+						PaddingTop = UDim.new(0, 25),
+					},
+
 					chosenPanel,
 				},
 			},
