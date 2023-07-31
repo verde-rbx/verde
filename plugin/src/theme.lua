@@ -20,6 +20,8 @@ local function setThemeValue(_key: string, _value: Color3)
 	local object = Theme[_key]
 	if not object then
 		object = Value(_value)
+	else
+		object:set(_value)
 	end
 	Theme[_key] = object
 end
@@ -29,6 +31,7 @@ end
     with the correct colour values for all combinations.
 ]]
 local function populateTheme()
+	print("populate theme")
 	for _, base in (Enum.StudioStyleGuideColor:GetEnumItems() :: { EnumItem }) do
 		setThemeValue(base.Name, StudioSettings.Theme:GetColor(base))
 
