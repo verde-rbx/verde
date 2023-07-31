@@ -37,7 +37,8 @@ return function()
 							-- Host
 							{
 								LayoutOrder = 1,
-								Size = UDim2.fromScale(0.7, 1),
+								Size = UDim2.fromScale(0.6, 1),
+								TextSize = 20,
 								Value = Store.get("HOST"),
 							},
 
@@ -53,7 +54,8 @@ return function()
 							-- Port
 							{
 								LayoutOrder = 3,
-								Size = UDim2.fromScale(0.25, 1),
+								Size = UDim2.fromScale(0.35, 1),
+								TextSize = 20,
 								Value = Store.get("PORT"),
 							},
 						},

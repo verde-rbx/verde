@@ -97,6 +97,7 @@ return function(_props)
 					Position = UDim2.fromScale(xAnchor, 0.5),
 					Text = _props.Value,
 					TextColor3 = Theme.MainText,
+					TextSize = _props.TextSize or 14,
 					Size = UDim2.new(1, xOffset, 1, 0),
 
 					[Out("Text")] = fieldValue,
