@@ -31,7 +31,6 @@ end
     with the correct colour values for all combinations.
 ]]
 local function populateTheme()
-	print("populate theme")
 	for _, base in (Enum.StudioStyleGuideColor:GetEnumItems() :: { EnumItem }) do
 		setThemeValue(base.Name, StudioSettings.Theme:GetColor(base))
 
