@@ -18,6 +18,8 @@ export type InputProps = {
 	Readonly: boolean?,
 	Size: UDim2,
 	TextSize: number?,
+	TextXAlignment: Enum.TextXAlignment?,
+	TextYAlinment: Enum.TextYAlignment?,
 	Value: Fusion.CanBeState<string>?,
 }
 
@@ -84,6 +86,8 @@ return function(_props)
 					TextColor3 = Theme.SubText,
 					TextScaled = not _props.TextSize,
 					TextSize = _props.TextSize or 14,
+					TextXAlignment = _props.TextXAlignment or Enum.TextXAlignment.Center,
+					TextYAlignment = _props.TextYAlignment or Enum.TextYAlignment.Center,
 					Size = UDim2.new(1, xOffset, 1, 0),
 
 					[Children] = {
@@ -98,6 +102,8 @@ return function(_props)
 					Text = _props.Value,
 					TextColor3 = Theme.MainText,
 					TextSize = _props.TextSize or 14,
+					TextXAlignment = _props.TextXAlignment or Enum.TextXAlignment.Center,
+					TextYAlignment = _props.TextYAlignment or Enum.TextYAlignment.Center,
 					Size = UDim2.new(1, xOffset, 1, 0),
 
 					[Out("Text")] = fieldValue,
