@@ -5,7 +5,6 @@ local Types = require(script.Parent.Parent.Parent.types)
 local New = Fusion.New
 local Children = Fusion.Children
 
-local Button = require(script.Parent.Parent.components.button)
 local InputGroup = require(script.Parent.Parent.components.input_group)
 
 return function()
@@ -37,7 +36,7 @@ return function()
 							-- Host
 							{
 								LayoutOrder = 1,
-								Size = UDim2.fromScale(0.6, 1),
+								Size = UDim2.fromScale(0.45, 1),
 								TextSize = 20,
 								Value = Store.get("HOST"),
 							},
@@ -54,19 +53,20 @@ return function()
 							-- Port
 							{
 								LayoutOrder = 3,
-								Size = UDim2.fromScale(0.35, 1),
+								Size = UDim2.fromScale(0.33, 1),
 								TextSize = 20,
 								Value = Store.get("PORT"),
 							},
+
+							-- Connect Button
+							{
+								Component = "Button",
+								Icon = "rbxassetid://10709768538",
+								LayoutOrder = 4,
+							},
 						},
 						LayoutOrder = 1,
-						Size = UDim2.new(0, 200, 1, 0),
-					},
-
-					-- Action
-					Button {
-						Icon = "rbxassetid://10709768538",
-						LayoutOrder = 2,
+						Size = UDim2.new(0, 250, 1, 0),
 					},
 				},
 			},

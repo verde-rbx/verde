@@ -9,10 +9,11 @@ local Computed = Fusion.Computed
 local Children = Fusion.Children
 local ForValues = Fusion.ForValues
 
+local Button = require(script.Parent.button)
 local Input = require(script.Parent.input)
 
 export type InputGroupProps = {
-	Inputs: { Input.InputProps },
+	Inputs: { (Input.InputProps | Button.ButtonProps) & { Component: ("Input" | "Button")? } },
 	LayoutOrder: number,
 	Size: UDim2,
 }
@@ -40,7 +41,7 @@ return function(_props)
 			else "all"
 
 		currentInput += 1
-		return Input(inputProps)
+		return if inputProps.Component == "Button" then Button(inputProps) else Input(inputProps)
 	end, Fusion.cleanup)
 
 	return New("Frame") {
