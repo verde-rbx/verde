@@ -4,25 +4,44 @@ local Types = require(script.Parent.Parent.Parent.types)
 
 local New = Fusion.New
 local Value = Fusion.Value
+local Tween = Fusion.Tween
 local Computed = Fusion.Computed
 local Children = Fusion.Children
 local OnEvent = Fusion.OnEvent
 
 export type ButtonProps = {
-	Icon: string,
+	Activated: () -> ()?,
+	Color: Fusion.CanBeState<string>?,
+	Icon: Fusion.CanBeState<string>,
 	LayoutOrder: number,
 	Location: ("left" | "middle" | "right" | "all")?,
+	Rotation: Fusion.CanBeState<number>?,
 	Size: UDim2?,
+	TextColor: Fusion.CanBeState<string>?,
 }
 
+local ColorTween = TweenInfo.new(0.25)
+
 return function(_props)
+	local baseColor = if not _props.Color or typeof(_props.Color) == "string"
+		then Value(_props.Color or "MainButton")
+		else _props.Color
+
+	local baseTextColor = if not _props.TextColor or typeof(_props.TextColor) == "string"
+		then Value(_props.TextColor or "MainText")
+		else _props.TextColor
+
+	local textColor = Computed(function()
+		return Theme[baseTextColor:get()]:get()
+	end)
+
 	local isPressed = Value(false)
 	local buttonColor = Computed(function()
 		if isPressed:get() then
-			return Theme.ButtonPressed:get()
+			return Theme[`{baseColor:get()}Pressed`]:get()
 		end
 
-		return Theme.Button:get()
+		return Theme[baseColor:get()]:get()
 	end)
 
 	-- Calculate roundness from position
@@ -50,7 +69,7 @@ return function(_props)
 		[Children] = {
 			New("TextButton") {
 				AnchorPoint = Vector2.new(xAnchor, 0.5),
-				BackgroundColor3 = buttonColor,
+				BackgroundColor3 = Tween(buttonColor, ColorTween),
 				Position = UDim2.fromScale(xAnchor, 0.5),
 				Text = "",
 				TextTransparency = 1,
@@ -64,6 +83,12 @@ return function(_props)
 					isPressed:set(false)
 				end,
 
+				[OnEvent("Activated")] = function()
+					if _props.Activated then
+						_props.Activated()
+					end
+				end,
+
 				[Children] = {
 					New("UICorner") {},
 
@@ -71,8 +96,9 @@ return function(_props)
 						AnchorPoint = Vector2.new(0.5, 0.5),
 						BackgroundTransparency = 1,
 						Image = _props.Icon,
-						ImageColor3 = Theme.MainText,
+						ImageColor3 = Tween(textColor, ColorTween),
 						Position = UDim2.fromScale(0.5, 0.5),
+						Rotation = _props.Rotation,
 						Size = UDim2.fromScale(0.6, 0.6),
 					},
 				},

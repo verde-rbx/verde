@@ -3,11 +3,17 @@ local Store = require(script.Parent.Parent.Parent.store)
 local Types = require(script.Parent.Parent.Parent.types)
 
 local New = Fusion.New
+local Value = Fusion.Value
 local Children = Fusion.Children
 
 local InputGroup = require(script.Parent.Parent.components.input_group)
 
 return function()
+	local connectIcon = Value("rbxassetid://10709768538")
+	local connectRotation = Value(0)
+	local connectColor = Value("MainButton")
+	local connectTextColor = Value("MainText")
+
 	return New("Frame") {
 		BackgroundTransparency = 1,
 		Name = "Home",
@@ -61,8 +67,25 @@ return function()
 							-- Connect Button
 							{
 								Component = "Button",
-								Icon = "rbxassetid://10709768538",
+								Color = connectColor,
+								Icon = connectIcon,
 								LayoutOrder = 4,
+								Rotation = connectRotation,
+								TextColor = connectTextColor,
+
+								Activated = function()
+									local isConnected = not Store.getValue("Connected")
+									Store.set("Connected", isConnected)
+									if isConnected then
+										connectIcon:set("rbxassetid://10747384394")
+										connectColor:set("ErrorText")
+										connectTextColor:set("Dark")
+									else
+										connectIcon:set("rbxassetid://10709768538")
+										connectColor:set("MainButton")
+										connectTextColor:set("MainText")
+									end
+								end,
 							},
 						},
 						LayoutOrder = 1,
