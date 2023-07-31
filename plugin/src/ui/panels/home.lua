@@ -4,15 +4,24 @@ local Types = require(script.Parent.Parent.Parent.types)
 
 local New = Fusion.New
 local Value = Fusion.Value
+local Computed = Fusion.Computed
 local Children = Fusion.Children
 
 local InputGroup = require(script.Parent.Parent.components.input_group)
 
 return function()
-	local connectIcon = Value("rbxassetid://10709768538")
+	local isConnected = Store.get("Connected", false)
+	local connectIcon = Computed(function()
+		return if isConnected:get() then "rbxassetid://10709768538" else "rbxassetid://10747384394"
+	end)
+	local connectColor = Computed(function()
+		return if isConnected:get() then "MainButton" else "ErrorText"
+	end)
+	local connectTextColor = Computed(function()
+		return if isConnected:get() then "MainText" else "Dark"
+	end)
+
 	local connectRotation = Value(0)
-	local connectColor = Value("MainButton")
-	local connectTextColor = Value("MainText")
 
 	return New("Frame") {
 		BackgroundTransparency = 1,
@@ -76,15 +85,6 @@ return function()
 								Activated = function()
 									local isConnected = not Store.getValue("Connected")
 									Store.set("Connected", isConnected)
-									if isConnected then
-										connectIcon:set("rbxassetid://10747384394")
-										connectColor:set("ErrorText")
-										connectTextColor:set("Dark")
-									else
-										connectIcon:set("rbxassetid://10709768538")
-										connectColor:set("MainButton")
-										connectTextColor:set("MainText")
-									end
 								end,
 							},
 						},
