@@ -65,9 +65,7 @@ return function(_props)
 				end,
 
 				[Children] = {
-					New("UICorner") {
-						CornerRadius = UDim.new(0, 10),
-					},
+					New("UICorner") {},
 
 					New("ImageLabel") {
 						AnchorPoint = Vector2.new(0.5, 0.5),
