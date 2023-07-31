@@ -37,6 +37,7 @@ return function(_props)
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundTransparency = 1,
 				Image = _props.Panel.icon,
+				ImageColor3 = Theme.MainText,
 				Position = UDim2.fromScale(0.5, 0.5),
 				Size = UDim2.fromScale(0.5, 0.5),
 			},
