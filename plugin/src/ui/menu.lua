@@ -36,12 +36,6 @@ return function(_widget: DockWidgetPluginGui)
 	local chosenPanel = Computed(function()
 		local activePanel = Store.getValue("CurrentMenu") :: Types.Menus
 
-		-- Update tab button colours
-		for _, btn in panelBtns:get() do
-			btn.BackgroundColor3 = if btn.Name == activePanel then Theme.MainBackground:get() else Theme.Titlebar:get()
-			btn.AppliedStroke.Enabled = btn.Name == activePanel
-		end
-
 		-- Check if active panel is set
 		if not activePanel then
 			return

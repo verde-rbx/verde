@@ -5,6 +5,7 @@ local Types = require(script.Parent.Parent.Parent.types)
 
 local New = Fusion.New
 local OnEvent = Fusion.OnEvent
+local Computed = Fusion.Computed
 local Children = Fusion.Children
 
 export type TabButtonProps = {
@@ -15,7 +16,18 @@ export type TabButtonProps = {
 }
 
 return function(_props)
+	local showStroke = Computed(function()
+		local activePanel = Store.getValue("CurrentMenu") :: Types.Menus
+		return activePanel == _props.Panel.panel
+	end)
+
+	local backgroundColor = Computed(function()
+		local activePanel = Store.getValue("CurrentMenu") :: Types.Menus
+		return if activePanel == _props.Panel.panel then Theme.MainBackground:get() else Theme.Titlebar:get()
+	end)
+
 	return New("TextButton") {
+		BackgroundColor3 = backgroundColor,
 		Name = _props.Panel.panel,
 		Size = UDim2.fromScale(1, 1),
 		SizeConstraint = Enum.SizeConstraint.RelativeYY,
@@ -29,7 +41,7 @@ return function(_props)
 			New("UIStroke") {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				Color = Theme.MainBackground,
-				Name = "AppliedStroke",
+				Enabled = showStroke,
 			},
 
 			-- Icon
@@ -40,6 +52,20 @@ return function(_props)
 				ImageColor3 = Theme.MainText,
 				Position = UDim2.fromScale(0.5, 0.5),
 				Size = UDim2.fromScale(0.5, 0.5),
+
+				[Children] = {
+					New("Frame") {
+						BackgroundTransparency = 1,
+
+						[Children] = {
+							New("UIStroke") {
+								ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+								Color = Theme.MainBackground,
+								Enabled = showStroke,
+							},
+						},
+					},
+				},
 			},
 		},
 	}
