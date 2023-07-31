@@ -8,6 +8,8 @@ local Tween = Fusion.Tween
 local Computed = Fusion.Computed
 local Children = Fusion.Children
 local OnEvent = Fusion.OnEvent
+local Observer = Fusion.Observer
+local Out = Fusion.Out
 
 export type InputProps = {
 	IsSelected: Fusion.Value<boolean>?,
@@ -16,7 +18,7 @@ export type InputProps = {
 	Readonly: boolean?,
 	Size: UDim2,
 	TextSize: number?,
-	Value: string?,
+	Value: Fusion.CanBeState<string>?,
 }
 
 local ColorTween = TweenInfo.new(0.25)
@@ -47,7 +49,24 @@ return function(_props)
 	end
 
 	-- Handling value
-	local text = Value(_props.Value or "")
+	local fieldValue = Value(
+		if typeof(_props.Value) == "string"
+			then _props.Value
+			elseif typeof(_props.Value) == "table" then _props.Value:get(false)
+			else ""
+	)
+
+	-- Updating linked value
+	Observer(fieldValue):onChange(function()
+		local val = fieldValue and fieldValue:get()
+		if not val then
+			return
+		end
+
+		if typeof(_props.Value) == "table" then
+			(_props.Value :: Fusion.Value<string>):set(val)
+		end
+	end)
 
 	return New("Frame") {
 		BackgroundTransparency = 1,
@@ -61,7 +80,7 @@ return function(_props)
 					BackgroundTransparency = 0,
 					BackgroundColor3 = Tween(backgroundColor, ColorTween),
 					Position = UDim2.fromScale(xAnchor, 0.5),
-					Text = text,
+					Text = _props.Value,
 					TextColor3 = Theme.SubText,
 					TextScaled = not _props.TextSize,
 					TextSize = _props.TextSize or 14,
@@ -76,9 +95,11 @@ return function(_props)
 					BackgroundTransparency = 0,
 					BackgroundColor3 = Tween(backgroundColor, ColorTween),
 					Position = UDim2.fromScale(xAnchor, 0.5),
-					Text = text,
+					Text = _props.Value,
 					TextColor3 = Theme.MainText,
 					Size = UDim2.new(1, xOffset, 1, 0),
+
+					[Out("Text")] = fieldValue,
 
 					[OnEvent("Focused")] = function()
 						if _props.Readonly then

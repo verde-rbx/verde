@@ -1,4 +1,5 @@
 local Fusion = require(script.Parent.Parent.Parent.packages.fusion)
+local Store = require(script.Parent.Parent.Parent.store)
 local Types = require(script.Parent.Parent.Parent.types)
 
 local New = Fusion.New
@@ -37,6 +38,7 @@ return function()
 							{
 								LayoutOrder = 1,
 								Size = UDim2.fromScale(0.7, 1),
+								Value = Store.get("HOST"),
 							},
 
 							-- Separator
@@ -52,6 +54,7 @@ return function()
 							{
 								LayoutOrder = 3,
 								Size = UDim2.fromScale(0.25, 1),
+								Value = Store.get("PORT"),
 							},
 						},
 						LayoutOrder = 1,
