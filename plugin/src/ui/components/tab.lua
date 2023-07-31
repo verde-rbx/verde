@@ -32,16 +32,35 @@ return function(_props)
 		Size = UDim2.fromScale(1, 1),
 		SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		TextTransparency = 1,
+		ZIndex = 2,
 
 		[OnEvent("Activated")] = function()
 			Store.set("CurrentMenu", _props.Panel.panel)
 		end,
 
 		[Children] = {
+			-- Hide topbar stroke
 			New("UIStroke") {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				Color = Theme.MainBackground,
 				Enabled = showStroke,
+			},
+
+			-- Selection Stroke
+			New("Frame") {
+				AnchorPoint = Vector2.new(0.5, 0),
+				BackgroundTransparency = 1,
+				Position = UDim2.fromScale(0.5, 0),
+				Size = UDim2.new(1, 2, 1, 0),
+				ZIndex = 1,
+
+				[Children] = {
+					New("UIStroke") {
+						ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+						Color = Theme.Separator,
+						Enabled = showStroke,
+					},
+				},
 			},
 
 			-- Icon
@@ -52,20 +71,7 @@ return function(_props)
 				ImageColor3 = Theme.MainText,
 				Position = UDim2.fromScale(0.5, 0.5),
 				Size = UDim2.fromScale(0.5, 0.5),
-
-				[Children] = {
-					New("Frame") {
-						BackgroundTransparency = 1,
-
-						[Children] = {
-							New("UIStroke") {
-								ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-								Color = Theme.MainBackground,
-								Enabled = showStroke,
-							},
-						},
-					},
-				},
+				ZIndex = 2,
 			},
 		},
 	}

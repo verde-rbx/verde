@@ -82,6 +82,7 @@ return function(_widget: DockWidgetPluginGui)
 							New("UIListLayout") {
 								FillDirection = Enum.FillDirection.Horizontal,
 								VerticalAlignment = Enum.VerticalAlignment.Center,
+								Padding = UDim.new(0, 2),
 							},
 
 							-- Buttons
