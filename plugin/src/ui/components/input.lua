@@ -15,6 +15,8 @@ export type InputProps = {
 	Location: ("left" | "middle" | "right" | "all")?,
 	Readonly: boolean?,
 	Size: UDim2,
+	TextSize: number?,
+	Value: string?,
 }
 
 local ColorTween = TweenInfo.new(0.25)
@@ -29,6 +31,7 @@ return function(_props)
 		end
 	end)
 
+	-- Calculate roundness from position
 	local xOffset = 0
 	if _props.Location == "left" or _props.Location == "right" then
 		xOffset = 5
@@ -43,42 +46,62 @@ return function(_props)
 		xAnchor = 1
 	end
 
+	-- Handling value
+	local text = Value(_props.Value or "")
+
 	return New("Frame") {
 		BackgroundTransparency = 1,
 		ClipsDescendants = true,
 		Size = _props.Size,
 
 		[Children] = {
-			New("TextBox") {
-				AnchorPoint = Vector2.new(xAnchor, 0.5),
-				BackgroundTransparency = 0,
-				BackgroundColor3 = Tween(backgroundColor, ColorTween),
-				Position = UDim2.fromScale(xAnchor, 0.5),
-				Size = UDim2.new(1, xOffset, 1, 0),
-				TextEditable = not _props.Readonly,
+			if _props.Readonly
+				then New("TextLabel") {
+					AnchorPoint = Vector2.new(xAnchor, 0.5),
+					BackgroundTransparency = 0,
+					BackgroundColor3 = Tween(backgroundColor, ColorTween),
+					Position = UDim2.fromScale(xAnchor, 0.5),
+					Text = text,
+					TextColor3 = Theme.SubText,
+					TextScaled = not _props.TextSize,
+					TextSize = _props.TextSize or 14,
+					Size = UDim2.new(1, xOffset, 1, 0),
 
-				[OnEvent("Focused")] = function()
-					if _props.Readonly then
-						return
-					end
+					[Children] = {
+						New("UICorner") {},
+					},
+				}
+				else New("TextBox") {
+					AnchorPoint = Vector2.new(xAnchor, 0.5),
+					BackgroundTransparency = 0,
+					BackgroundColor3 = Tween(backgroundColor, ColorTween),
+					Position = UDim2.fromScale(xAnchor, 0.5),
+					Text = text,
+					TextColor3 = Theme.MainText,
+					Size = UDim2.new(1, xOffset, 1, 0),
 
-					_props.IsSelected:set(true)
-					isOutlined:set(true)
-				end,
+					[OnEvent("Focused")] = function()
+						if _props.Readonly then
+							return
+						end
 
-				[OnEvent("FocusLost")] = function()
-					if _props.Readonly then
-						return
-					end
+						_props.IsSelected:set(true)
+						isOutlined:set(true)
+					end,
 
-					_props.IsSelected:set(false)
-					isOutlined:set(false)
-				end,
+					[OnEvent("FocusLost")] = function()
+						if _props.Readonly then
+							return
+						end
 
-				[Children] = {
-					New("UICorner") {},
+						_props.IsSelected:set(false)
+						isOutlined:set(false)
+					end,
+
+					[Children] = {
+						New("UICorner") {},
+					},
 				},
-			},
 		},
 	}
 end :: Types.Component<InputProps>

@@ -36,12 +36,21 @@ return function()
 							-- Host
 							{
 								LayoutOrder = 1,
-								Size = UDim2.fromScale(0.75, 1),
+								Size = UDim2.fromScale(0.7, 1),
+							},
+
+							-- Separator
+							{
+								LayoutOrder = 2,
+								Readonly = true,
+								Size = UDim2.fromScale(0.05, 1),
+								TextSize = 20,
+								Value = ":",
 							},
 
 							-- Port
 							{
-								LayoutOrder = 2,
+								LayoutOrder = 3,
 								Size = UDim2.fromScale(0.25, 1),
 							},
 						},
