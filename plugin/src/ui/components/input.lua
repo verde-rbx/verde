@@ -13,6 +13,7 @@ export type InputProps = {
 	IsSelected: Fusion.Value<boolean>?,
 	LayoutOrder: number,
 	Location: ("left" | "middle" | "right" | "all")?,
+	Readonly: boolean?,
 	Size: UDim2,
 }
 
@@ -54,13 +55,22 @@ return function(_props)
 				BackgroundColor3 = Tween(backgroundColor, ColorTween),
 				Position = UDim2.fromScale(xAnchor, 0.5),
 				Size = UDim2.new(1, xOffset, 1, 0),
+				TextEditable = not _props.Readonly,
 
 				[OnEvent("Focused")] = function()
+					if _props.Readonly then
+						return
+					end
+
 					_props.IsSelected:set(true)
 					isOutlined:set(true)
 				end,
 
 				[OnEvent("FocusLost")] = function()
+					if _props.Readonly then
+						return
+					end
+
 					_props.IsSelected:set(false)
 					isOutlined:set(false)
 				end,
