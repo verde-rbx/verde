@@ -12,9 +12,11 @@ local Observer = Fusion.Observer
 local Out = Fusion.Out
 
 export type InputProps = {
+	Font: Font?,
 	IsSelected: Fusion.Value<boolean>?,
 	LayoutOrder: number,
 	Location: ("left" | "middle" | "right" | "all")?,
+	Placeholder: string?,
 	Readonly: boolean?,
 	Size: UDim2,
 	TextSize: number?,
@@ -81,6 +83,7 @@ return function(_props)
 					AnchorPoint = Vector2.new(xAnchor, 0.5),
 					BackgroundTransparency = 0,
 					BackgroundColor3 = Tween(backgroundColor, ColorTween),
+					FontFace = _props.Font or Font.fromEnum(Enum.Font.Gotham),
 					Position = UDim2.fromScale(xAnchor, 0.5),
 					Text = _props.Value,
 					TextColor3 = Theme.SubText,
@@ -98,6 +101,8 @@ return function(_props)
 					AnchorPoint = Vector2.new(xAnchor, 0.5),
 					BackgroundTransparency = 0,
 					BackgroundColor3 = Tween(backgroundColor, ColorTween),
+					FontFace = _props.Font or Font.fromEnum(Enum.Font.Gotham),
+					PlaceholderText = _props.Placeholder,
 					Position = UDim2.fromScale(xAnchor, 0.5),
 					Text = _props.Value,
 					TextColor3 = Theme.MainText,
