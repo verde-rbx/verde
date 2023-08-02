@@ -31,3 +31,4 @@ Store.set("UIShown", false)
 
 -- Initialise UI
 require(script.Parent.ui.menu)(verdeWidget)
+require(script.Parent.ui.toasts)()
