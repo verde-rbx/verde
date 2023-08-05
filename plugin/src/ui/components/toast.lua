@@ -62,7 +62,7 @@ return function(_props)
 
 	-- Handling lifetime progress
 	local cornerRadius = 4
-	local lifetimeInfo = TweenInfo.new(_props.Data.Lifetime + ToastTweenInfo.Time, Enum.EasingStyle.Linear)
+	local lifetimeInfo = TweenInfo.new(_props.Data.Lifetime, Enum.EasingStyle.Linear)
 	local lifetimeProgress = Value(UDim2.new(0, toastSize.X.Offset, 0, cornerRadius))
 	task.defer(lifetimeProgress.set, lifetimeProgress, UDim2.new(0, 0, 0, cornerRadius))
 

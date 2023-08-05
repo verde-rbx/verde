@@ -27,7 +27,7 @@ return function()
 	local toasts = ForPairs(toastQueue, function(_key, _value)
 		-- Set defaults
 		_value.Severity = _value.Severity or "Info"
-		_value.Lifetime = _value.Lifetime or 10
+		_value.Lifetime = _value.Lifetime or 4.5
 		_value.Time = _value.Time or os.clock()
 
 		-- Checking for existing toast (prevent duplication)
