@@ -12,6 +12,10 @@ local Children = Fusion.Children
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 
+local Icon = require(script.Parent.icon)
+
+local ToastTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Cubic)
+
 export type ToastProps = {
 	Data: Types.Toast,
 	States: {
@@ -19,10 +23,8 @@ export type ToastProps = {
 	},
 }
 
-local ToastTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Cubic)
-
 return function(_props)
-	local baseSize = Vector2.new(50, 25)
+	local baseSize = Vector2.new(120, 55)
 	local textSize = TextService:GetTextSize(_props.Data.Message, 14, Enum.Font.Gotham, baseSize)
 	local toastSize = UDim2.fromOffset(textSize.X + baseSize.X, textSize.Y + baseSize.Y)
 
@@ -58,9 +60,10 @@ return function(_props)
 	task.delay(_props.Data.Lifetime, destroyToast)
 
 	-- Handling lifetime progress
+	-- The magic offset of 8 is the Border Radius offset
 	local lifetimeInfo = TweenInfo.new(_props.Data.Lifetime + ToastTweenInfo.Time, Enum.EasingStyle.Linear)
-	local lifetimeProgress = Value(UDim2.fromOffset(toastSize.X, 15))
-	task.defer(lifetimeProgress.set, lifetimeProgress, UDim2.fromOffset(0, 15))
+	local lifetimeProgress = Value(UDim2.new(0, toastSize.X.Offset, 0, 8))
+	task.defer(lifetimeProgress.set, lifetimeProgress, UDim2.new(0, 0, 0, 8))
 
 	return New("ImageButton") {
 		AnchorPoint = Vector2.new(1, 1),
@@ -77,11 +80,17 @@ return function(_props)
 		[Children] = {
 			New("UICorner") {},
 
+			Icon {},
+
 			New("TextLabel") {
+				AnchorPoint = Vector2.new(0.5, 1),
 				BackgroundTransparency = 1,
-				Position = UDim2.fromScale(0, 0.05),
+				Position = UDim2.fromScale(0.5, 0.95),
 				Text = _props.Data.Message,
-				Size = UDim2.fromScale(1, 0.95),
+				TextWrapped = true,
+				TextXAlignment = Enum.TextXAlignment.Left,
+				TextYAlignment = Enum.TextYAlignment.Top,
+				Size = UDim2.fromScale(0.95, 0.65),
 			},
 
 			-- Progress for lifetime
