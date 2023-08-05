@@ -25,7 +25,7 @@ export type ToastProps = {
 }
 
 return function(_props)
-	local baseSize = Vector2.new(120, 55)
+	local baseSize = Vector2.new(175, 55)
 	local textSize = TextService:GetTextSize(_props.Data.Message, 14, Enum.Font.Gotham, baseSize)
 	local toastSize = UDim2.fromOffset(textSize.X + baseSize.X, textSize.Y + baseSize.Y)
 
@@ -88,18 +88,36 @@ return function(_props)
 				CornerRadius = UDim.new(0, cornerRadius),
 			},
 
-			-- TopRight Icon (watermark?)
-			Icon {},
-
-			-- Timestamp
-			New("TextLabel") {
+			-- Top Bar
+			New("Frame") {
+				AnchorPoint = Vector2.new(0.5, 0),
 				BackgroundTransparency = 1,
-				Position = UDim2.fromOffset(5, 3),
-				Text = timestamp,
-				TextColor3 = Theme.DimmedText,
-				TextScaled = true,
-				TextXAlignment = Enum.TextXAlignment.Left,
-				Size = UDim2.fromScale(0.85, 0.2),
+				Position = UDim2.fromScale(0.5, 0),
+				Size = UDim2.fromScale(0.95, 0.2),
+
+				[Children] = {
+					-- TopRight Icon (watermark?)
+					Icon {},
+
+					-- Timestamp
+					New("TextLabel") {
+						AnchorPoint = Vector2.new(0, 0.5),
+						BackgroundTransparency = 1,
+						Position = UDim2.fromScale(0, 0.52),
+						Text = timestamp,
+						TextColor3 = Theme.DimmedText,
+						TextScaled = true,
+						TextXAlignment = Enum.TextXAlignment.Left,
+						TextYAlignment = Enum.TextYAlignment.Center,
+						Size = UDim2.fromScale(0.85, 1),
+
+						[Children] = {
+							New("UITextSizeConstraint") {
+								MaxTextSize = 14,
+							},
+						},
+					},
+				},
 			},
 
 			-- Message
@@ -109,6 +127,7 @@ return function(_props)
 				Position = UDim2.fromScale(0.5, 0.95),
 				Text = _props.Data.Message,
 				TextColor3 = Theme.MainText,
+				TextSize = 14,
 				TextWrapped = true,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextYAlignment = Enum.TextYAlignment.Top,
@@ -127,7 +146,7 @@ return function(_props)
 				[Children] = {
 					New("Frame") {
 						AnchorPoint = Vector2.new(0, 1),
-						BackgroundColor3 = Color3.fromRGB(185, 251, 192),
+						BackgroundColor3 = Color3.fromRGB(150, 210, 137),
 						Name = "Progress",
 						Position = UDim2.fromScale(0, 1),
 						Size = UDim2.new(1, 5, 1, 5),
