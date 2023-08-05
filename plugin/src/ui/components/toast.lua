@@ -25,9 +25,8 @@ export type ToastProps = {
 }
 
 return function(_props)
-	local baseSize = Vector2.new(175, 55)
-	local textSize = TextService:GetTextSize(_props.Data.Message, 14, Enum.Font.Gotham, baseSize)
-	local toastSize = UDim2.fromOffset(textSize.X + baseSize.X, textSize.Y + baseSize.Y)
+	local textSize = TextService:GetTextSize(_props.Data.Message, 14, Enum.Font.Gotham, Vector2.zero)
+	local toastSize = UDim2.fromOffset((textSize.X - (textSize.X / 5)) + 25, textSize.Y + 35)
 
 	local destroying = Value(false) :: Fusion.Value<boolean>
 	local instance = Value() :: Fusion.Value<Frame?>
@@ -93,7 +92,7 @@ return function(_props)
 				AnchorPoint = Vector2.new(0.5, 0),
 				BackgroundTransparency = 1,
 				Position = UDim2.fromScale(0.5, 0),
-				Size = UDim2.fromScale(0.95, 0.2),
+				Size = UDim2.fromScale(0.95, 0.3),
 
 				[Children] = {
 					-- TopRight Icon (watermark?)
@@ -128,10 +127,9 @@ return function(_props)
 				Text = _props.Data.Message,
 				TextColor3 = Theme.MainText,
 				TextSize = 14,
-				TextWrapped = true,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextYAlignment = Enum.TextYAlignment.Top,
-				Size = UDim2.fromScale(0.95, 0.65),
+				Size = UDim2.fromScale(0.95, 0.6),
 			},
 
 			-- Progress for lifetime
