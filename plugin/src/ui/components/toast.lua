@@ -2,6 +2,7 @@ local TextService = game:GetService("TextService")
 
 local Fusion = require(script.Parent.Parent.Parent.packages.fusion)
 local Store = require(script.Parent.Parent.Parent.store)
+local Theme = require(script.Parent.Parent.Parent.theme)
 local Types = require(script.Parent.Parent.Parent.types)
 
 local New = Fusion.New
@@ -60,13 +61,18 @@ return function(_props)
 	task.delay(_props.Data.Lifetime, destroyToast)
 
 	-- Handling lifetime progress
-	-- The magic offset of 8 is the Border Radius offset
+	local cornerRadius = 4
 	local lifetimeInfo = TweenInfo.new(_props.Data.Lifetime + ToastTweenInfo.Time, Enum.EasingStyle.Linear)
-	local lifetimeProgress = Value(UDim2.new(0, toastSize.X.Offset, 0, 8))
-	task.defer(lifetimeProgress.set, lifetimeProgress, UDim2.new(0, 0, 0, 8))
+	local lifetimeProgress = Value(UDim2.new(0, toastSize.X.Offset, 0, cornerRadius))
+	task.defer(lifetimeProgress.set, lifetimeProgress, UDim2.new(0, 0, 0, cornerRadius))
+
+	-- Timestamp
+	local utcTimestamp = os.date("!*t", _props.Data.Time)
+	local timestamp = string.format("%02d:%02d:%02d", utcTimestamp.hour, utcTimestamp.min, utcTimestamp.sec)
 
 	return New("ImageButton") {
 		AnchorPoint = Vector2.new(1, 1),
+		BackgroundColor3 = Theme.MainBackground,
 		ImageTransparency = 1,
 		Name = "Toast",
 		Parent = _props.Container,
@@ -78,15 +84,31 @@ return function(_props)
 		[OnEvent("Activated")] = destroyToast,
 
 		[Children] = {
-			New("UICorner") {},
+			New("UICorner") {
+				CornerRadius = UDim.new(0, cornerRadius),
+			},
 
+			-- TopRight Icon (watermark?)
 			Icon {},
 
+			-- Timestamp
+			New("TextLabel") {
+				BackgroundTransparency = 1,
+				Position = UDim2.fromOffset(5, 3),
+				Text = timestamp,
+				TextColor3 = Theme.DimmedText,
+				TextScaled = true,
+				TextXAlignment = Enum.TextXAlignment.Left,
+				Size = UDim2.fromScale(0.85, 0.2),
+			},
+
+			-- Message
 			New("TextLabel") {
 				AnchorPoint = Vector2.new(0.5, 1),
 				BackgroundTransparency = 1,
 				Position = UDim2.fromScale(0.5, 0.95),
 				Text = _props.Data.Message,
+				TextColor3 = Theme.MainText,
 				TextWrapped = true,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextYAlignment = Enum.TextYAlignment.Top,
@@ -111,7 +133,9 @@ return function(_props)
 						Size = UDim2.new(1, 5, 1, 5),
 
 						[Children] = {
-							New("UICorner") {},
+							New("UICorner") {
+								CornerRadius = UDim.new(0, cornerRadius),
+							},
 						},
 					},
 				},

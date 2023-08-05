@@ -74,7 +74,7 @@ return function()
 			New("Frame") {
 				AnchorPoint = Vector2.new(1, 1),
 				BackgroundTransparency = 1,
-				Position = UDim2.fromScale(1, 1),
+				Position = UDim2.new(1, -5, 1, -5),
 				Size = UDim2.fromScale(0.25, 1),
 
 				[Children] = toasts,
