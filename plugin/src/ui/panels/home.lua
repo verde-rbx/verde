@@ -87,6 +87,10 @@ return function()
 								Activated = function()
 									local isConnected = not Store.getValue("Connected")
 									Store.set("Connected", isConnected)
+
+									Store.add("Toasts", {
+										Message = "Connecting...",
+									} :: Types.Toast, 1)
 								end,
 							},
 						},
