@@ -2,7 +2,7 @@
     Fusion State Store
 
 	Used as a global state management system in the plugin.
-	Is essentially just a key value store of fusion states to be editing by any script
+	It's essentially just a key value store of states.
 --]]
 local Config = require(script.Parent.config)
 local Fusion = require(script.Parent.packages.fusion)
@@ -41,6 +41,27 @@ end
 ]]
 function Store.getValue<T>(_key: string, _defaultValue: unknown?): T?
 	return Store.get(_key, _defaultValue):get()
+end
+
+--[[
+	Adds a value to a table state.
+]]
+function Store.add(_key: string, _value: unknown, _position: number?)
+	local state = Store.get(_key, { _value }) :: Fusion.Value<{ typeof(_value)? }>
+	local tbl = state:get()
+	table.insert(tbl, _position or (#tbl + 1), _value)
+	state:set(tbl)
+end
+
+--[[
+	Removes a value from a table state.
+]]
+function Store.remove<T>(_key: string, _position: number?): Fusion.Value<T>
+	local state = Store.get(_key, {}) :: Fusion.Value<T>
+	local tbl = state:get()
+	table.remove(tbl, _position)
+	state:set(tbl)
+	return state
 end
 
 -- Add config values to store
