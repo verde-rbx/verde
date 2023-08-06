@@ -27,7 +27,8 @@ export type InputGroupProps = {
 	Size: UDim2,
 }
 
-local ColorTween = TweenInfo.new(0.25)
+local ColorTweenInfo = TweenInfo.new(0.25)
+local OverlayTweenInfo = TweenInfo.new(0.25)
 
 return function(_props)
 	local isOutlined = Value(false)
@@ -100,7 +101,7 @@ return function(_props)
 		[Children] = {
 			New("UIStroke") {
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-				Color = Tween(outlineColor, ColorTween),
+				Color = Tween(outlineColor, ColorTweenInfo),
 			},
 
 			New("UICorner") {
@@ -113,7 +114,7 @@ return function(_props)
 				BackgroundTransparency = 1,
 				ClipsDescendants = true,
 				Position = UDim2.fromScale(overlayAnchor:get().X - (_props.Overlay.Offset or 0), 0.5),
-				Size = Tween(overlaySize, TweenInfo.new(0.25)),
+				Size = Tween(overlaySize, OverlayTweenInfo),
 				Visible = _props.Overlay.UseOverlay,
 
 				[Children] = {
