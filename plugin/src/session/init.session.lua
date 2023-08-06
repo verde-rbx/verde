@@ -7,7 +7,7 @@ local HttpService = game:GetService("HttpService")
 
 export type SessionData = {}
 
-local Session = {} :: { _session: SessionData }
+local Session = {} :: { _session: SessionData? }
 
 --[[
     Connects to a session.
@@ -22,7 +22,7 @@ function Session.disconnect(_force: boolean?) end
 --[[
     Returns the currently active session.
 ]]
-function Session.getSession(): SessionData
+function Session.getSession(): SessionData?
 	return Session._session
 end
 
