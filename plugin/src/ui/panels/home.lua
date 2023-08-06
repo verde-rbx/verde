@@ -9,6 +9,12 @@ local Children = Fusion.Children
 
 local InputGroup = require(script.Parent.Parent.components.input_group)
 
+local function addNotification(_message: string)
+	Store.add("Toasts", {
+		Message = _message,
+	} :: Types.Toast, 1)
+end
+
 return function()
 	local isConnected = Store.get("Connected", false)
 	local connectIcon = Computed(function()
@@ -18,10 +24,12 @@ return function()
 		return if isConnected:get() then "MainButton" else "ErrorText"
 	end)
 	local connectTextColor = Computed(function()
-		return if isConnected:get() then "MainText" else "Dark"
+		return if isConnected:get() then "MainText" else "Mid"
 	end)
 
 	local connectRotation = Value(0)
+	local overlayPercentage = Value(0)
+	local overlayText = Value("Connecting...")
 
 	return New("Frame") {
 		BackgroundTransparency = 1,
@@ -88,11 +96,32 @@ return function()
 									local isConnected = not Store.getValue("Connected")
 									Store.set("Connected", isConnected)
 
-									Store.add("Toasts", {
-										Message = "Connecting...",
-									} :: Types.Toast, 1)
+									if not isConnected then
+										overlayPercentage:set(0.82)
+										overlayText:set("Connecting...")
+										addNotification(
+											`Connecting to {Store.getValue("HOST")}:{Store.getValue("PORT")}...`
+										)
+
+										-- TODO: Create session here
+
+										overlayText:set("Connected")
+										addNotification(`Connected to session {"session.name"}`)
+									else
+										overlayPercentage:set(0)
+										addNotification(`Disconnecting from session {"session.name"}...`)
+									end
 								end,
 							},
+						},
+						Overlay = {
+							Anchor = "right",
+							Color = connectColor,
+							Offset = 0.18,
+							Text = overlayText,
+							TextColor = connectTextColor,
+							Width = overlayPercentage,
+							UseOverlay = true,
 						},
 						LayoutOrder = 1,
 						Size = UDim2.new(0, 250, 1, 0),
