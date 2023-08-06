@@ -28,8 +28,8 @@ return function()
 	end)
 
 	local connectRotation = Value(0)
-	local overlayPercentage = Value(0)
-	local overlayText = Value("Connecting...")
+	local overlayPercentage = Value(if not isConnected:get() then 0.82 else 0)
+	local overlayText = Value(if not isConnected:get() then "Connected" else "")
 
 	return New("Frame") {
 		BackgroundTransparency = 1,

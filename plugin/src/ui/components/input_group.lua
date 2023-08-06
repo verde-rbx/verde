@@ -119,7 +119,7 @@ return function(_props)
 					New("TextLabel") {
 						AnchorPoint = Vector2.new(0, 0.5),
 						BackgroundTransparency = 1,
-						Font = Enum.Font.GothamMedium,
+						Font = Enum.Font.Gotham,
 						FontSize = 10,
 						Position = UDim2.fromScale(0, 0.5),
 						Size = UDim2.fromScale(1, 1),
