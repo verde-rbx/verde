@@ -2,8 +2,6 @@
     UI Types
 --]]
 
-local Config = require(script.Parent.config)
-
 -- Component builder method
 export type Component<T> = (_props: T) -> Instance
 
@@ -25,10 +23,35 @@ export type Toast = {
 -- Store Menus
 export type Menus = "home" | "settings"
 
-export type Store = typeof(Config.getConfig()) & {
+export type Store = { [string]: unknown } & {
 	UIShown: boolean,
 	CurrentMenu: Menus,
 	Toasts: { Toast },
+}
+
+--[[
+	Config Types
+]]
+
+export type SettingUpdateFn = (_key: string, _oldValue: unknown, _newValue: unknown) -> nil
+
+export type DefaultSetting = {
+	Name: string,
+	Type: "Checkbox",
+	Default: unknown,
+}
+
+export type Config = {
+	_settingCache: {
+		[string]: unknown,
+	},
+	_settingListeners: {
+		[number]: SettingUpdateFn,
+	},
+	getSettings: () -> { [string]: DefaultSetting },
+	getSetting: <T>(_key: string) -> T,
+	settingUpdated: (_onUpdate: SettingUpdateFn) -> nil,
+	getConfig: () -> { [string]: unknown },
 }
 
 return nil

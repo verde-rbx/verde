@@ -69,4 +69,13 @@ for k, v in Config.getConfig() do
 	Store.set(k, v)
 end
 
+-- Add settings
+for setting, value in Config.getSettings() do
+	Store.set(setting, value.Default)
+end
+
+Config.settingUpdated(function(_key, _oldValue, _newValue)
+	Store.set(_key, _newValue)
+end)
+
 return Store
