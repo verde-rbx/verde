@@ -37,11 +37,12 @@ return function(_props)
 
 	local isPressed = Value(false)
 	local buttonColor = Computed(function()
+		local base = baseColor:get()
 		if isPressed:get() then
-			return Theme[`{baseColor:get()}Pressed`]:get()
+			base = `{base}Pressed`
 		end
 
-		return Theme[baseColor:get()]:get()
+		return (if Theme[base] then Theme[base] else Theme.MainBackground):get()
 	end)
 
 	-- Calculate roundness from position

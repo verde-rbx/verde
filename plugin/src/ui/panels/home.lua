@@ -21,7 +21,7 @@ return function()
 		return if isConnected:get() then "rbxassetid://10709768538" else "rbxassetid://10747384394"
 	end)
 	local connectColor = Computed(function()
-		return if isConnected:get() then "MainButton" else "ErrorText"
+		return if isConnected:get() then "MainButton" else "BrandColor"
 	end)
 	local connectTextColor = Computed(function()
 		return if isConnected:get() then "MainText" else "Mid"

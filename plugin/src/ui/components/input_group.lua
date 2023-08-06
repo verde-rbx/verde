@@ -70,7 +70,8 @@ return function(_props)
 	local overlayBackground = Computed(function()
 		if _props.Overlay.Color then
 			if typeof(_props.Overlay.Color) == "table" then
-				return Theme[_props.Overlay.Color:get()]:get()
+				local theme = Theme[_props.Overlay.Color:get()]
+				return if theme then theme:get() else Theme.MainBackground:get()
 			else
 				return _props.Overlay.Color
 			end

@@ -144,7 +144,7 @@ return function(_props)
 				[Children] = {
 					New("Frame") {
 						AnchorPoint = Vector2.new(0, 1),
-						BackgroundColor3 = Color3.fromRGB(150, 210, 137),
+						BackgroundColor3 = Theme.BrandColor,
 						Name = "Progress",
 						Position = UDim2.fromScale(0, 1),
 						Size = UDim2.new(1, 5, 1, 5),

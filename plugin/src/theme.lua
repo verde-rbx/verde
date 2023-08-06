@@ -11,7 +11,10 @@ local Fusion = require(script.Parent.packages.fusion)
 local Value = Fusion.Value
 
 local StudioSettings = settings().Studio
-local Theme = {} :: { [string]: Fusion.Value<Color3> }
+local Theme = {
+	BrandColor = Value(Color3.fromRGB(150, 210, 137)),
+	BrandColorPressed = Value(Color3.fromRGB(116, 186, 100)),
+} :: { [string]: Fusion.Value<Color3> }
 
 --[[
     Sets a theme value or creates a new one if it doesn't exist.
