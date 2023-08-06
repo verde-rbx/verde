@@ -14,6 +14,15 @@ local Input = require(script.Parent.input)
 
 export type InputGroupProps = {
 	Inputs: { (Input.InputProps | Button.ButtonProps) & { Component: ("Input" | "Button")? } },
+	Overlay: {
+		Anchor: "left" | "right"?,
+		Color: Fusion.CanBeState<Color3>?,
+		Offset: number,
+		Text: Fusion.CanBeState<string>?,
+		TextColor: Fusion.CanBeState<string>?,
+		Width: Fusion.CanBeState<number>?,
+		UseOverlay: boolean,
+	}?,
 	LayoutOrder: number,
 	Size: UDim2,
 }
@@ -30,6 +39,7 @@ return function(_props)
 		end
 	end)
 
+	-- Creating Inputs
 	local currentInput = 1
 	local inputs = ForValues(_props.Inputs, function(_inputProps)
 		local inputProps = _inputProps
@@ -43,6 +53,43 @@ return function(_props)
 		currentInput += 1
 		return if inputProps.Component == "Button" then Button(inputProps) else Input(inputProps)
 	end, Fusion.cleanup)
+
+	-- Handling Overlay
+	_props.Overlay = _props.Overlay or { UseOverlay = false }
+	local overlayAnchor = Computed(function()
+		local anchorX = if _props.Overlay.Anchor then if _props.Overlay.Anchor == "left" then 0 else 1 else 0
+		return Vector2.new(anchorX, 0.5)
+	end)
+
+	local overlaySize = Computed(function()
+		local width = if _props.Overlay.Width then _props.Overlay.Width else 0
+		width = if typeof(width) == "table" then width:get() else width
+		return UDim2.fromScale(width, 1)
+	end)
+
+	local overlayBackground = Computed(function()
+		if _props.Overlay.Color then
+			if typeof(_props.Overlay.Color) == "table" then
+				return Theme[_props.Overlay.Color:get()]:get()
+			else
+				return _props.Overlay.Color
+			end
+		else
+			return Color3.fromRGB(150, 210, 137)
+		end
+	end)
+
+	local overlayTextColor = Computed(function()
+		if _props.Overlay.Color then
+			if typeof(_props.Overlay.TextColor) == "table" then
+				return Theme[_props.Overlay.TextColor:get()]:get()
+			else
+				return _props.Overlay.TextColor
+			end
+		else
+			return Theme.Light:get()
+		end
+	end)
 
 	return New("Frame") {
 		BackgroundTransparency = 1,
@@ -59,6 +106,47 @@ return function(_props)
 				CornerRadius = UDim.new(0, 6),
 			},
 
+			-- Overlay Swipe
+			New("Frame") {
+				AnchorPoint = overlayAnchor,
+				BackgroundTransparency = 1,
+				ClipsDescendants = true,
+				Position = UDim2.fromScale(overlayAnchor:get().X - (_props.Overlay.Offset or 0), 0.5),
+				Size = Tween(overlaySize, TweenInfo.new(0.25)),
+				Visible = _props.Overlay.UseOverlay,
+
+				[Children] = {
+					New("TextLabel") {
+						AnchorPoint = Vector2.new(0, 0.5),
+						BackgroundTransparency = 1,
+						Font = Enum.Font.GothamMedium,
+						FontSize = 10,
+						Position = UDim2.fromScale(0, 0.5),
+						Size = UDim2.fromScale(1, 1),
+						Text = _props.Overlay.Text,
+						TextColor3 = overlayTextColor,
+						Visible = _props.Overlay.Text ~= nil,
+						ZIndex = 3,
+					},
+
+					New("Frame") {
+						AnchorPoint = Vector2.new(0, 1),
+						BackgroundColor3 = overlayBackground,
+						Name = "Progress",
+						Position = UDim2.fromScale(0, 1),
+						Size = UDim2.new(1, 5, 1, 0),
+						ZIndex = 2,
+
+						[Children] = {
+							New("UICorner") {
+								CornerRadius = UDim.new(0, 8),
+							},
+						},
+					},
+				},
+			},
+
+			-- Contents
 			New("Frame") {
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundTransparency = 1,
@@ -74,6 +162,7 @@ return function(_props)
 						VerticalAlignment = Enum.VerticalAlignment.Center,
 					},
 
+					-- Input Elements
 					inputs,
 				},
 			},
