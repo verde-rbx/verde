@@ -1,0 +1,6 @@
+name: "plugin"
+tree: 
+  Verde:
+    .path: "src/"
+    packages:
+      .path: "Packages/"
