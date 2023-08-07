@@ -18,7 +18,7 @@ We are happy to accept any contributions to Verde so that we can build a better 
 There are a number of rules that are outlined in the [Contribution Guidelines]() so that development is efficient and fast.
 
 ## 💼 License
-Verde is licensed under the [Mozilla Public License Version 2.0](./LICENSE.md).<br>
+Verde is licensed under the [Mozilla Public License Version 2.0](./LICENSE).<br>
 Verde also uses a number of external dependencies with their own licenses:
 
 | Library | License  |
