@@ -25,10 +25,6 @@ pub struct ServeArgs {
 
 impl ServeArgs {
     pub fn execute(self) {
-        VerdeCore::new()
-            .project(self.project.to_str().unwrap())
-            .start_session();
-
-        println!("Serving on port {}", self.port);
+        VerdeCore::new().project(self.project.to_str().unwrap()).start_session();
     }
 }
