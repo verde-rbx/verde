@@ -8,7 +8,7 @@ hero:
   text: Streamlined Roblox Development
   tagline: Empowering developers with improved collaboration and productivity for Roblox.
   image:
-    src: /Verde_Logo.svg
+    src: /verde.svg
     alt: Verde
     width: 300
   actions:
@@ -34,12 +34,19 @@ features:
 import { VPTeamPage, VPTeamPageTitle, VPTeamPageSection, VPTeamMembers } from 'vitepress/theme'
 
 const members = [
-  {
-    name: 'Game Name',
-    title: 'Author Name'
-  }
+  // {
+  //   name: 'Game Name',
+  //   title: 'Author Name'
+  // }
 ]
 </script>
+
+<style module>
+:root {
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #00754F, #10B981);
+}
+</style>
 
 <br><br>
 <VPTeamPage>
