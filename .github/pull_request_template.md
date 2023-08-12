@@ -32,6 +32,7 @@
 
 ### 📝 Checklist
 <!-- Put an `x` in all the boxes that apply. -->
-- [ ] I have linked an issue or discussion. <!-- A linked issue should be in brackets. E.g., fix: resolve crashing bug on start (#1234) -->
-- [ ] I have updated the related documentation. <!-- Any change to an API must include Documentation changes. -->
+- [ ] I have linked an issue or discussion. 
+- [ ] I have updated the related documentation. 
 - [ ] I have reviewed my code and confirmed it follows the [Contribution Guidelines](./CONTRIBUTING.md)
+- [ ] By submitting this PR, I agree to follow the [Code of Conduct](./CODE_OF_CONDUCT.md)
