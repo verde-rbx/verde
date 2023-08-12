@@ -13,8 +13,12 @@ export default defineConfig({
         lineNumbers: true
     },
 
+    head: [
+        ['link', { rel: 'icon', href: '/verde.svg' }]
+    ],
+
     themeConfig: {
-        logo: "/Verde_Icon.svg",
+        logo: "/verde.svg",
         search: {
             // TODO: Change to algolia once released
             provider: "local"
@@ -56,8 +60,7 @@ export default defineConfig({
             text: 'Contribute to this page on GitHub'
         },
         footer: {
-            message: 'Released under the Mozilla Public License Version 2.0 license. Created with Vitepress',
-            copyright: 'Copyright © 2023-present quantix-dev'
+            message: 'Released under the Mozilla Public License Version 2.0 license.',
         }
     }
 })
