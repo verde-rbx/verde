@@ -1,8 +1,9 @@
 name: Deploy Docs
 on:
   workflow_dispatch:
-  release:
-    types: [published]
+  push:
+    branches: ["main"]
+    paths: ["docs/**/*.*", ".github/workflows/docs.yml"]
 
 defaults:
   run:
