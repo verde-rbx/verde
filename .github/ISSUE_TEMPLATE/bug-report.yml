@@ -1,0 +1,73 @@
+name: Bug Report
+description: Create a report to document an issue with Verde to help us improve.
+title: "[Bug]: "
+labels: "\U0001F41B bug"
+projects: ["verde/1"]
+assignees: quantix-dev
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: What area does this impact?
+      options:
+        - Verde CLI
+        - Roblox Studio Plugin
+        - Verde VSC Extension
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: What OS are you seeing the problem on?
+      multiple: true
+      options:
+        - Windows
+        - MacOS
+        - Linux
+        - Other (Please Specify)
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Describe the steps to reproduce
+      description: How did you trigger the bug? Please provide a step by step explanation.
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+      render: bash 
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/quantix-dev/verde/blob/main/.github/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
