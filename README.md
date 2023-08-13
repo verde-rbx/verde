@@ -4,8 +4,8 @@
     </a>
 </p>
 
-![GitHub](https://img.shields.io/github/license/quantix-dev/verde?cacheSeconds=604800)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/deploy-docs.yml?label=docs)
+[![GitHub](https://img.shields.io/github/license/quantix-dev/verde?cacheSeconds=604800)](./LICENSE.txt)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/deploy-docs.yml?label=docs)](https://verde.quantix.dev)
 
 > [!IMPORTANT]\
 > Verde is under heavy development and no stable release has been made yet.
