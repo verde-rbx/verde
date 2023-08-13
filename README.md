@@ -4,8 +4,14 @@
     </a>
 </p>
 
-[![GitHub](https://img.shields.io/github/license/quantix-dev/verde?cacheSeconds=604800)](./LICENSE.txt)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/deploy-docs.yml?label=docs)](https://verde.quantix.dev)
+<p align="center">
+    <a href="./LICENSE.txt">
+        <img src="https://img.shields.io/github/license/quantix-dev/verde?cacheSeconds=60480" alt="GitHub License">
+    </a>
+    <a href="https://verde.quantix.dev">
+        <img src="https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/deploy-docs.yml?label=docs" alt="GitHub Workflow Status">
+    </a>
+</p>
 
 > [!IMPORTANT]\
 > Verde is under heavy development and no stable release has been made yet.
