@@ -4,6 +4,7 @@
   "repository": "https://github.com/quantix-dev/verde",
   "author": "quantix-dev",
   "license": "MPL-2.0",
+  "version": "0.1.0",
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
