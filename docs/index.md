@@ -14,7 +14,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/
+      link: /guide/quick-start
     - theme: alt
       text: View on GitHub
       link: https://github.com/quantix-dev/verde  
@@ -41,8 +41,12 @@ const members = [
 ]
 </script>
 
-<style module>
+<style>
 :root {
+  --vp-c-brand: #10B981;
+  --vp-c-brand-light: #10B981;
+  --vp-c-brand-dark: #00754F;
+  --vp-c-brand-darker: #004F36;
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #00754F, #10B981);
 }
