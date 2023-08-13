@@ -14,7 +14,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/
+      link: /guide/quick-start
     - theme: alt
       text: View on GitHub
       link: https://github.com/quantix-dev/verde  
@@ -29,32 +29,3 @@ features:
     title: Collaborate
     details: Designed with collaboration in mind. Setup a multi-user project in seconds.
 ---
-
-<script setup>
-import { VPTeamPage, VPTeamPageTitle, VPTeamPageSection, VPTeamMembers } from 'vitepress/theme'
-
-const members = [
-  // {
-  //   name: 'Game Name',
-  //   title: 'Author Name'
-  // }
-]
-</script>
-
-<style module>
-:root {
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #00754F, #10B981);
-}
-</style>
-
-<br><br>
-<VPTeamPage>
-  <VPTeamPageSection>
-    <template #title>Games</template>
-    <template #lead>Games using Verde to enhance the developer experience.</template>
-    <template #members>
-      <VPTeamMembers :members="members" />
-    </template>
-  </VPTeamPageSection>
-</VPTeamPage>
