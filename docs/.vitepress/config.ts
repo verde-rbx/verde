@@ -62,7 +62,7 @@ export default defineConfig({
             text: 'Contribute to this page on GitHub'
         },
         footer: {
-            message: 'Released under the Mozilla Public License Version 2.0 license.',
+            message: 'Released under the Mozilla Public License Version 2.0.',
         }
     }
 })
