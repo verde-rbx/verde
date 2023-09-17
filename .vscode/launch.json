@@ -47,7 +47,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}/docs",
             "console": "integratedTerminal",
-            "runtimeExecutable": "yarn",
+            "runtimeExecutable": "pnpm",
             "runtimeArgs": ["docs:dev"],
         }
     ]
