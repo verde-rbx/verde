@@ -1,16 +1,44 @@
 /**
-* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 use serde::{Deserialize, Serialize};
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     fs::{self, File},
     io::Read,
 };
 
 pub const DEFAULT_PROJECT: &str = "verde.yaml";
+
+/// An instance node.
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Node {
+    /// Path (relative to source directory)
+    #[serde(rename = ".path")]
+    pub path: String,
+
+    // Properties applied to the related Roblox instance
+    #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
+    pub properties: Option<BTreeMap<String, String>>,
+
+    /// Additonal instance tree
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    pub contents: Option<BTreeMap<String, Node>>,
+}
+
+impl Node {
+    /// Recursively locates the paths of child nodes.
+    pub fn get_paths(&self, map: &mut HashMap<String, Node>) {
+        map.insert(self.path.clone(), self.clone());
+        if self.contents.as_ref().is_some_and(|x| !x.is_empty()) {
+            for (_key, node) in self.contents.as_ref().unwrap() {
+                node.get_paths(map);
+            }
+        }
+    }
+}
 
 /// Project Structure
 ///
@@ -33,22 +61,7 @@ pub struct VerdeProject {
     pub tree: BTreeMap<String, Node>,
 }
 
-/// An instance node.
-#[derive(Serialize, Deserialize)]
-pub struct Node {
-    /// Path (relative to source directory)
-    #[serde(rename = ".path", skip_serializing_if = "Option::is_none")]
-    pub path: Option<String>,
-
-    // Properties applied to the related Roblox instance
-    #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
-    pub properties: Option<BTreeMap<String, String>>,
-
-    /// Additonal instance tree
-    #[serde(flatten, skip_serializing_if = "Option::is_none")]
-    pub contents: Option<BTreeMap<String, Node>>,
-}
-
+// Verde project implementation
 impl VerdeProject {
     /// Loads a VerdeProject from the specified file path.
     pub fn new(project: Option<&File>) -> Self {
@@ -72,6 +85,16 @@ impl VerdeProject {
             Err(_) => println!("Failed"),
         }
     }
+
+    /// Creates watchers for defined paths
+    pub fn create_watcher(&self) -> HashMap<String, Node> {
+        let mut map = HashMap::<String, Node>::new();
+        for (_key, node) in &self.tree {
+            node.get_paths(&mut map);
+        }
+
+        map
+    }
 }
 
 impl Default for VerdeProject {
@@ -82,7 +105,7 @@ impl Default for VerdeProject {
                 (
                     String::from("ServerScriptService"),
                     Node {
-                        path: Some(String::from("src/server")),
+                        path: String::from("src/server"),
                         properties: None,
                         contents: None,
                     },
@@ -90,20 +113,12 @@ impl Default for VerdeProject {
                 (
                     String::from("ReplicatedStorage"),
                     Node {
-                        path: Some(String::from("src/shared")),
-                        properties: None,
-                        contents: None,
-                    },
-                ),
-                (
-                    String::from("StarterPlayer"),
-                    Node {
-                        path: None,
+                        path: String::from("src/shared"),
                         properties: None,
                         contents: Some(BTreeMap::<String, Node>::from([(
-                            String::from("StarterPlayerScripts"),
+                            String::from("client"),
                             Node {
-                                path: Some(String::from("src/client")),
+                                path: String::from("src/client"),
                                 properties: None,
                                 contents: None,
                             },

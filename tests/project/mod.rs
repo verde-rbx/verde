@@ -40,7 +40,7 @@ fn create_mock_project() -> VerdeProject {
         tree: BTreeMap::<String, Node>::from([(
             String::from("ServerScriptService"),
             Node {
-                path: Some(String::from("src/server")),
+                path: String::from("src/server"),
                 properties: None,
                 contents: None,
             },
@@ -63,7 +63,6 @@ fn new_project_from_path() {
     // Checking to ensure a node contains the correct serialised values
     let replicated_storage_node = project.tree.get("ReplicatedStorage");
     assert!(replicated_storage_node.is_some());
-    assert!(replicated_storage_node.unwrap().path.is_some());
 }
 
 #[test]
