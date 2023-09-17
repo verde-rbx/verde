@@ -11,12 +11,13 @@
     "docs:serve": "vitepress serve"
   },
   "devDependencies": {
-    "vitepress": "^1.0.0-rc.11"
+    "vitepress": "1.0.0-rc.14"
   },
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
-        "@algolia/client-search"
+        "@algolia/client-search",
+        "search-insights"
       ]
     }
   },
