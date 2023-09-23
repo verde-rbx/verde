@@ -31,8 +31,9 @@ impl VerdeCore {
         match self.project {
             Some(_) => println!("A project has already been specified"),
             None => {
-                let project_file = File::open(path).unwrap();
-                self.project = Some(VerdeProject::new(Some(&project_file)));
+                let mut project_file = File::open(path).unwrap();
+                let created_project = VerdeProject::from(&mut project_file);
+                self.project = created_project.ok();
             }
         }
 
@@ -41,17 +42,16 @@ impl VerdeCore {
 
     /// Starts a new Verde Session
     pub fn start_session(&mut self) -> &mut Self {
-        if self.session.is_none() {
-            self.session = Some(VerdeSession::default());
-        }
-
-        if let Some(session) = &self.session {
-            match session.state {
-                SessionState::Active => println!("Session is already active"),
-                SessionState::Offline => session.start(),
-                SessionState::Error => session.get_latest_error(),
-            };
-        }
+        match &self.session {
+            None => self.session = Some(VerdeSession::default()),
+            Some(session) => {
+                match session.state {
+                    SessionState::Active => println!("Session is already active"),
+                    SessionState::Offline => session.start(),
+                    SessionState::Error => session.get_latest_error(),
+                };
+            }
+        };
 
         self
     }
