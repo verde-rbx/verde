@@ -1,0 +1,70 @@
+name: Build CLI Release
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build Artifact - ${{ matrix.os }}
+    runs-on: ${{ matrix.machine }}
+    strategy:
+      matrix:
+        include:
+          - os: Windows
+            machine: windows-latest
+            artifact: verde.exe
+            binary_name: verde-windows.exe
+
+          - os: Ubuntu
+            machine: ubuntu-latest
+            artifact: verde
+            binary_name: verde-amd64.exe
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install rust
+        uses: moonrepo/setup-rust@v1
+        with:
+          cache-target: release
+      
+      - name: Build binary
+        run: cargo build --release --locked
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.binary_name }}
+          path: target/release/${{ matrix.artifact }}
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@4
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}" 
+          output-file: "false"
+          skip-commit: "true"
+          skip-git-pull: "true"
+          version-file: "./Cargo.toml,docs/package.json"
+
+      - uses: actions/download-artifact@v3
+        id: download
+
+      - name: Upload artifacts
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.download.outputs.download-path }}
+          file_glob: true
+          tag: ${{ github.ref }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
