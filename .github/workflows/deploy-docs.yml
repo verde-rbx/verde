@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
-    paths: ["docs/**/*.*", ".github/workflows/docs.yml"]
+    paths: ["docs/**/*.*", ".github/workflows/deploy-docs.yml"]
 
 defaults:
   run:
@@ -23,7 +23,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
