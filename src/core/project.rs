@@ -6,8 +6,10 @@
 use serde::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, HashMap},
+    error::Error,
     fs::{self, File},
     io::Read,
+    result::Result::{Err, Ok},
 };
 
 pub const DEFAULT_PROJECT: &str = "verde.yaml";
@@ -63,16 +65,16 @@ pub struct VerdeProject {
 
 // Verde project implementation
 impl VerdeProject {
-    /// Loads a VerdeProject from the specified file path.
-    pub fn new(project: Option<&File>) -> Self {
-        match project {
-            Some(mut proj) => {
-                let mut buffer = String::new();
-                proj.read_to_string(&mut buffer).unwrap();
-                serde_yaml::from_str(&buffer).unwrap()
-            }
-            None => VerdeProject::default(),
-        }
+    /// Creates a VerdeProject using defaults.
+    pub fn new() -> Self {
+        VerdeProject::default()
+    }
+
+    /// Creates a new VerdeProject from the specified file.
+    pub fn from(project: &mut File) -> Result<Self, Box<dyn Error>> {
+        let mut buffer = String::new();
+        project.read_to_string(&mut buffer)?;
+        Ok(serde_yaml::from_str(&buffer)?)
     }
 
     /// Saves the VerdeProject to the file system.

@@ -51,8 +51,8 @@ fn create_mock_project() -> VerdeProject {
 #[test]
 /// Test to ensure a project can be deserialised correctly
 fn new_project_from_path() {
-    let project_file = save_mock_project();
-    let project = project::VerdeProject::new(Some(&project_file));
+    let mut project_file = save_mock_project();
+    let project = project::VerdeProject::from(&mut project_file).unwrap();
 
     // Checking to ensure the project name is deserialised correctly
     assert_eq!(project.name, "Verde Test Project");
