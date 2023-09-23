@@ -56,3 +56,9 @@ impl VerdeCore {
         self
     }
 }
+
+impl Default for VerdeCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}

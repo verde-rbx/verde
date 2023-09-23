@@ -35,7 +35,7 @@ impl Node {
     pub fn get_paths(&self, map: &mut HashMap<String, Node>) {
         map.insert(self.path.clone(), self.clone());
         if self.contents.as_ref().is_some_and(|x| !x.is_empty()) {
-            for (_key, node) in self.contents.as_ref().unwrap() {
+            for node in self.contents.as_ref().unwrap().values() {
                 node.get_paths(map);
             }
         }
@@ -67,40 +67,6 @@ pub struct VerdeProject {
 impl VerdeProject {
     /// Creates a VerdeProject using defaults.
     pub fn new() -> Self {
-        VerdeProject::default()
-    }
-
-    /// Creates a new VerdeProject from the specified file.
-    pub fn from(project: &mut File) -> Result<Self, Box<dyn Error>> {
-        let mut buffer = String::new();
-        project.read_to_string(&mut buffer)?;
-        Ok(serde_yaml::from_str(&buffer)?)
-    }
-
-    /// Saves the VerdeProject to the file system.
-    pub fn save(&self) {
-        match serde_yaml::to_string(self) {
-            Ok(yaml) => {
-                fs::write(DEFAULT_PROJECT, yaml).expect("Failed to write.");
-            }
-
-            Err(_) => println!("Failed"),
-        }
-    }
-
-    /// Creates watchers for defined paths
-    pub fn create_watcher(&self) -> HashMap<String, Node> {
-        let mut map = HashMap::<String, Node>::new();
-        for (_key, node) in &self.tree {
-            node.get_paths(&mut map);
-        }
-
-        map
-    }
-}
-
-impl Default for VerdeProject {
-    fn default() -> Self {
         Self {
             name: String::from("A Verde Project"),
             tree: BTreeMap::<String, Node>::from([
@@ -129,5 +95,39 @@ impl Default for VerdeProject {
                 ),
             ]),
         }
+    }
+
+    /// Creates a new VerdeProject from the specified file.
+    pub fn from(project: &mut File) -> Result<Self, Box<dyn Error>> {
+        let mut buffer = String::new();
+        project.read_to_string(&mut buffer)?;
+        Ok(serde_yaml::from_str(&buffer)?)
+    }
+
+    /// Saves the VerdeProject to the file system.
+    pub fn save(&self) {
+        match serde_yaml::to_string(self) {
+            Ok(yaml) => {
+                fs::write(DEFAULT_PROJECT, yaml).expect("Failed to write.");
+            }
+
+            Err(_) => println!("Failed"),
+        }
+    }
+
+    /// Creates watchers for defined paths
+    pub fn create_watcher(&self) -> HashMap<String, Node> {
+        let mut map = HashMap::<String, Node>::new();
+        for node in self.tree.values() {
+            node.get_paths(&mut map);
+        }
+
+        map
+    }
+}
+
+impl Default for VerdeProject {
+    fn default() -> Self {
+        Self::new()
     }
 }

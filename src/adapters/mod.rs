@@ -8,20 +8,18 @@ mod rojo;
 use std::path::Path;
 
 /// Detects the project file type
-pub fn detect_project(path: &Path) -> Result<&Path, ()> {
+pub fn detect_project(path: &Path) -> Option<&Path> {
     if path.is_file() {
         if path.ends_with(".project.json") {
-            return Ok(path);
+            return Some(path);
         }
     } else {
-        for entry in path.read_dir().expect("Failed to read directory") {
-            if let Ok(_entry) = entry {
-                todo!("Check each entry for a project path");
-            }
+        for _entry in path.read_dir().expect("Failed to read directory").flatten() {
+            todo!("Check each entry for a project path");
         }
     }
 
-    Err(())
+    None
 }
 
 /// Converts the project file type using an adapter to a Verde project

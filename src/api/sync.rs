@@ -25,6 +25,7 @@ mod handlers {
     use std::convert::Infallible;
     use warp::http::StatusCode;
 
+    #[allow(dead_code)]
     struct SyncApi {}
 
     pub async fn handshake() -> Result<impl warp::Reply, Infallible> {
