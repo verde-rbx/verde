@@ -1,22 +1,30 @@
+local vide = require(script.Parent.packages.vide)
+
 --[[
-    UI Types
---]]
+	Helper Types
+]]
+
+export type ThemeSource = (() -> vide.Source<Color3>) & ((vide.Source<string> | string) -> vide.Source<Color3>)
 
 -- vide CanBeSource
-export type CanBeSource<T> = T | ((() -> T) & ((T) -> T))
+export type CanBeSource<T> = T | vide.Source<T>
 
 -- Component builder method
 export type Component<T> = (_props: T) -> Instance
+
+--[[
+    UI Types
+--]]
 
 -- Panel builder method
 export type Panel = () -> Frame
 
 -- A new toast to display
 export type Toast = {
-	Message: string,
-	Severity: ("Error" | "Warn" | "Info" | string)?,
-	Time: number?,
-	Lifetime: number?,
+    Message: string,
+    Severity: ("Error" | "Warn" | "Info" | string)?,
+    Time: number?,
+    Lifetime: number?,
 }
 
 --[[ 
@@ -27,10 +35,10 @@ export type Toast = {
 export type Menus = "home" | "settings"
 
 export type Store = {
-	[string]: any,
-	UIShown: boolean,
-	CurrentMenu: Menus,
-	Toasts: { Toast },
+    [string]: any,
+    UIShown: boolean,
+    CurrentMenu: Menus,
+    Toasts: { Toast },
 }
 
 --[[
@@ -40,25 +48,25 @@ export type Store = {
 export type SettingUpdateFn = (_key: string, _oldValue: unknown, _newValue: unknown) -> nil
 
 export type DefaultSetting = {
-	[string]: any,
-	ShowToasts: {
-		Name: string,
-		Type: "Checkbox",
-		Default: unknown,
-	},
+    [string]: any,
+    ShowToasts: {
+        Name: string,
+        Type: "Checkbox",
+        Default: unknown,
+    },
 }
 
 export type Config = {
-	_settingCache: {
-		[string]: unknown,
-	},
-	_settingListeners: {
-		[number]: SettingUpdateFn,
-	},
-	getSettings: () -> { [string]: DefaultSetting },
-	getSetting: <T>(_key: string) -> T,
-	settingUpdated: (_onUpdate: SettingUpdateFn) -> nil,
-	getConfig: () -> { [string]: any },
+    _settingCache: {
+        [string]: unknown,
+    },
+    _settingListeners: {
+        [number]: SettingUpdateFn,
+    },
+    getSettings: () -> { [string]: DefaultSetting },
+    getSetting: <T>(_key: string) -> T,
+    settingUpdated: (_onUpdate: SettingUpdateFn) -> nil,
+    getConfig: () -> { [string]: any },
 }
 
 return nil
