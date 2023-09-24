@@ -5,7 +5,7 @@
 --]]
 
 if not plugin then
-	return error("Please run Verde in a plugin context")
+    return error("Please run Verde in a plugin context")
 end
 
 local vide = require(script.Parent.packages.vide)
@@ -26,15 +26,15 @@ store.set("UIShown", verdeWidget.Enabled)
 
 local unmountApp
 uiToggleBtn.Click:Connect(function()
-	store.set("UIShown", verdeWidget.Enabled)
-	verdeWidget.Enabled = not verdeWidget.Enabled
+    store.set("UIShown", verdeWidget.Enabled)
+    verdeWidget.Enabled = not verdeWidget.Enabled
 
-	-- Initialise UI
-	if verdeWidget.Enabled then
-		unmountApp = vide.mount(require(script.Parent.ui.app), verdeWidget)
-	elseif unmountApp then
-		unmountApp()
-	end
+    -- Initialise UI
+    if verdeWidget.Enabled then
+        unmountApp = vide.mount(require(script.Parent.ui.app), verdeWidget)
+    elseif unmountApp then
+        unmountApp()
+    end
 end)
 
 -- Initialise Toasts
