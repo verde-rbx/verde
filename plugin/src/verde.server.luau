@@ -8,7 +8,10 @@ if not plugin then
 	return error("Please run Verde in a plugin context")
 end
 
-local Store = require(script.Parent.store)
+local vide = require(script.Parent.packages.vide)
+vide.strict = false -- Disable strict mode in production for performance improvement
+
+local store = require(script.Parent.store)
 
 -- Setup Plugin Widget
 local widgetSettings = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, true, false, 320, 210, 300, 210)
@@ -19,16 +22,20 @@ verdeWidget.Title = "Verde"
 local verdeToolbar = plugin:CreateToolbar("Verde")
 local uiToggleBtn = verdeToolbar:CreateButton("Verde", "Toggle Verde UI", "rbxassetid://14205439269")
 uiToggleBtn:SetActive(verdeWidget.Enabled)
-Store.set("UIShown", verdeWidget.Enabled)
+store.set("UIShown", verdeWidget.Enabled)
 
+local unmountApp
 uiToggleBtn.Click:Connect(function()
-	Store.set("UIShown", verdeWidget.Enabled)
+	store.set("UIShown", verdeWidget.Enabled)
 	verdeWidget.Enabled = not verdeWidget.Enabled
+
+	-- Initialise UI
+	if verdeWidget.Enabled then
+		unmountApp = vide.mount(require(script.Parent.ui.app), verdeWidget)
+	elseif unmountApp then
+		unmountApp()
+	end
 end)
 
--- Set initial states
-Store.set("UIShown", false)
-
--- Initialise UI
-require(script.Parent.ui.menu)(verdeWidget)
-require(script.Parent.ui.toasts)()
+-- Initialise Toasts
+vide.mount(require(script.Parent.ui.toasts), game.CoreGui)

@@ -2,6 +2,9 @@
     UI Types
 --]]
 
+-- vide CanBeSource
+export type CanBeSource<T> = T | ((() -> T) & ((T) -> T))
+
 -- Component builder method
 export type Component<T> = (_props: T) -> Instance
 
@@ -11,7 +14,7 @@ export type Panel = () -> Frame
 -- A new toast to display
 export type Toast = {
 	Message: string,
-	Severity: ("Error" | "Warn" | "Info")?,
+	Severity: ("Error" | "Warn" | "Info" | string)?,
 	Time: number?,
 	Lifetime: number?,
 }
@@ -23,7 +26,8 @@ export type Toast = {
 -- Store Menus
 export type Menus = "home" | "settings"
 
-export type Store = { [string]: unknown } & {
+export type Store = {
+	[string]: any,
 	UIShown: boolean,
 	CurrentMenu: Menus,
 	Toasts: { Toast },
@@ -36,9 +40,12 @@ export type Store = { [string]: unknown } & {
 export type SettingUpdateFn = (_key: string, _oldValue: unknown, _newValue: unknown) -> nil
 
 export type DefaultSetting = {
-	Name: string,
-	Type: "Checkbox",
-	Default: unknown,
+	[string]: any,
+	ShowToasts: {
+		Name: string,
+		Type: "Checkbox",
+		Default: unknown,
+	},
 }
 
 export type Config = {
@@ -51,7 +58,7 @@ export type Config = {
 	getSettings: () -> { [string]: DefaultSetting },
 	getSetting: <T>(_key: string) -> T,
 	settingUpdated: (_onUpdate: SettingUpdateFn) -> nil,
-	getConfig: () -> { [string]: unknown },
+	getConfig: () -> { [string]: any },
 }
 
 return nil

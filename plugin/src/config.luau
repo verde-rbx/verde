@@ -5,7 +5,7 @@
 	This can be seen as a read-only version of the intiial plugin state.
 ]]
 
-local Types = require(script.Parent.types)
+local types = require(script.Parent.types)
 
 local DEFAULT_CONFIG = table.freeze {
 	-- Plugin
@@ -21,12 +21,12 @@ local DEFAULT_SETTINGS = table.freeze {
 		Type = "Checkbox",
 		Default = true,
 	},
-} :: { [string]: Types.DefaultSetting }
+} :: { [string]: types.DefaultSetting }
 
 local Config = {
 	_settingCache = {},
 	_settingListeners = {},
-} :: Types.Config
+} :: types.Config
 
 --[[
 	Retrieves the setting from studio or creates a new setting
@@ -70,7 +70,7 @@ end
 ]]
 function Config.getSetting<T>(_key: string): T
 	if Config._settingCache[_key] then
-		return Config._settingCache[_key]
+		return Config._settingCache[_key] :: T
 	end
 
 	return get(_key)
@@ -79,8 +79,8 @@ end
 --[[
 	Calls on update method when setting has changed
 ]]
-function Config.settingUpdated(_onUpdate: Types.SettingUpdateFn)
-	table.insert(Config._settingListeners, _onUpdate)
+function Config.settingUpdated(_onUpdate: types.SettingUpdateFn)
+	return table.insert(Config._settingListeners, _onUpdate)
 end
 
 --[[

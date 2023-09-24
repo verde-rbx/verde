@@ -3,11 +3,11 @@
 registry = "test"
 
 [[package]]
-name = "elttob/fusion"
-version = "0.2.0"
+name = "centau/vide"
+version = "0.1.0"
 dependencies = []
 
 [[package]]
 name = "verde/plugin"
 version = "0.1.0"
-dependencies = [["fusion", "elttob/fusion@0.2.0"]]
+dependencies = [["vide", "centau/vide@0.1.0"]]

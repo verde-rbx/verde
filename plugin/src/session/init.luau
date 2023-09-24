@@ -32,7 +32,7 @@ end
     Connects to a session.
 ]]
 function Session:connect()
-	local connectionData = self:makeRequest("connect")
+	local _connectionData = self:makeRequest("connect")
 	-- TODO: Process connection data (first request should include project setup)
 end
 

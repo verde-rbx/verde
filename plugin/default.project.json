@@ -1,13 +1,15 @@
 {
-  "name": "plugin",
-  "tree": {
-    "$className": "DataModel",
-
-    "Verde": {
-      "$path": "src/",
-      "packages": {
-        "$path": "Packages/"
-      }
+    "name": "Verde",
+    "tree": {
+        "$className": "DataModel",
+        "Verde": {
+            "$path": "src/",
+            "storybook": {
+                "$path": "storybook/"
+            },
+            "packages": {
+                "$path": "Packages/"
+            }
+        }
     }
-  }
 }

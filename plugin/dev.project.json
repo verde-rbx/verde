@@ -1,0 +1,18 @@
+{
+    "name": "Verde-Dev",
+    "tree": {
+        "$className": "DataModel",
+        "Workspace": {
+            "$className": "Workspace",
+            "Verde": {
+                "$path": "src/",
+                "storybook": {
+                    "$path": "storybook/"
+                },
+                "packages": {
+                    "$path": "Packages/"
+                }
+            }
+        }
+    }
+}
