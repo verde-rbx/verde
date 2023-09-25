@@ -4,7 +4,7 @@ local vide = require(script.Parent.packages.vide)
 	Helper Types
 ]]
 
-export type ThemeSource = ((string | () -> string)?) -> Color3 | () -> Color3
+export type ThemeSource = (() -> Color3) & ((_state: string) -> () -> Color3)
 
 -- vide CanBeSource
 export type CanBeSource<T> = T | vide.Source<T>
