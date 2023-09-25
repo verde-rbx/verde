@@ -36,10 +36,10 @@ export type ButtonProps = {
 }
 
 return function(_props)
+    local btnState = source("")
     local xOffset = ROUNDNESS_OFFSETS.offset[_props.Location] or 0
     local xAnchor = ROUNDNESS_OFFSETS.anchor[_props.Location] or 1
 
-    local btnState = source("")
     return create("Frame") {
         BackgroundTransparency = 1,
         ClipsDescendants = true,

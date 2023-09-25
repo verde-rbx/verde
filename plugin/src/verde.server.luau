@@ -38,4 +38,5 @@ uiToggleBtn.Click:Connect(function()
 end)
 
 -- Initialise Toasts
+-- Toasts are persistent so do not need to be unmounted.
 vide.mount(require(script.Parent.ui.toasts), game.CoreGui)
