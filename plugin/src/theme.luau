@@ -52,14 +52,16 @@ local function populateTheme()
 
         -- Create theme source
         if not Theme[base.Name] then
-            local function getTheme(_state: string?): Color3 | () -> Color3
-                if _state then
+            local function getTheme(_state): Color3 | () -> Color3
+                if _state and type(_state) == "function" then
                     return function()
-                        local color = Colors[`{base.Name}{vide.read(_state) or ""}`]
-                        return if color then color() else Colors[base.Name]()
+                        local color = Colors[`{base.Name}{_state() or ""}`]
+                        return (color or Colors[base.Name])()
                     end
                 else
-                    return Colors[base.Name]()
+                    local key = `{base.Name}{_state or ""}`
+                    local color = Colors[key]
+                    return (color or Colors[base.Name])()
                 end
             end
             Theme[base.Name] = getTheme :: types.ThemeSource
