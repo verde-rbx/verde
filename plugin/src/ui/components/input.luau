@@ -6,6 +6,7 @@ local useChanged = require(script.Parent.Parent.composables.useChanged)
 local useRoundness = require(script.Parent.Parent.composables.useRoundness)
 
 local create = vide.create
+local derive = vide.derive
 local read = vide.read
 local source = vide.source
 local spring = vide.spring
@@ -13,7 +14,7 @@ local spring = vide.spring
 export type InputProps = {
     Location: useRoundness.Location?,
     Value: vide.Source<string>?,
-    Readonly: types.CanBeSource<string>?,
+    Readonly: vide.Source<string>?,
     Size: UDim2,
     Layout: {
         Font: Font?,
@@ -24,13 +25,17 @@ export type InputProps = {
 }
 
 return function(_props)
-    local btnState = source("Disabled")
+    local btnState: vide.Source<types.ThemeState> = source("")
     local backgroundColor = theme.Button(btnState)
     local xOffset, xAnchor = useRoundness(_props.Location or "all")
 
-    local readonly = function()
+    local readonlyFalsy = function()
         return not read(_props.Readonly or false)
     end
+
+    local textColor = derive(function()
+        return if readonlyFalsy() then theme.MainText(btnState()) else theme.DimmedText()
+    end)
 
     return create("Frame") {
         BackgroundTransparency = 1,
@@ -44,9 +49,9 @@ return function(_props)
                 FontFace = Font.fromEnum(Enum.Font.Gotham),
                 Position = UDim2.fromScale(xAnchor, 0.5),
                 Text = _props.Value,
-                TextColor3 = theme.MainText,
+                TextColor3 = spring(textColor, 0.5),
                 TextScaled = not _props.Layout or not _props.Layout.TextSize,
-                TextEditable = readonly,
+                TextEditable = readonlyFalsy,
                 TextSize = 14,
                 TextXAlignment = Enum.TextXAlignment.Center,
                 TextYAlignment = Enum.TextYAlignment.Center,
@@ -63,7 +68,7 @@ return function(_props)
                 end,
 
                 FocusLost = function()
-                    btnState("Disabled")
+                    btnState("")
                 end,
 
                 {
