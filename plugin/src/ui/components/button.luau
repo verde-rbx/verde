@@ -2,28 +2,15 @@ local theme = require(script.Parent.Parent.Parent.theme)
 local types = require(script.Parent.Parent.Parent.types)
 local vide = require(script.Parent.Parent.Parent.packages.vide)
 
+local useRoundness = require(script.Parent.Parent.composables.useRoundness)
+
 local create = vide.create
 local source = vide.source
-
-local ROUNDNESS_OFFSETS = {
-    offset = {
-        ["left"] = 5,
-        ["right"] = 5,
-        ["middle"] = 10,
-        ["all"] = 0,
-    },
-    anchor = {
-        ["left"] = 0,
-        ["right"] = 1,
-        ["middle"] = 1,
-        ["all"] = 1,
-    },
-}
 
 export type ButtonProps = {
     Activated: () -> (),
     BackgroundColor3: types.ThemeSource,
-    Location: ("left" | "middle" | "right" | "all")?,
+    Location: useRoundness.Location?,
     Layout: {
         LayoutOrder: number,
         Size: UDim2?,
@@ -37,8 +24,7 @@ export type ButtonProps = {
 
 return function(_props)
     local btnState = source("")
-    local xOffset = ROUNDNESS_OFFSETS.offset[_props.Location] or 0
-    local xAnchor = ROUNDNESS_OFFSETS.anchor[_props.Location] or 1
+    local xOffset, xAnchor = useRoundness(_props.Location or "all")
 
     return create("Frame") {
         BackgroundTransparency = 1,
