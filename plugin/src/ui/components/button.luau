@@ -12,7 +12,9 @@ export type ButtonProps = {
     BackgroundColor3: types.ThemeSource,
     Location: useRoundness.Location?,
     Layout: {
-        LayoutOrder: number,
+        AnchorPoint: Vector2?,
+        Position: UDim2?,
+        LayoutOrder: number?,
         Size: UDim2?,
     }?,
     Icon: {
