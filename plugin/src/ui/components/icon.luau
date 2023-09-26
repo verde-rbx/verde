@@ -13,7 +13,7 @@ return function(_props)
     return create("ImageLabel") {
         AnchorPoint = Vector2.new(1, 0.5),
         BackgroundTransparency = 1,
-        Image = "rbxassetid://14245986258",
+        Image = "rbxassetid://14891988900",
         Name = "VerdeIcon",
         Position = UDim2.fromScale(1, 0.5),
         Size = UDim2.fromScale(1, 1),
