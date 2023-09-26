@@ -1,6 +1,7 @@
 local story = require(script.Parent.Parent.Parent.story)
-local tab = require(script.Parent.Parent.Parent.Parent.ui.components.tab)
 local vide = require(script.Parent.Parent.Parent.Parent.packages.vide)
+
+local tab = require(script.Parent.Parent.Parent.Parent.ui.components.tab)
 
 local create = vide.create
 
