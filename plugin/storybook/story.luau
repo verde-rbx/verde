@@ -4,7 +4,7 @@
 
 local types = require(script.Parent.Parent.types)
 local vide = require(script.Parent.Parent.packages.vide)
-vide.strict = false
+vide.strict = true
 
 local mount = vide.mount
 local create = vide.create
