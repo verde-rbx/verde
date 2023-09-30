@@ -35,4 +35,4 @@ local function InputReadonly()
     }
 end
 
-return story(InputReadonly)
+return story(InputReadonly, {})

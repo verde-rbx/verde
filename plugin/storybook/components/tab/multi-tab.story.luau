@@ -25,4 +25,4 @@ local function TabGroup()
     }
 end
 
-return story(TabGroup)
+return story(TabGroup, {})

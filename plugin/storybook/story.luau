@@ -9,7 +9,7 @@ vide.strict = false
 local mount = vide.mount
 local create = vide.create
 
-return function<T>(_component: types.Component<T>, _properties: T?)
+return function<T>(_component: types.Component<T>, _properties: T)
     local createComponent = function()
         return create("Frame") {
             AnchorPoint = Vector2.new(0.5, 0.5),

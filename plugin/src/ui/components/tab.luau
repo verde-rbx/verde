@@ -4,6 +4,7 @@ local types = require(script.Parent.Parent.Parent.types)
 local vide = require(script.Parent.Parent.Parent.packages.vide)
 
 local create = vide.create
+local derive = vide.derive
 
 export type TabProps = {
     Icon: string,
@@ -11,11 +12,11 @@ export type TabProps = {
 }
 
 return function(_props)
-    local function isActivePanel(): boolean
+    local isActivePanel = derive(function()
         return store.getValue("CurrentMenu") :: types.Menus == _props.Panel
-    end
+    end)
 
-    local function backgroundColor(): Color3
+    local backgroundColor = function(): Color3
         return if isActivePanel() then theme.MainBackground() else theme.Titlebar()
     end
 

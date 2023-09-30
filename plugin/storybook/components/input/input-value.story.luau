@@ -30,4 +30,4 @@ local function InputValue()
     }
 end
 
-return story(InputValue)
+return story(InputValue, {})

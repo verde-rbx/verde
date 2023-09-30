@@ -2,10 +2,10 @@ local theme = require(script.Parent.Parent.Parent.theme)
 local types = require(script.Parent.Parent.Parent.types)
 local vide = require(script.Parent.Parent.Parent.packages.vide)
 
-local useChanged = require(script.Parent.Parent.composables.useChanged)
 local useRoundness = require(script.Parent.Parent.composables.useRoundness)
 
 local create = vide.create
+local changed = vide.changed
 local derive = vide.derive
 local read = vide.read
 local source = vide.source
@@ -15,7 +15,7 @@ export type InputProps = {
     Location: useRoundness.Location?,
     Value: vide.Source<string>?,
     Readonly: vide.Source<string>?,
-    Size: UDim2,
+    Size: UDim2?,
     Layout: {
         Font: Font?,
         TextSize: number?,
@@ -29,18 +29,18 @@ return function(_props)
     local backgroundColor = theme.Button(btnState)
     local xOffset, xAnchor = useRoundness(_props.Location or "all")
 
-    local readonlyFalsy = function()
+    local readonlyFalsy = derive(function()
         return not read(_props.Readonly or false)
-    end
-
-    local textColor = derive(function()
-        return if readonlyFalsy() then theme.MainText(btnState()) else theme.DimmedText()
     end)
+
+    local textColor = function()
+        return if readonlyFalsy() then theme.MainText(btnState()) else theme.DimmedText()
+    end
 
     return create("Frame") {
         BackgroundTransparency = 1,
-        ClipsDescendants = false,
-        Size = _props.Size,
+        ClipsDescendants = true,
+        Size = _props.Size or UDim2.fromScale(0.5, 1),
         {
             create("TextBox") {
                 AnchorPoint = Vector2.new(xAnchor, 0.5),
@@ -57,7 +57,7 @@ return function(_props)
                 TextYAlignment = Enum.TextYAlignment.Center,
                 Size = UDim2.new(1, xOffset, 1, 0),
 
-                useChanged("Text", function(new: string)
+                changed("Text", function(new: string)
                     if type(_props.Value) == "function" then
                         _props.Value(new)
                     end

@@ -10,7 +10,7 @@ local ROUNDNESS_OFFSETS = {
     anchor = {
         ["left"] = 0,
         ["right"] = 1,
-        ["middle"] = 1,
+        ["middle"] = 0.5,
         ["all"] = 1,
     },
 }
