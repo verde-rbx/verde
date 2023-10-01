@@ -12,7 +12,7 @@ return story(input_group, {
         {
             Component = "Button",
             Activated = function() end,
-            BackgroundColor3 = theme.Mid,
+            BackgroundColor3 = theme.MainButton,
             Width = "*",
         },
     },

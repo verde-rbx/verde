@@ -46,24 +46,33 @@ return function(_props)
     end
 
     -- Calculate the scaling ratio for a component
+    -- TODO: Fix offset on size budget. the useRoundness composable applies an offset (5/10) to clip roundness which is causing issues with the below calculation
     local absoluteSize = source(Vector2.new(1, 1))
-    local buttonCount, inputCount = 0, 0
+    local sizeBudget, inputCount = (1 - (#_props.Inputs * 0.025)), 0
     local function getScale(_component: "Button" | "Input")
-        if buttonCount == 0 and inputCount == 0 then
-            for _, data in _props.Inputs do
-                if data.Component == "Button" then
-                    buttonCount += 1
+        -- Calculate individual budget for inputs
+        -- We can asume a relculation is necessary since absoluteSize() is tracked and may have changed
+        sizeBudget, inputCount = (1 - (#_props.Inputs * 0.025)), 0
+        for _, data in _props.Inputs do
+            if data.Component == "Button" then
+                -- Buttons will be square ratio, so same as input height
+                sizeBudget -= (absoluteSize().Y / workspace.CurrentCamera.ViewportSize.Y)
+            elseif data.Component == "Input" then
+                if data.Width ~= "*" and data.Width then
+                    sizeBudget -= data.Width
                 else
                     inputCount += 1
                 end
             end
         end
 
+        -- Buttons should fully scale
         if _component == "Button" then
             return 1
         end
 
-        return (0.94 - (buttonCount * (absoluteSize().Y / workspace.CurrentCamera.ViewportSize.Y))) / inputCount
+        -- Decrease auto inputs from budget
+        return (sizeBudget / inputCount)
     end
 
     -- Generate input components from props
@@ -98,84 +107,84 @@ return function(_props)
     return create("Frame") {
         BackgroundTransparency = 1,
         ClipsDescendants = true,
-        {
-            _props.Layout,
-            create("UIStroke") {
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+
+        create("UIStroke") {
+            ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+        },
+
+        create("UICorner") {
+            CornerRadius = UDim.new(0, 5),
+        },
+
+        changed("AbsoluteSize", function(_absoluteSize)
+            absoluteSize(_absoluteSize)
+        end),
+
+        -- Contents
+        create("Frame") {
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BackgroundTransparency = 1,
+            ClipsDescendants = true,
+            Position = UDim2.fromScale(0.5, 0.5),
+            Size = UDim2.fromScale(1, 1),
+
+            {
+                create("UIListLayout") {
+                    FillDirection = Enum.FillDirection.Horizontal,
+                    HorizontalAlignment = Enum.HorizontalAlignment.Center,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    VerticalAlignment = Enum.VerticalAlignment.Center,
+                },
+
+                inputs,
             },
+        },
 
-            create("UICorner") {
-                CornerRadius = UDim.new(0, 6),
-            },
-
-            changed("AbsoluteSize", function(_absoluteSize)
-                absoluteSize(_absoluteSize)
-            end),
-
-            -- Contents
+        -- Overlay
+        show(
+            overlayEnabled,
             create("Frame") {
-                AnchorPoint = Vector2.new(0.5, 0.5),
                 BackgroundTransparency = 1,
                 ClipsDescendants = true,
-                Position = UDim2.fromScale(0.5, 0.5),
-                Size = UDim2.fromScale(1, 1),
+                Position = UDim2.fromScale(0, 0.5),
+                Size = overlaySize,
 
                 {
-                    create("UIListLayout") {
-                        FillDirection = Enum.FillDirection.Horizontal,
-                        HorizontalAlignment = Enum.HorizontalAlignment.Center,
-                        SortOrder = Enum.SortOrder.LayoutOrder,
-                        VerticalAlignment = Enum.VerticalAlignment.Center,
-                    },
+                    _props.Overlay.Layout,
 
-                    inputs,
-                },
-            },
+                    -- Overlay text
+                    show(
+                        overlayTextVisible,
+                        create("TextLabel") {
+                            AnchorPoint = Vector2.new(0, 0.5),
+                            BackgroundTransparency = 1,
+                            Font = Enum.Font.Gotham,
+                            FontSize = 10,
+                            Position = UDim2.fromScale(0, 0.5),
+                            Size = UDim2.fromScale(1, 1),
+                            Text = _props.Overlay.Text,
+                            ZIndex = 3,
+                        }
+                    ),
 
-            -- Overlay
-            show(
-                overlayEnabled,
-                create("Frame") {
-                    BackgroundTransparency = 1,
-                    ClipsDescendants = true,
-                    Position = UDim2.fromScale(0, 0.5),
-                    Size = overlaySize,
-
-                    {
-                        _props.Overlay.Layout,
-
-                        -- Overlay text
-                        show(
-                            overlayTextVisible,
-                            create("TextLabel") {
-                                AnchorPoint = Vector2.new(0, 0.5),
-                                BackgroundTransparency = 1,
-                                Font = Enum.Font.Gotham,
-                                FontSize = 10,
-                                Position = UDim2.fromScale(0, 0.5),
-                                Size = UDim2.fromScale(1, 1),
-                                Text = _props.Overlay.Text,
-                                ZIndex = 3,
-                            }
-                        ),
-
-                        -- Overlay fill
-                        create("Frame") {
-                            AnchorPoint = Vector2.new(0, 1),
-                            BackgroundColor3 = theme.MainBackground,
-                            Name = "Progress",
-                            Position = UDim2.fromScale(0, 1),
-                            Size = UDim2.new(1, 5, 1, 0),
-                            ZIndex = 2,
-                            {
-                                create("UICorner") {
-                                    CornerRadius = UDim.new(0, 8),
-                                },
+                    -- Overlay fill
+                    create("Frame") {
+                        AnchorPoint = Vector2.new(0, 1),
+                        BackgroundColor3 = theme.MainBackground,
+                        Name = "Progress",
+                        Position = UDim2.fromScale(0, 1),
+                        Size = UDim2.new(1, 5, 1, 0),
+                        ZIndex = 2,
+                        {
+                            create("UICorner") {
+                                CornerRadius = UDim.new(0, 8),
                             },
                         },
                     },
-                }
-            ),
-        },
+                },
+            }
+        ),
+
+        _props.Layout,
     }
 end :: types.Component<InputGroupProps>
