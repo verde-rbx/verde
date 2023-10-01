@@ -33,38 +33,38 @@ return function(_props)
         ClipsDescendants = true,
         Size = UDim2.fromScale(1, 1),
         SizeConstraint = Enum.SizeConstraint.RelativeYY,
-        {
-            _props.Layout,
-            create("TextButton") {
-                AnchorPoint = Vector2.new(xAnchor, 0.5),
-                BackgroundColor3 = _props.BackgroundColor3(btnState),
-                Position = UDim2.fromScale(xAnchor, 0.5),
-                Text = "",
-                TextTransparency = 1,
-                Size = UDim2.new(1, xOffset, 1, 0),
 
-                Activated = _props.Activated,
+        create("TextButton") {
+            AnchorPoint = Vector2.new(xAnchor, 0.5),
+            BackgroundColor3 = _props.BackgroundColor3(btnState),
+            Position = UDim2.fromScale(xAnchor, 0.5),
+            Text = "",
+            TextTransparency = 1,
+            Size = UDim2.new(1, xOffset, 1, 0),
 
-                MouseButton1Down = function()
-                    btnState("Pressed")
-                end,
+            Activated = _props.Activated,
 
-                MouseButton1Up = function()
-                    btnState("")
-                end,
+            MouseButton1Down = function()
+                btnState("Pressed")
+            end,
 
-                {
-                    create("UICorner") {},
-                    create("ImageLabel") {
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        BackgroundTransparency = 1,
-                        ImageColor3 = theme.MainText(),
-                        Position = UDim2.fromScale(0.5, 0.5),
-                        Size = UDim2.fromScale(0.6, 0.6),
-                        _props.Icon,
-                    },
+            MouseButton1Up = function()
+                btnState("")
+            end,
+
+            {
+                create("UICorner") {},
+                create("ImageLabel") {
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    BackgroundTransparency = 1,
+                    ImageColor3 = theme.MainText(),
+                    Position = UDim2.fromScale(0.5, 0.5),
+                    Size = UDim2.fromScale(0.6, 0.6),
+                    _props.Icon,
                 },
             },
         },
+
+        _props.Layout,
     }
 end :: types.Component<ButtonProps>

@@ -41,40 +41,39 @@ return function(_props)
         BackgroundTransparency = 1,
         ClipsDescendants = true,
         Size = _props.Size or UDim2.fromScale(0.5, 1),
-        {
-            create("TextBox") {
-                AnchorPoint = Vector2.new(xAnchor, 0.5),
-                BackgroundTransparency = 0,
-                BackgroundColor3 = spring(backgroundColor, 0.5),
-                FontFace = Font.fromEnum(Enum.Font.Gotham),
-                Position = UDim2.fromScale(xAnchor, 0.5),
-                Text = _props.Value,
-                TextColor3 = spring(textColor, 0.5),
-                TextScaled = not _props.Layout or not _props.Layout.TextSize,
-                TextEditable = readonlyFalsy,
-                TextSize = 14,
-                TextXAlignment = Enum.TextXAlignment.Center,
-                TextYAlignment = Enum.TextYAlignment.Center,
-                Size = UDim2.new(1, xOffset, 1, 0),
 
-                changed("Text", function(new: string)
-                    if type(_props.Value) == "function" then
-                        _props.Value(new)
-                    end
-                end),
+        create("TextBox") {
+            AnchorPoint = Vector2.new(xAnchor, 0.5),
+            BackgroundTransparency = 0,
+            BackgroundColor3 = spring(backgroundColor, 0.5),
+            FontFace = Font.fromEnum(Enum.Font.Gotham),
+            Position = UDim2.fromScale(xAnchor, 0.5),
+            Text = _props.Value,
+            TextColor3 = spring(textColor, 0.5),
+            TextScaled = not _props.Layout or not _props.Layout.TextSize,
+            TextEditable = readonlyFalsy,
+            TextSize = 14,
+            TextXAlignment = Enum.TextXAlignment.Center,
+            TextYAlignment = Enum.TextYAlignment.Center,
+            Size = UDim2.new(1, xOffset, 1, 0),
 
-                Focused = function()
-                    btnState("Hover")
-                end,
+            changed("Text", function(new: string)
+                if type(_props.Value) == "function" then
+                    _props.Value(new)
+                end
+            end),
 
-                FocusLost = function()
-                    btnState("")
-                end,
+            Focused = function()
+                btnState("Hover")
+            end,
 
-                {
-                    _props.Layout,
-                    create("UICorner") {},
-                },
+            FocusLost = function()
+                btnState("")
+            end,
+
+            {
+                _props.Layout,
+                create("UICorner") {},
             },
         },
     }

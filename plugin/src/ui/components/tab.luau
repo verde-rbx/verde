@@ -32,41 +32,39 @@ return function(_props)
             store.set("CurrentMenu", _props.Panel)
         end,
 
-        {
-            -- Hide topbar stroke
-            create("UIStroke") {
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-                Color = theme.MainBackground,
-                Enabled = isActivePanel,
-            },
+        -- Hide topbar stroke
+        create("UIStroke") {
+            ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+            Color = theme.MainBackground,
+            Enabled = isActivePanel,
+        },
 
-            -- Selection Stroke
-            create("Frame") {
-                AnchorPoint = Vector2.new(0.5, 0),
-                BackgroundTransparency = 1,
-                Position = UDim2.fromScale(0.5, 0),
-                Size = UDim2.new(1, 2, 1, 0),
-                ZIndex = 1,
+        -- Selection Stroke
+        create("Frame") {
+            AnchorPoint = Vector2.new(0.5, 0),
+            BackgroundTransparency = 1,
+            Position = UDim2.fromScale(0.5, 0),
+            Size = UDim2.new(1, 2, 1, 0),
+            ZIndex = 1,
 
-                {
-                    create("UIStroke") {
-                        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-                        Color = theme.Separator,
-                        Enabled = isActivePanel,
-                    },
+            {
+                create("UIStroke") {
+                    ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+                    Color = theme.Separator,
+                    Enabled = isActivePanel,
                 },
             },
+        },
 
-            -- Icon
-            create("ImageLabel") {
-                AnchorPoint = Vector2.new(0.5, 0.5),
-                BackgroundTransparency = 1,
-                Image = _props.Icon,
-                ImageColor3 = theme.MainText,
-                Position = UDim2.fromScale(0.5, 0.5),
-                Size = UDim2.fromScale(0.5, 0.5),
-                ZIndex = 2,
-            },
+        -- Icon
+        create("ImageLabel") {
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BackgroundTransparency = 1,
+            Image = _props.Icon,
+            ImageColor3 = theme.MainText,
+            Position = UDim2.fromScale(0.5, 0.5),
+            Size = UDim2.fromScale(0.5, 0.5),
+            ZIndex = 2,
         },
     }
 end :: types.Component<TabProps>
