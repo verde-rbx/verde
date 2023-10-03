@@ -48,11 +48,10 @@ return function(_props)
     -- Calculate the scaling ratio for a component
     -- TODO: Fix offset on size budget. the useRoundness composable applies an offset (5/10) to clip roundness which is causing issues with the below calculation
     local absoluteSize = source(Vector2.new(1, 1))
-    local sizeBudget, inputCount = (1 - (#_props.Inputs * 0.025)), 0
     local function getScale(_component: "Button" | "Input")
         -- Calculate individual budget for inputs
         -- We can asume a relculation is necessary since absoluteSize() is tracked and may have changed
-        sizeBudget, inputCount = (1 - (#_props.Inputs * 0.025)), 0
+        local sizeBudget, inputCount = (1 - (#_props.Inputs * 0.025)), 0
         for _, data in _props.Inputs do
             if data.Component == "Button" then
                 -- Buttons will be square ratio, so same as input height
