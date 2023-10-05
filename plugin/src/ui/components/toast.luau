@@ -1,3 +1,4 @@
+local store = require(script.Parent.Parent.Parent.store)
 local theme = require(script.Parent.Parent.Parent.theme)
 local types = require(script.Parent.Parent.Parent.types)
 local vide = require(script.Parent.Parent.Parent.packages.vide)
@@ -10,6 +11,7 @@ local useTimestamp = require(script.Parent.Parent.composables.useTimestamp)
 
 local action = vide.action
 local create = vide.create
+local effect = vide.effect
 local root = vide.root
 local source = vide.source
 local spring = vide.spring
@@ -25,6 +27,29 @@ return function(_props)
         local instance = source()
         local size = useTextSize(_props.Message)
         local position = source(UDim2.new(1, size.X.Offset, 1, 0))
+        local yOffset = 0
+
+        -- Kill and cleanup toast
+        local timeoutThread: thread
+        local function kill()
+            position(UDim2.new(1, size.X.Offset, 1, yOffset))
+            task.delay(0.5, function()
+                if instance() then
+                    instance():Destroy()
+                end
+
+                store.remove("Toasts", _props.Index())
+                _destroy()
+            end)
+        end
+
+        -- Watch for position changes
+        effect(function()
+            if instance() ~= nil then
+                yOffset = (_props.Index() - 1) * -(instance().AbsoluteSize.Y + 15)
+                position(UDim2.new(1, 0, 1, yOffset))
+            end
+        end)
 
         return create("ImageButton") {
             AnchorPoint = Vector2.new(1, 1),
@@ -35,20 +60,12 @@ return function(_props)
             Size = size,
 
             Activated = function()
-                position(UDim2.new(1, size.X.Offset, 1, 0))
-                task.delay(0.5, function()
-                    if instance() then
-                        instance():Destroy()
-                    end
-
-                    _destroy()
-                end)
+                task.cancel(timeoutThread)
+                kill()
             end,
 
             action(function(_instance: ImageButton)
-                local offset = (_props.Index() - 1) * -(_instance.AbsoluteSize.Y + 15)
-                position(UDim2.new(1, 0, 1, offset))
-                task.delay(_props.Lifetime, position, UDim2.new(1, size.X.Offset, 1, 0))
+                timeoutThread = task.delay(_props.Lifetime, kill)
                 instance(_instance)
             end),
 
