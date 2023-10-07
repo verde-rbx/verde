@@ -13,6 +13,10 @@ local DEFAULT_CONFIG = table.freeze {
     HOST = "localhost",
     PORT = 34872,
     VERSION = "0.1.0",
+    MENUS = {
+        home = "rbxassetid://10734940825",
+        settings = "rbxassetid://10734950309",
+    },
 }
 
 local DEFAULT_SETTINGS = table.freeze {
