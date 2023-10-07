@@ -5,6 +5,7 @@ local vide = require(script.Parent.Parent.packages.vide)
 
 local icon = require(script.Parent.components.icon)
 local tab = require(script.Parent.components.tab)
+local version = require(script.Parent.components.version)
 
 local create = vide.create
 local switch = vide.switch
@@ -77,5 +78,7 @@ return function()
                 PaddingTop = UDim.new(0, 25),
             },
         },
+
+        version {},
     }
 end
