@@ -10,6 +10,7 @@ local source = vide.source
 
 local function InputReadonly()
     local readonly = source(true)
+    local value = source("Readonly input demo")
 
     return create("Frame") {
         BackgroundTransparency = 1,
@@ -17,7 +18,7 @@ local function InputReadonly()
 
         input {
             Size = UDim2.fromScale(1, 0.25),
-            Value = "Readonly input demo",
+            Value = value,
             Readonly = readonly,
         },
 

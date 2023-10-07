@@ -6,14 +6,14 @@ local input_group = require(script.Parent.Parent.Parent.Parent.ui.components.inp
 return story(input_group, {
     Inputs = {
         {
-            Component = "Input",
-            Width = "*",
+            Component = "Input" :: "Input",
+            Width = "*" :: "*",
         },
         {
-            Component = "Button",
+            Component = "Button" :: "Button",
             Activated = function() end,
             BackgroundColor3 = theme.MainButton,
-            Width = "*",
+            Width = "*" :: "*",
         },
     },
     Layout = {
