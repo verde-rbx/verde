@@ -46,19 +46,18 @@ return function(_props)
     end
 
     -- Calculate the scaling ratio for a component
-    -- TODO: Fix offset on size budget. the useRoundness composable applies an offset (5/10) to clip roundness which is causing issues with the below calculation
     local absoluteSize = source(Vector2.new(1, 1))
-    local function getScale(_component: "Button" | "Input")
+    local function getScale(_component: "Button" | "Input"): UDim2
         -- Calculate individual budget for inputs
-        -- We can asume a relculation is necessary since absoluteSize() is tracked and may have changed
-        local sizeBudget, inputCount = (1 - (#_props.Inputs * 0.025)), 0
+        local widthOffset, inputCount = 0, 0
         for _, data in _props.Inputs do
             if data.Component == "Button" then
                 -- Buttons will be square ratio, so same as input height
-                sizeBudget -= (absoluteSize().Y / workspace.CurrentCamera.ViewportSize.Y)
+                widthOffset -= absoluteSize().Y
             elseif data.Component == "Input" then
                 if data.Width ~= "*" and data.Width then
-                    sizeBudget -= data.Width
+                    -- TODO: Convert from scale to absolute units
+                    widthOffset -= data.Width
                 else
                     inputCount += 1
                 end
@@ -67,11 +66,11 @@ return function(_props)
 
         -- Buttons should fully scale
         if _component == "Button" then
-            return 1
+            return UDim2.fromScale(1, 1)
         end
 
         -- Decrease auto inputs from budget
-        return (sizeBudget / inputCount)
+        return UDim2.new(1 / inputCount, widthOffset, 1, 0)
     end
 
     -- Generate input components from props
@@ -90,10 +89,10 @@ return function(_props)
                 else "right"
 
             -- Calculate scaling
-            local xScale = if not componentData.Width or componentData.Width == "*"
+            local scale = if not componentData.Width or componentData.Width == "*"
                 then getScale(data.Component)
-                else componentData.Width
-            componentData.Size = UDim2.fromScale(xScale :: number, 1)
+                else UDim2.fromScale(componentData.Width, 1)
+            componentData.Size = scale
 
             -- Create a component without tracking to avoid updates
             children[i] = untrack(function()

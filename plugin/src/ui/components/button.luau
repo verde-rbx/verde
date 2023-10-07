@@ -53,7 +53,9 @@ return function(_props)
             end,
 
             {
-                create("UICorner") {},
+                create("UICorner") {
+                    CornerRadius = UDim.new(0, 5),
+                },
                 create("ImageLabel") {
                     AnchorPoint = Vector2.new(0.5, 0.5),
                     BackgroundTransparency = 1,

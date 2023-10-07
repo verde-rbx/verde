@@ -73,7 +73,9 @@ return function(_props)
 
             {
                 _props.Layout,
-                create("UICorner") {},
+                create("UICorner") {
+                    CornerRadius = UDim.new(0, 5),
+                },
             },
         },
     }
