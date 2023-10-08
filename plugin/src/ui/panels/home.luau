@@ -25,12 +25,12 @@ return function()
                 },
                 Layout = {
                     LayoutOrder = 1,
-                    Size = UDim2.new(0, 250, 1, 0),
+                    Size = UDim2.new(0, 300, 1, 0),
                 },
                 Inputs = {
                     {
                         Component = "Input" :: "Input",
-                        Width = "*" :: "*",
+                        Width = 0.6,
                         Value = store.get("HOST") :: () -> string,
                         Layout = {
                             TextSize = 20,
