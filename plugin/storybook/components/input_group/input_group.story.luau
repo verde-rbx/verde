@@ -13,7 +13,6 @@ return story(input_group, {
             Component = "Button" :: "Button",
             Activated = function() end,
             BackgroundColor3 = theme.MainButton,
-            Width = "*" :: "*",
         },
     },
     Layout = {

@@ -1,3 +1,5 @@
+local store = require(script.Parent.Parent.Parent.store)
+local theme = require(script.Parent.Parent.Parent.theme)
 local vide = require(script.Parent.Parent.Parent.packages.vide)
 
 local input_group = require(script.Parent.Parent.components.input_group)
@@ -29,6 +31,21 @@ return function()
                     {
                         Component = "Input" :: "Input",
                         Width = "*" :: "*",
+                        Value = store.get("HOST") :: () -> string,
+                    },
+
+                    {
+                        Component = "Input" :: "Input",
+                        Width = "*" :: "*",
+                        Value = store.get("PORT") :: () -> string,
+                    },
+
+                    {
+                        Component = "Button" :: "Button",
+                        BackgroundColor3 = theme.MainButton,
+                        Activated = function()
+                            print("attempt connect")
+                        end,
                     },
                 },
             },
