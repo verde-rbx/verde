@@ -14,8 +14,8 @@ local untrack = vide.untrack
 
 export type InputGroupProps = {
     Inputs: {
-        { Width: "*" | number }
-        & (({ Component: "Button" } & button.ButtonProps) | ({ Component: "Input" } & input.InputProps))
+        ({ Component: "Button" } & button.ButtonProps)
+        | ({ Component: "Input", Width: "*" | number } & input.InputProps)
     },
     Layout: {
         LayoutOrder: number,
@@ -47,16 +47,16 @@ return function(_props)
 
     -- Calculate the scaling ratio for a component
     local absoluteSize = source(Vector2.new(1, 1))
-    local function getScale(_component: "Button" | "Input"): UDim2
+    local function getInputScale(): UDim2
         -- Calculate individual budget for inputs
-        local widthOffset, inputCount = 0, 0
+        local widthOffset = 0
+        local buttonCount, inputCount = 0, 0
         for _, data in _props.Inputs do
             if data.Component == "Button" then
                 -- Buttons will be square ratio, so same as input height
-                widthOffset -= absoluteSize().Y
+                buttonCount += 1
             elseif data.Component == "Input" then
                 if data.Width ~= "*" and data.Width then
-                    -- TODO: Convert from scale to absolute units
                     widthOffset -= data.Width
                 else
                     inputCount += 1
@@ -64,13 +64,9 @@ return function(_props)
             end
         end
 
-        -- Buttons should fully scale
-        if _component == "Button" then
-            return UDim2.fromScale(1, 1)
-        end
-
         -- Decrease auto inputs from budget
-        return UDim2.new(1 / inputCount, widthOffset, 1, 0)
+        widthOffset -= buttonCount * absoluteSize().Y
+        return UDim2.new(1 / inputCount, math.floor(widthOffset / inputCount), 1, 0)
     end
 
     -- Generate input components from props
@@ -89,8 +85,9 @@ return function(_props)
                 else "right"
 
             -- Calculate scaling
-            local scale = if not componentData.Width or componentData.Width == "*"
-                then getScale(data.Component)
+            local scale = if data.Component == "Button"
+                then UDim2.fromScale(1, 1)
+                elseif not componentData.Width or componentData.Width == "*" then getInputScale()
                 else UDim2.fromScale(componentData.Width, 1)
             componentData.Size = scale
 
