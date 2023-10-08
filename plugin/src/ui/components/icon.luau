@@ -16,7 +16,7 @@ return function(_props)
         Image = "rbxassetid://14891988900",
         Name = "VerdeIcon",
         Position = UDim2.fromScale(1, 0.5),
-        Size = UDim2.fromScale(1, 1),
+        Size = UDim2.fromScale(0.95, 0.85),
         SizeConstraint = Enum.SizeConstraint.RelativeYY,
         _props,
     }

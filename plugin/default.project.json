@@ -2,13 +2,13 @@
     "name": "Verde",
     "tree": {
         "$className": "DataModel",
-        "Verde": {
-            "$path": "src/",
-            "storybook": {
-                "$path": "storybook/"
-            },
-            "packages": {
-                "$path": "Packages/"
+        "Workspace": {
+            "$className": "Workspace",
+            "Verde": {
+                "$path": "src/",
+                "packages": {
+                    "$path": "Packages/"
+                }
             }
         }
     }

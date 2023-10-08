@@ -17,7 +17,7 @@ return function()
             BackgroundTransparency = 1,
             Name = "Controls",
             Position = UDim2.fromScale(0.5, 0.5),
-            Size = UDim2.new(0.5, 0, 0, 45),
+            Size = UDim2.new(0.95, 0, 0, 45),
 
             input_group {
                 Overlay = {
@@ -25,12 +25,12 @@ return function()
                 },
                 Layout = {
                     LayoutOrder = 1,
-                    Size = UDim2.new(0, 300, 1, 0),
+                    Size = UDim2.new(1, 0, 1, 0),
                 },
                 Inputs = {
                     {
                         Component = "Input" :: "Input",
-                        Width = 0.6,
+                        Width = 0.55,
                         Value = store.get("HOST") :: () -> string,
                         Layout = {
                             TextSize = 20,

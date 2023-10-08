@@ -14,6 +14,7 @@ return function(_props)
         Size = UDim2.fromOffset(100, 45),
         Text = store.get("VERSION"),
         TextColor3 = theme.DimmedText,
+        TextSize = 12,
         TextXAlignment = Enum.TextXAlignment.Left,
         TextYAlignment = Enum.TextYAlignment.Bottom,
     }
