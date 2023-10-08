@@ -57,7 +57,7 @@ return function(_props)
                 buttonCount += 1
             elseif data.Component == "Input" then
                 if data.Width ~= "*" and data.Width then
-                    widthOffset -= data.Width
+                    widthOffset -= (data.Width * absoluteSize().X)
                 else
                     inputCount += 1
                 end
