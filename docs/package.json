@@ -11,7 +11,7 @@
     "docs:serve": "vitepress serve"
   },
   "devDependencies": {
-    "vitepress": "1.0.0-rc.14"
+    "vitepress": "1.0.0-rc.20"
   },
   "pnpm": {
     "peerDependencyRules": {
