@@ -33,7 +33,7 @@ return function()
                         Width = 0.55,
                         Value = store.get("HOST") :: () -> string,
                         Layout = {
-                            TextSize = 20,
+                            TextSize = 16,
                         },
                     },
 
@@ -42,7 +42,7 @@ return function()
                         Width = "*" :: "*",
                         Value = store.get("PORT") :: () -> string,
                         Layout = {
-                            TextSize = 20,
+                            TextSize = 16,
                         },
                     },
 
