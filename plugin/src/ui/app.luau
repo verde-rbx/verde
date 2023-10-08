@@ -54,7 +54,7 @@ return function()
             },
 
             create("UIPadding") {
-                PaddingLeft = UDim.new(0, 5),
+                PaddingLeft = UDim.new(0, 0),
                 PaddingRight = UDim.new(0, 5),
             },
         },
