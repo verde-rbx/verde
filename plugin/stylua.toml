@@ -1,4 +1,5 @@
 call_parentheses = "NoSingleTable"
+indent_type = "Spaces"
 
 [sort_requires]
 enabled = true
