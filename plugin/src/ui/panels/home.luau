@@ -32,12 +32,18 @@ return function()
                         Component = "Input" :: "Input",
                         Width = "*" :: "*",
                         Value = store.get("HOST") :: () -> string,
+                        Layout = {
+                            TextSize = 20,
+                        },
                     },
 
                     {
                         Component = "Input" :: "Input",
                         Width = "*" :: "*",
                         Value = store.get("PORT") :: () -> string,
+                        Layout = {
+                            TextSize = 20,
+                        },
                     },
 
                     {
