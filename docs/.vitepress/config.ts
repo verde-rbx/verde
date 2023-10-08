@@ -93,12 +93,21 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
     },
     {
       text: "Studio Plugin",
-      link: "plugin",
+      items: [
+        { text: "Introduction", link: "plugin" },
+      ]
     },
     {
       text: "Project",
-      link: "project",
+      items: [
+        { text: "Introduction", link: "project" },
+      ]
     },
+    {
+      text: "CLI & API Reference",
+      base: "/",
+      link: "/reference/"
+    }
   ];
 }
 
