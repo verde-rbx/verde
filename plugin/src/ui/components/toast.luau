@@ -30,8 +30,14 @@ return function(_props)
         local yOffset = 0
 
         -- Kill and cleanup toast
+        local killing = false
         local timeoutThread: thread
         local function kill()
+            if killing then
+                return
+            end
+
+            killing = true
             position(UDim2.new(1, size.X.Offset, 1, yOffset))
             task.delay(0.5, function()
                 if instance() then
@@ -45,7 +51,7 @@ return function(_props)
 
         -- Watch for position changes
         effect(function()
-            if instance() ~= nil then
+            if instance() ~= nil and not killing then
                 yOffset = (_props.Index() - 1) * -(instance().AbsoluteSize.Y + 15)
                 position(UDim2.new(1, 0, 1, yOffset))
             end
