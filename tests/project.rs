@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     fs::{self, File},
     io::{Seek, Write},
     path::Path,
@@ -85,4 +85,23 @@ fn save_project() {
 
     // Cleanup and delete file
     fs::remove_file(project_path).unwrap();
+}
+
+#[test]
+/// Test to make sure node paths are properly retrieved
+fn get_node_paths() {
+    let project = create_mock_project();
+
+    // Get node paths (similar to create_watchers())
+    let mut node_map = HashMap::<String, Node>::new();
+    for node in project.tree.values() {
+        node.get_paths(&mut node_map);
+    }
+
+    // Confirm path
+    assert!(node_map.contains_key("src/server"));
+    assert_eq!(
+        node_map.get("src/server").unwrap().path,
+        Some(String::from("src/server"))
+    );
 }
