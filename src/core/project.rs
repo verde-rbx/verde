@@ -37,8 +37,8 @@ impl Node {
             map.insert(path.clone(), self.clone());
         }
 
-        if self.contents.as_ref().is_some_and(|x| !x.is_empty()) {
-            for node in self.contents.as_ref().unwrap().values() {
+        if let Some(contents) = self.contents.as_ref() {
+            for node in contents.values() {
                 node.get_paths(map);
             }
         }
