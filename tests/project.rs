@@ -37,14 +37,18 @@ fn save_mock_project() -> File {
 fn create_mock_project() -> VerdeProject {
     VerdeProject {
         name: String::from("Verde Test Project"),
-        tree: BTreeMap::<String, Node>::from([(
-            String::from("ServerScriptService"),
-            Node {
-                path: Some(String::from("src/server")),
-                properties: None,
-                contents: None,
-            },
-        )]),
+        tree: Node {
+            path: None,
+            properties: None,
+            contents: Some(BTreeMap::<String, Node>::from([(
+                String::from("ServerScriptService"),
+                Node {
+                    path: Some(String::from("src/server")),
+                    properties: None,
+                    contents: None,
+                },
+            )])),
+        },
     }
 }
 
@@ -58,11 +62,15 @@ fn new_project_from_path() {
     assert_eq!(project.name, "Verde Test Project");
 
     // Checking to ensure the tree serialised a node correctly
-    assert!(project.tree.contains_key("ReplicatedStorage"));
+    if let Some(contents) = project.tree.contents {
+        assert!(contents.contains_key("ReplicatedStorage"));
 
-    // Checking to ensure a node contains the correct serialised values
-    let replicated_storage_node = project.tree.get("ReplicatedStorage");
-    assert!(replicated_storage_node.is_some());
+        // Checking to ensure a node contains the correct serialised values
+        let replicated_storage_node = contents.get("ReplicatedStorage");
+        assert!(replicated_storage_node.is_some());
+    } else {
+        panic!("Missing project root node.")
+    }
 }
 
 #[test]
@@ -72,7 +80,7 @@ fn save_project() {
     let project = create_mock_project();
 
     // Checking to ensure the file is created
-    assert!(!project_path.exists());
+    assert!(!project_path.exists(), "project file already exists");
     project.save();
     assert!(project_path.exists());
 
@@ -94,9 +102,7 @@ fn get_node_paths() {
 
     // Get node paths (similar to create_watchers())
     let mut node_map = HashMap::<String, Node>::new();
-    for node in project.tree.values() {
-        node.get_paths(&mut node_map);
-    }
+    project.tree.get_paths(&mut node_map);
 
     // Confirm path
     assert!(node_map.contains_key("src/server"));

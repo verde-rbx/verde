@@ -63,7 +63,7 @@ pub struct VerdeProject {
     pub name: String,
 
     /// The instance tree
-    pub tree: BTreeMap<String, Node>,
+    pub tree: Node,
 }
 
 // Verde project implementation
@@ -72,31 +72,35 @@ impl VerdeProject {
     pub fn new() -> Self {
         Self {
             name: String::from("A Verde Project"),
-            tree: BTreeMap::<String, Node>::from([
-                (
-                    String::from("ServerScriptService"),
-                    Node {
-                        path: Some(String::from("src/server")),
-                        properties: None,
-                        contents: None,
-                    },
-                ),
-                (
-                    String::from("ReplicatedStorage"),
-                    Node {
-                        path: Some(String::from("src/shared")),
-                        properties: None,
-                        contents: Some(BTreeMap::<String, Node>::from([(
-                            String::from("client"),
-                            Node {
-                                path: Some(String::from("src/client")),
-                                properties: None,
-                                contents: None,
-                            },
-                        )])),
-                    },
-                ),
-            ]),
+            tree: Node {
+                path: None,
+                properties: None,
+                contents: Some(BTreeMap::<String, Node>::from([
+                    (
+                        String::from("ServerScriptService"),
+                        Node {
+                            path: Some(String::from("src/server")),
+                            properties: None,
+                            contents: None,
+                        },
+                    ),
+                    (
+                        String::from("ReplicatedStorage"),
+                        Node {
+                            path: Some(String::from("src/shared")),
+                            properties: None,
+                            contents: Some(BTreeMap::<String, Node>::from([(
+                                String::from("client"),
+                                Node {
+                                    path: Some(String::from("src/client")),
+                                    properties: None,
+                                    contents: None,
+                                },
+                            )])),
+                        },
+                    ),
+                ])),
+            },
         }
     }
 
@@ -121,10 +125,7 @@ impl VerdeProject {
     /// Creates watchers for defined paths
     pub fn create_watcher(&self) -> HashMap<String, Node> {
         let mut map = HashMap::<String, Node>::new();
-        for node in self.tree.values() {
-            node.get_paths(&mut map);
-        }
-
+        self.tree.get_paths(&mut map);
         map
     }
 }
