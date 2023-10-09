@@ -4,7 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use serde::{self, Deserialize};
-use std::{collections::BTreeMap, net::IpAddr};
+use serde_json;
+use std::{collections::BTreeMap, error::Error, fs::File, io::Read, net::IpAddr};
+
+use crate::core::project::{Node, VerdeProject};
 
 // Rojo project structure taken from the Rojo github:
 // This project structure has been modified to remove properties that are not yet supported by Verde
@@ -40,4 +43,32 @@ pub struct ProjectNode {
 
     #[serde(rename = "$path", skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
+}
+
+impl ProjectNode {
+    /// Converts a Rojo ProjectNode to Verde Node
+    pub fn convert_node(&self) -> Node {
+        let mut child_nodes = BTreeMap::<String, Node>::new();
+        for (key, child) in &self.children {
+            child_nodes.insert(key.to_string(), child.convert_node());
+        }
+
+        Node {
+            path: self.path.to_owned(),
+            properties: None,
+            contents: Some(child_nodes),
+        }
+    }
+}
+
+/// Converts the associated project file from Rojo to Verde
+pub fn convert(project: &mut File) -> Result<VerdeProject, Box<dyn Error>> {
+    let mut buffer = String::new();
+    project.read_to_string(&mut buffer)?;
+    let rojo_project: Project = serde_json::from_str(&buffer)?;
+
+    Ok(VerdeProject {
+        name: rojo_project.name,
+        tree: rojo_project.tree.convert_node(),
+    })
 }
