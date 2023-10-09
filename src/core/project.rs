@@ -18,8 +18,8 @@ pub const DEFAULT_PROJECT: &str = "verde.yaml";
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Node {
     /// Path (relative to source directory)
-    #[serde(rename = ".path")]
-    pub path: String,
+    #[serde(rename = ".path", skip_serializing_if = "Option::is_none")]
+    pub path: Option<String>,
 
     // Properties applied to the related Roblox instance
     #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
@@ -33,7 +33,10 @@ pub struct Node {
 impl Node {
     /// Recursively locates the paths of child nodes.
     pub fn get_paths(&self, map: &mut HashMap<String, Node>) {
-        map.insert(self.path.clone(), self.clone());
+        if let Some(path) = &self.path {
+            map.insert(path.clone(), self.clone());
+        }
+
         if self.contents.as_ref().is_some_and(|x| !x.is_empty()) {
             for node in self.contents.as_ref().unwrap().values() {
                 node.get_paths(map);
@@ -73,7 +76,7 @@ impl VerdeProject {
                 (
                     String::from("ServerScriptService"),
                     Node {
-                        path: String::from("src/server"),
+                        path: Some(String::from("src/server")),
                         properties: None,
                         contents: None,
                     },
@@ -81,12 +84,12 @@ impl VerdeProject {
                 (
                     String::from("ReplicatedStorage"),
                     Node {
-                        path: String::from("src/shared"),
+                        path: Some(String::from("src/shared")),
                         properties: None,
                         contents: Some(BTreeMap::<String, Node>::from([(
                             String::from("client"),
                             Node {
-                                path: String::from("src/client"),
+                                path: Some(String::from("src/client")),
                                 properties: None,
                                 contents: None,
                             },

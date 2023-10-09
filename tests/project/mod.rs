@@ -40,7 +40,7 @@ fn create_mock_project() -> VerdeProject {
         tree: BTreeMap::<String, Node>::from([(
             String::from("ServerScriptService"),
             Node {
-                path: String::from("src/server"),
+                path: Some(String::from("src/server")),
                 properties: None,
                 contents: None,
             },
