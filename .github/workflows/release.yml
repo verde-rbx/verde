@@ -15,15 +15,17 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: Windows
+          - os: windows
             machine: windows-latest
             artifact: verde.exe
-            binary_name: verde-windows.exe
 
-          - os: Ubuntu
+          - os: linux
             machine: ubuntu-latest
             artifact: verde
-            binary_name: verde-amd64.exe
+          
+          - os: macos
+            machine: macos-latest
+            artifact: verde
     steps:
       - uses: actions/checkout@v4
 
@@ -38,7 +40,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.binary_name }}
+          name: verde-${{matrix.os}}
           path: target/release/${{ matrix.artifact }}
   release:
     name: Release
