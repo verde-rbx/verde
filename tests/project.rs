@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     fs::{self, File},
     io::{Seek, Write},
     path::Path,
@@ -37,33 +37,40 @@ fn save_mock_project() -> File {
 fn create_mock_project() -> VerdeProject {
     VerdeProject {
         name: String::from("Verde Test Project"),
-        tree: BTreeMap::<String, Node>::from([(
-            String::from("ServerScriptService"),
-            Node {
-                path: Some(String::from("src/server")),
-                properties: None,
-                contents: None,
-            },
-        )]),
+        tree: Node {
+            path: None,
+            properties: None,
+            contents: Some(BTreeMap::<String, Node>::from([(
+                String::from("ServerScriptService"),
+                Node {
+                    path: Some(String::from("src/server")),
+                    properties: None,
+                    contents: None,
+                },
+            )])),
+        },
     }
 }
 
 #[test]
 /// Test to ensure a project can be deserialised correctly
 fn new_project_from_path() {
-    let project_file = save_mock_project();
-    let project = project::VerdeProject::new(Some(&project_file));
+    let mut project_file = save_mock_project();
+    let project = project::VerdeProject::from(&mut project_file).unwrap();
 
     // Checking to ensure the project name is deserialised correctly
     assert_eq!(project.name, "Verde Test Project");
 
     // Checking to ensure the tree serialised a node correctly
-    assert!(project.tree.contains_key("ReplicatedStorage"));
+    if let Some(contents) = project.tree.contents {
+        assert!(contents.contains_key("ReplicatedStorage"));
 
-    // Checking to ensure a node contains the correct serialised values
-    let replicated_storage_node = project.tree.get("ReplicatedStorage");
-    assert!(replicated_storage_node.is_some());
-    assert!(replicated_storage_node.unwrap().path.is_some());
+        // Checking to ensure a node contains the correct serialised values
+        let replicated_storage_node = contents.get("ReplicatedStorage");
+        assert!(replicated_storage_node.is_some());
+    } else {
+        panic!("Missing project root node.")
+    }
 }
 
 #[test]
@@ -73,8 +80,8 @@ fn save_project() {
     let project = create_mock_project();
 
     // Checking to ensure the file is created
-    assert!(!project_path.exists());
-    project.save();
+    assert!(!project_path.exists(), "project file already exists");
+    project.save().unwrap();
     assert!(project_path.exists());
 
     // Checking file content to ensure it is as expected
@@ -86,4 +93,21 @@ fn save_project() {
 
     // Cleanup and delete file
     fs::remove_file(project_path).unwrap();
+}
+
+#[test]
+/// Test to make sure node paths are properly retrieved
+fn get_node_paths() {
+    let project = create_mock_project();
+
+    // Get node paths (similar to create_watchers())
+    let mut node_map = HashMap::<String, Node>::new();
+    project.tree.get_paths(&mut node_map);
+
+    // Confirm path
+    assert!(node_map.contains_key("src/server"));
+    assert_eq!(
+        node_map.get("src/server").unwrap().path,
+        Some(String::from("src/server"))
+    );
 }

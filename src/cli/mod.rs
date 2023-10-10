@@ -1,8 +1,8 @@
 /**
-* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 mod convert;
 mod init;
 mod serve;
@@ -20,12 +20,14 @@ pub struct VerdeCli {
 }
 
 impl VerdeCli {
-    pub fn execute(self) {
+    pub fn execute(self) -> anyhow::Result<()> {
         match self.command {
-            Commands::Convert(command) => command.execute(),
-            Commands::Init(command) => command.execute(),
-            Commands::Serve(command) => command.execute(),
+            Commands::Convert(command) => command.execute()?,
+            Commands::Init(command) => command.execute()?,
+            Commands::Serve(command) => command.execute()?,
         }
+
+        Ok(())
     }
 }
 

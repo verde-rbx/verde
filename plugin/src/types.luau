@@ -51,27 +51,19 @@ export type Store = {
 	Config Types
 ]]
 
-export type SettingUpdateFn = (_key: string, _oldValue: unknown, _newValue: unknown) -> nil
-
-export type DefaultSetting = {
-    [string]: any,
-    ShowToasts: {
+export type DefaultSettings = {
+    [string]: {
         Name: string,
-        Type: "Checkbox",
-        Default: unknown,
+        Type: string,
+        Default: any,
     },
 }
 
 export type Config = {
-    _settingCache: {
-        [string]: unknown,
-    },
-    _settingListeners: {
-        [number]: SettingUpdateFn,
-    },
-    getSettings: () -> { [string]: DefaultSetting },
+    getSettings: () -> DefaultSettings,
     getSetting: <T>(_key: string) -> T,
-    settingUpdated: (_onUpdate: SettingUpdateFn) -> nil,
+    updateSetting: (_key: string, _value: unknown) -> (),
+    settingUpdated: (_onUpdate: (_key: string, _oldValue: unknown, _newValue: unknown) -> nil) -> nil,
     getConfig: () -> { [string]: any },
 }
 

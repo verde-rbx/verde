@@ -1,8 +1,8 @@
 /**
-* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 use crate::core::{project, session, VerdeCore};
 use clap::{Parser, ValueHint};
 use std::{net::IpAddr, path::PathBuf};
@@ -24,7 +24,12 @@ pub struct ServeArgs {
 }
 
 impl ServeArgs {
-    pub fn execute(self) {
-        VerdeCore::new().project(self.project.to_str().unwrap()).start_session();
+    pub fn execute(self) -> anyhow::Result<()> {
+        VerdeCore::new()
+            .project(self.project.to_str().unwrap())?
+            .start_session();
+
+        println!("Session ended gracefully.");
+        Ok(())
     }
 }
