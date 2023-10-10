@@ -6,5 +6,7 @@
   "debug.allowBreakpointsEverywhere": true,
   "editor.indentSize": 4,
   "editor.insertSpaces": true,
-  "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  "editor.defaultFormatter": "rust-lang.rust-analyzer",
+  "files.eol": "\n",
+  "rust-analyzer.check.command": "clippy"
 }

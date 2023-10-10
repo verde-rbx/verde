@@ -92,21 +92,22 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       ],
     },
     {
-      text: "Project",
-      base: "project-",
+      text: "Studio Plugin",
       items: [
-        { text: "Introduction", link: "intro" },
-        { text: "Setup", link: "setup" },
-      ],
+        { text: "Introduction", link: "plugin" },
+      ]
     },
     {
-      text: "Studio Plugin",
-      base: "plugin-",
+      text: "Project",
       items: [
-        { text: "Introduction", link: "intro" },
-        { text: "Setup", link: "setup" },
-      ],
+        { text: "Introduction", link: "project" },
+      ]
     },
+    {
+      text: "CLI & API Reference",
+      base: "/",
+      link: "/reference/"
+    }
   ];
 }
 
@@ -114,14 +115,7 @@ function sidebarReference(): DefaultTheme.SidebarItem[] {
   return [
     {
       text: "Reference",
-      items: [
-        { text: "CLI", link: "cli" },
-        {
-          text: "Project File",
-          base: "project-file-",
-          items: [{ text: "Overview", link: "config" }],
-        },
-      ],
+      items: [{ text: "CLI", link: "cli" }],
     },
   ];
 }

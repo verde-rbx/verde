@@ -1,8 +1,8 @@
 /**
-* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 pub mod project;
 pub mod session;
 
@@ -27,32 +27,37 @@ impl VerdeCore {
     }
 
     /// Sets the current Verde Project
-    pub fn project(&mut self, path: &str) -> &mut Self {
+    pub fn project(&mut self, path: &str) -> anyhow::Result<&mut Self> {
         match self.project {
             Some(_) => println!("A project has already been specified"),
             None => {
-                let project_file = File::open(path).unwrap();
-                self.project = Some(VerdeProject::new(Some(&project_file)));
+                let mut project_file = File::open(path)?;
+                self.project = Some(VerdeProject::from(&mut project_file)?);
             }
         }
 
-        self
+        Ok(self)
     }
 
     /// Starts a new Verde Session
     pub fn start_session(&mut self) -> &mut Self {
-        if self.session.is_none() {
-            self.session = Some(VerdeSession::default());
-        }
-
-        if let Some(session) = &self.session {
-            match session.state {
-                SessionState::Active => println!("Session is already active"),
-                SessionState::Offline => session.start(),
-                SessionState::Error => session.get_latest_error(),
-            };
-        }
+        match &self.session {
+            None => self.session = Some(VerdeSession::default()),
+            Some(session) => {
+                match session.state {
+                    SessionState::Active => println!("Session is already active"),
+                    SessionState::Offline => session.start(),
+                    SessionState::Error => session.get_latest_error(),
+                };
+            }
+        };
 
         self
+    }
+}
+
+impl Default for VerdeCore {
+    fn default() -> Self {
+        Self::new()
     }
 }

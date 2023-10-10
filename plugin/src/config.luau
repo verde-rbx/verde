@@ -25,12 +25,23 @@ local DEFAULT_SETTINGS = table.freeze {
         Type = "Checkbox",
         Default = true,
     },
-} :: { [string]: types.DefaultSetting }
+} :: types.DefaultSettings
+
+type SettingUpdateFn = (_key: string, _oldValue: unknown, _newValue: unknown) -> nil
+
+type _Config = {
+    _settingCache: {
+        [string]: unknown,
+    },
+    _settingListeners: {
+        [number]: SettingUpdateFn,
+    },
+}
 
 local Config = {
     _settingCache = {},
     _settingListeners = {},
-} :: types.Config
+} :: _Config & types.Config
 
 --[[
 	Retrieves the setting from studio or creates a new setting
@@ -80,10 +91,14 @@ function Config.getSetting<T>(_key: string): T
     return get(_key)
 end
 
+function Config.updateSetting(_key: string, _value: unknown)
+    set(_key, _value)
+end
+
 --[[
 	Calls on update method when setting has changed
 ]]
-function Config.settingUpdated(_onUpdate: types.SettingUpdateFn)
+function Config.settingUpdated(_onUpdate: SettingUpdateFn)
     return table.insert(Config._settingListeners, _onUpdate)
 end
 
@@ -94,4 +109,4 @@ function Config.getConfig()
     return DEFAULT_CONFIG
 end
 
-return Config
+return Config :: types.Config

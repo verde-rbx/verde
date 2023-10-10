@@ -1,11 +1,11 @@
 /**
-* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+use crate::api;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use tokio::runtime::{Builder, Runtime};
-use warp::Filter;
 
 pub const DEFAULT_HOST: IpAddr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
 pub const DEFAULT_PORT: u16 = 3000;
@@ -52,8 +52,8 @@ impl VerdeSession {
     pub fn start(&self) {
         println!("Serving on port {}", self.port);
         self.runtime.block_on(async {
-            let hello = warp::path!("verde").map(|| format!("Verde is serving"));
-            warp::serve(hello).run(SocketAddr::new(self.host, self.port)).await;
+            let routes = api::get_routes();
+            warp::serve(routes).run(SocketAddr::new(self.host, self.port)).await;
         })
     }
 
