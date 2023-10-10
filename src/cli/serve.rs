@@ -24,7 +24,11 @@ pub struct ServeArgs {
 }
 
 impl ServeArgs {
-    pub fn execute(self) {
-        VerdeCore::new().project(self.project.to_str().unwrap()).start_session();
+    pub fn execute(self) -> anyhow::Result<()> {
+        VerdeCore::new()
+            .project(self.project.to_str().unwrap())?
+            .start_session();
+
+        Ok(())
     }
 }

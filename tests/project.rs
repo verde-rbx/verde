@@ -81,7 +81,7 @@ fn save_project() {
 
     // Checking to ensure the file is created
     assert!(!project_path.exists(), "project file already exists");
-    project.save();
+    project.save().unwrap();
     assert!(project_path.exists());
 
     // Checking file content to ensure it is as expected

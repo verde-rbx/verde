@@ -11,10 +11,11 @@ use clap::Parser;
 pub struct InitArgs {}
 
 impl InitArgs {
-    pub fn execute(self) {
+    pub fn execute(self) -> anyhow::Result<()> {
         let project = VerdeProject::default();
-        project.save();
+        project.save()?;
 
         println!("New project setup");
+        Ok(())
     }
 }

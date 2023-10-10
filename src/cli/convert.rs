@@ -22,12 +22,11 @@ pub struct ConvertArgs {
 }
 
 impl ConvertArgs {
-    pub fn execute(self) {
+    pub fn execute(self) -> anyhow::Result<()> {
         let path = self.project.as_path();
-        let project = convert_project(path);
-        if let Ok(project) = project {
-            project.save();
-            println!("Successfully converted project.")
-        }
+        let project = convert_project(path)?;
+        project.save()?;
+        println!("Successfully converted project.");
+        Ok(())
     }
 }

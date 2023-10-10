@@ -27,17 +27,16 @@ impl VerdeCore {
     }
 
     /// Sets the current Verde Project
-    pub fn project(&mut self, path: &str) -> &mut Self {
+    pub fn project(&mut self, path: &str) -> anyhow::Result<&mut Self> {
         match self.project {
             Some(_) => println!("A project has already been specified"),
             None => {
-                let mut project_file = File::open(path).unwrap();
-                let created_project = VerdeProject::from(&mut project_file);
-                self.project = created_project.ok();
+                let mut project_file = File::open(path)?;
+                self.project = Some(VerdeProject::from(&mut project_file)?);
             }
         }
 
-        self
+        Ok(self)
     }
 
     /// Starts a new Verde Session

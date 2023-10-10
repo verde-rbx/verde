@@ -5,10 +5,11 @@
  */
 mod rojo;
 
+use crate::core::project::VerdeProject;
+use anyhow::bail;
 use std::{fs::File, path::Path};
 
-use crate::core::project::VerdeProject;
-
+/// Available adapter types
 enum Adapters {
     Rojo,
 }
@@ -32,19 +33,13 @@ fn detect_project(path: &Path) -> Option<Adapters> {
 }
 
 /// Converts the project file type using an adapter to a Verde project
-pub fn convert_project(path: &Path) -> Result<VerdeProject, ()> {
+pub fn convert_project(path: &Path) -> anyhow::Result<VerdeProject> {
     let project_type = detect_project(path);
-    let mut file = File::open(path).unwrap();
-
+    let mut file = File::open(path)?;
     let converted = match project_type {
         Some(Adapters::Rojo) => rojo::convert(&mut file),
-        None => todo!("Implement custom error struct for adapters"),
-    };
+        None => bail!("Unable to detect project type."),
+    }?;
 
-    if let Ok(project) = converted {
-        return Ok(project);
-    }
-
-    // Utilise custom error struct
-    Err(())
+    Ok(converted)
 }

@@ -6,10 +6,9 @@
 use serde::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, HashMap},
-    error::Error,
     fs::{self, File},
     io::Read,
-    result::Result::{Err, Ok},
+    result::Result::Ok,
 };
 
 pub const DEFAULT_PROJECT: &str = "verde.yaml";
@@ -105,21 +104,17 @@ impl VerdeProject {
     }
 
     /// Creates a new VerdeProject from the specified file.
-    pub fn from(project: &mut File) -> Result<Self, Box<dyn Error>> {
+    pub fn from(project: &mut File) -> anyhow::Result<Self> {
         let mut buffer = String::new();
         project.read_to_string(&mut buffer)?;
         Ok(serde_yaml::from_str(&buffer)?)
     }
 
     /// Saves the VerdeProject to the file system.
-    pub fn save(&self) {
-        match serde_yaml::to_string(self) {
-            Ok(yaml) => {
-                fs::write(DEFAULT_PROJECT, yaml).expect("Failed to write.");
-            }
-
-            Err(_) => println!("Failed"),
-        }
+    pub fn save(&self) -> anyhow::Result<()> {
+        let content = serde_yaml::to_string(self)?;
+        fs::write(DEFAULT_PROJECT, content)?;
+        Ok(())
     }
 
     /// Creates watchers for defined paths

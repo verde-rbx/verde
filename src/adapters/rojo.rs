@@ -5,7 +5,7 @@
  */
 use serde::{self, Deserialize};
 use serde_json;
-use std::{collections::BTreeMap, error::Error, fs::File, io::Read, net::IpAddr};
+use std::{collections::BTreeMap, fs::File, io::Read, net::IpAddr};
 
 use crate::core::project::{Node, VerdeProject};
 
@@ -62,7 +62,7 @@ impl ProjectNode {
 }
 
 /// Converts the associated project file from Rojo to Verde
-pub fn convert(project: &mut File) -> Result<VerdeProject, Box<dyn Error>> {
+pub fn convert(project: &mut File) -> anyhow::Result<VerdeProject> {
     let mut buffer = String::new();
     project.read_to_string(&mut buffer)?;
     let rojo_project: Project = serde_json::from_str(&buffer)?;
