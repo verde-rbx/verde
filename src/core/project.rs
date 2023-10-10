@@ -1,3 +1,4 @@
+use anyhow::Context;
 /**
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -107,21 +108,26 @@ impl VerdeProject {
     /// Creates a new VerdeProject from the specified file.
     pub fn from(project: &mut File) -> anyhow::Result<Self> {
         let mut buffer = String::new();
-        project.read_to_string(&mut buffer)?;
-        Ok(serde_yaml::from_str(&buffer)?)
+        project
+            .read_to_string(&mut buffer)
+            .with_context(|| format!("Failed to read file {:#?}", project))?;
+
+        Ok(serde_yaml::from_str(&buffer).context("Failed to deserialise yaml to VerdeProject.")?)
     }
 
     /// Saves the VerdeProject to the file system.
     pub fn save(&self) -> anyhow::Result<()> {
-        let content = serde_yaml::to_string(self)?;
-        fs::write(DEFAULT_PROJECT, content)?;
+        let dest = Path::new(DEFAULT_PROJECT);
+        self.save_to(&dest)?;
         Ok(())
     }
 
     /// Saves the VerdeProject to the specified file location.
     pub fn save_to(&self, destination: &Path) -> anyhow::Result<()> {
         let content = serde_yaml::to_string(self)?;
-        fs::write(destination, content)?;
+        fs::write(destination, content)
+            .with_context(|| format!("Failed to write project to {}", destination.display()))?;
+
         Ok(())
     }
 
