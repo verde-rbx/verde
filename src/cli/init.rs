@@ -15,7 +15,7 @@ impl InitArgs {
         let project = VerdeProject::default();
         project.save()?;
 
-        println!("New project setup");
+        println!("Successfully initialised new Verde project");
         Ok(())
     }
 }

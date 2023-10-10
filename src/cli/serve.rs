@@ -29,6 +29,7 @@ impl ServeArgs {
             .project(self.project.to_str().unwrap())?
             .start_session();
 
+        println!("Session ended gracefully.");
         Ok(())
     }
 }

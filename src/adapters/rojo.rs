@@ -3,11 +3,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+use crate::core::project::{Node, VerdeProject};
 use serde::{self, Deserialize};
 use serde_json;
 use std::{collections::BTreeMap, fs::File, io::Read, net::IpAddr};
-
-use crate::core::project::{Node, VerdeProject};
 
 // Rojo project structure taken from the Rojo github:
 // This project structure has been modified to remove properties that are not yet supported by Verde

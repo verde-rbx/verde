@@ -8,6 +8,7 @@ use std::{
     collections::{BTreeMap, HashMap},
     fs::{self, File},
     io::Read,
+    path::Path,
     result::Result::Ok,
 };
 
@@ -114,6 +115,13 @@ impl VerdeProject {
     pub fn save(&self) -> anyhow::Result<()> {
         let content = serde_yaml::to_string(self)?;
         fs::write(DEFAULT_PROJECT, content)?;
+        Ok(())
+    }
+
+    /// Saves the VerdeProject to the specified file location.
+    pub fn save_to(&self, destination: &Path) -> anyhow::Result<()> {
+        let content = serde_yaml::to_string(self)?;
+        fs::write(destination, content)?;
         Ok(())
     }
 
