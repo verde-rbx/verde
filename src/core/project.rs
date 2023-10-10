@@ -112,13 +112,13 @@ impl VerdeProject {
             .read_to_string(&mut buffer)
             .with_context(|| format!("Failed to read file {:#?}", project))?;
 
-        Ok(serde_yaml::from_str(&buffer).context("Failed to deserialise yaml to VerdeProject.")?)
+        serde_yaml::from_str(&buffer).context("Failed to deserialise yaml to VerdeProject.")
     }
 
     /// Saves the VerdeProject to the file system.
     pub fn save(&self) -> anyhow::Result<()> {
         let dest = Path::new(DEFAULT_PROJECT);
-        self.save_to(&dest)?;
+        self.save_to(dest)?;
         Ok(())
     }
 
