@@ -5,11 +5,20 @@
 </p>
 
 <p align="center">
-    <a href="./LICENSE.txt">
-        <img src="https://img.shields.io/github/license/quantix-dev/verde?cacheSeconds=60480" alt="GitHub License">
+    <a href="https://verde.quantix.dev">
+        <img src="https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/release.yml?label=build&logo=github" alt="Docs Workflow Status">
     </a>
     <a href="https://verde.quantix.dev">
-        <img src="https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/deploy-docs.yml?label=docs" alt="GitHub Workflow Status">
+        <img src="https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/deploy-docs.yml?label=docs&logo=github" alt="Docs Workflow Status">
+    </a>
+    <a href="">
+        <img alt="Codecov" src="https://codecov.io/github/quantix-dev/verde/graph/badge.svg?token=M7HHNI1Z5E">
+    </a>
+    <a href="./Cargo.toml">
+        <img alt="Rust MSRV" src="https://img.shields.io/badge/rust-1.70-brightgreen?style=flat&logo=rust">
+    </a>
+    <a href="./LICENSE.txt">
+        <img src="https://img.shields.io/github/license/quantix-dev/verde?cacheSeconds=60480" alt="GitHub License">
     </a>
 </p>
 

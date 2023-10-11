@@ -1,0 +1,43 @@
+name: Coverage Report
+on:
+  pull_request: 
+    paths: ["src/**/*.*", "tests/**/*.*", "Cargo.toml", "Cargo.lock"]
+  push:
+    branches: ["main"]
+    paths: ["src/**/*.*", "tests/**/*.*", "Cargo.toml", "Cargo.lock"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint:
+    name: Coverage
+    runs-on: ubuntu-latest
+    container:
+      image: xd009642/tarpaulin
+      options: --security-opt seccomp=unconfined
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/W
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
+            target/
+          key: ${{ runner.os }}-${{ hashFiles('**/Cargo.toml') }}
+
+      - name: Generate code coverage
+        run: cargo tarpaulin --all-features --workspace --timeout 120 --out xml
+
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          fail_ci_if_error: true
