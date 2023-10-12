@@ -5,6 +5,7 @@
  */
 pub mod project;
 pub mod session;
+pub mod sourcemap;
 
 use self::project::VerdeProject;
 use self::session::{SessionState, VerdeSession};
