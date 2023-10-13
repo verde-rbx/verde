@@ -7,11 +7,7 @@ mod rojo;
 
 use crate::core::project::VerdeProject;
 use anyhow::bail;
-use std::{
-    fs::{self, File},
-    io::Read,
-    path::Path,
-};
+use std::{fs, path::Path};
 
 /// Available adapter types
 enum Adapters {
