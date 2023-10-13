@@ -7,7 +7,11 @@ mod rojo;
 
 use crate::core::project::VerdeProject;
 use anyhow::bail;
-use std::{fs::File, path::Path};
+use std::{
+    fs::{self, File},
+    io::Read,
+    path::Path,
+};
 
 /// Available adapter types
 enum Adapters {
@@ -35,9 +39,11 @@ fn detect_project(path: &Path) -> Option<Adapters> {
 /// Converts the project file type using an adapter to a Verde project
 pub fn convert_project(path: &Path) -> anyhow::Result<VerdeProject> {
     let project_type = detect_project(path);
-    let mut file = File::open(path)?;
+
+    // Open file and read contents
+    let buffer = fs::read_to_string(path)?;
     let converted = match project_type {
-        Some(Adapters::Rojo) => rojo::convert(&mut file),
+        Some(Adapters::Rojo) => rojo::convert(&buffer),
         None => bail!("Unable to detect project type."),
     }?;
 

@@ -6,7 +6,7 @@
 use crate::core::project::{Node, VerdeProject};
 use serde::{self, Deserialize};
 use serde_json;
-use std::{collections::BTreeMap, fs::File, io::Read, net::IpAddr};
+use std::{collections::BTreeMap, net::IpAddr};
 
 // Rojo project structure taken from the Rojo github:
 // This project structure has been modified to remove properties that are not yet supported by Verde
@@ -61,11 +61,8 @@ impl ProjectNode {
 }
 
 /// Converts the associated project file from Rojo to Verde
-pub fn convert(project: &mut File) -> anyhow::Result<VerdeProject> {
-    let mut buffer = String::new();
-    project.read_to_string(&mut buffer)?;
-    let rojo_project: Project = serde_json::from_str(&buffer)?;
-
+pub fn convert(buffer: &str) -> anyhow::Result<VerdeProject> {
+    let rojo_project: Project = serde_json::from_str(buffer)?;
     Ok(VerdeProject {
         name: rojo_project.name,
         tree: rojo_project.tree.convert_node(),
