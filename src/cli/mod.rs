@@ -6,10 +6,12 @@
 mod convert;
 mod init;
 mod serve;
+mod sourcemap;
 
 use self::convert::ConvertArgs;
 use self::init::InitArgs;
 use self::serve::ServeArgs;
+use self::sourcemap::SourcemapArgs;
 use clap::Parser;
 
 #[derive(Parser)]
@@ -25,6 +27,7 @@ impl VerdeCli {
             Commands::Convert(command) => command.execute()?,
             Commands::Init(command) => command.execute()?,
             Commands::Serve(command) => command.execute()?,
+            Commands::Sourcemap(command) => command.execute()?,
         }
 
         Ok(())
@@ -36,4 +39,5 @@ pub enum Commands {
     Convert(ConvertArgs),
     Init(InitArgs),
     Serve(ServeArgs),
+    Sourcemap(SourcemapArgs),
 }

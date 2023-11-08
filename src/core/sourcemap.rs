@@ -5,12 +5,12 @@
  */
 use super::project::VerdeProject;
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
+use std::path::Path;
 
 /// The sourcemap schema has been defined by Rojo and adopted by third parties becoming the standard.
-/// Ideally, we would want to migrate this to something like types.d.ts?
 #[derive(Serialize, Deserialize)]
-struct Sourcemap<'a> {
+#[serde(rename_all = "camelCase")]
+pub struct VerdeSourcemap<'a> {
     /// The name of the node.
     pub name: &'a str,
 
@@ -19,15 +19,24 @@ struct Sourcemap<'a> {
 
     /// The file paths associated with the node.
     #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub file_paths: Vec<PathBuf>,
+    pub file_paths: Vec<&'a Path>,
 
     /// Child nodes.
     #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub children: Vec<Sourcemap<'a>>,
+    pub children: Vec<VerdeSourcemap<'a>>,
 }
 
-impl<'a> Sourcemap<'a> {
-    pub fn from_project(project: &VerdeProject) {
-        
+impl<'a> VerdeSourcemap<'a> {
+    pub fn from_project(project: &'a VerdeProject) -> Self {
+        // Get top level definition
+        // project.create_watcher();
+
+        VerdeSourcemap {
+            name: &project.name,
+            class_name: "DataModel",
+            file_paths: vec![],
+            children: vec![],
+        }
     }
 }
+
