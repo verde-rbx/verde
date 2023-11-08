@@ -9,6 +9,7 @@ pub mod sourcemap;
 
 use self::project::VerdeProject;
 use self::session::{SessionState, VerdeSession};
+use anyhow::anyhow;
 use std::fs::File;
 
 pub struct VerdeCore {
@@ -18,7 +19,8 @@ pub struct VerdeCore {
     pub session: Option<VerdeSession>,
 }
 
-// TODO: Should builder syntax be separated into VerdeCoreBuilder?
+// TODO: I think this is redundent and session/project should be their own thing
+//       Session relies on project so making them in this structure makes it difficult to pass them around
 impl VerdeCore {
     pub fn new() -> Self {
         VerdeCore {
@@ -41,19 +43,23 @@ impl VerdeCore {
     }
 
     /// Starts a new Verde Session
-    pub fn start_session(&mut self) -> &mut Self {
+    pub fn start_session(&mut self) -> anyhow::Result<&mut Self> {
+        if self.project.is_none() {
+            return Err(anyhow!("Please ensure a project is loaded before starting a session."));
+        }
+
         match &self.session {
             None => self.session = Some(VerdeSession::default()),
             Some(session) => {
                 match session.state {
                     SessionState::Active => println!("Session is already active"),
-                    SessionState::Offline => session.start(),
+                    SessionState::Offline => session.start(self.project.as_ref().unwrap()),
                     SessionState::Error => session.get_latest_error(),
                 };
             }
         };
 
-        self
+        Ok(self)
     }
 }
 

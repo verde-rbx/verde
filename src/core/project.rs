@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use anyhow::Context;
+use notify::RecommendedWatcher;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -17,6 +18,7 @@ pub const DEFAULT_PROJECT: &str = "verde.yaml";
 
 /// An instance node.
 #[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Node {
     /// Path (relative to source directory)
     #[serde(rename = ".path", skip_serializing_if = "Option::is_none")]
@@ -58,7 +60,8 @@ impl Node {
 ///  ServerScriptService:
 ///    .path: src/server
 /// ````
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct VerdeProject {
     /// Name of project
     pub name: String,
@@ -132,10 +135,12 @@ impl VerdeProject {
     }
 
     /// Creates watchers for defined paths
-    pub fn create_watcher(&self) -> HashMap<String, Node> {
+    pub fn create_watcher(&self) -> anyhow::Result<RecommendedWatcher> {
+        // Construct a map of tracked nodes
         let mut map = HashMap::<String, Node>::new();
         self.tree.get_paths(&mut map);
-        map
+
+        notify::recommended_watcher(|_x| {}).context("Failed to create recommended watcher")
     }
 }
 

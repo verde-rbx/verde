@@ -29,6 +29,7 @@ mod handlers {
     struct SyncApi {}
 
     pub async fn handshake() -> Result<impl warp::Reply, Infallible> {
+        // TODO: Validate the place id / make sure it's ALLOWED to interact with this project
         Ok(StatusCode::OK)
     }
 }

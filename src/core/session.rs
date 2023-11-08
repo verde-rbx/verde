@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+use super::VerdeProject;
 use crate::api;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use tokio::runtime::{Builder, Runtime};
@@ -49,8 +50,10 @@ impl VerdeSession {
     }
 
     /// Starts the session and begins listening
-    pub fn start(&self) {
+    pub fn start(&self, project: &VerdeProject) {
         println!("Serving on port {}", self.port);
+
+        // Start listening on api
         self.runtime.block_on(async {
             let routes = api::get_routes();
             warp::serve(routes).run(SocketAddr::new(self.host, self.port)).await;
