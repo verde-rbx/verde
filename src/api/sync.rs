@@ -3,33 +3,44 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-use warp::Filter;
 
-/// The main sync endpoint filter.
-pub fn sync() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
-    filters::sync_handshake()
-}
-
-mod filters {
+pub mod filters {
     use super::handlers;
-    use warp::Filter;
+    use crate::core::project::VerdeProject;
+    use std::{convert::Infallible, sync::Arc};
+    use warp::{path, Filter};
 
-    /// POST /sync/handshake
-    /// Initiates a connection with the sync server.
-    pub fn sync_handshake() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
-        warp::path!("sync" / "handshake").and_then(handlers::handshake)
+    /// Entry point for the sync api
+    pub fn sync(
+        project: Arc<VerdeProject>,
+    ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
+        sync_heartbeat(project)
+    }
+
+    /// Api for requesting heartbeat status of the sync session
+    pub fn sync_heartbeat(
+        project: Arc<VerdeProject>,
+    ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
+        path!("heartbeat")
+            .and(warp::get())
+            .and(with_project(project))
+            .and_then(handlers::sync_heartbeat)
+    }
+
+    /// Helper for warp
+    fn with_project(
+        project: Arc<VerdeProject>,
+    ) -> impl Filter<Extract = (Arc<VerdeProject>,), Error = Infallible> + Clone {
+        warp::any().map(move || Arc::clone(&project))
     }
 }
 
 mod handlers {
-    use std::convert::Infallible;
+    use crate::core::project::VerdeProject;
+    use std::{convert::Infallible, sync::Arc};
     use warp::http::StatusCode;
 
-    #[allow(dead_code)]
-    struct SyncApi {}
-
-    pub async fn handshake() -> Result<impl warp::Reply, Infallible> {
-        // TODO: Validate the place id / make sure it's ALLOWED to interact with this project
+    pub async fn sync_heartbeat(project: Arc<VerdeProject>) -> Result<impl warp::Reply, Infallible> {
         Ok(StatusCode::OK)
     }
 }

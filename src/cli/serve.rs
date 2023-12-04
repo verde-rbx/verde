@@ -10,6 +10,7 @@ use std::{net::IpAddr, path::PathBuf};
 #[derive(Parser)]
 /// Starts the Verde server to begin the synchronisation process
 pub struct ServeArgs {
+    
     /// The project file to configure the server with
     #[arg(long, alias="path", value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
     project: PathBuf,
@@ -27,7 +28,7 @@ impl ServeArgs {
     pub fn execute(self) -> anyhow::Result<()> {
         VerdeCore::new()
             .project(self.project.to_str().unwrap())?
-            .start_session();
+            .start_session()?;
 
         println!("Session ended gracefully.");
         Ok(())

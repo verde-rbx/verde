@@ -9,7 +9,7 @@ pub mod sourcemap;
 
 use self::project::VerdeProject;
 use self::session::{SessionState, VerdeSession};
-use anyhow::anyhow;
+use anyhow::bail;
 use std::fs::File;
 
 pub struct VerdeCore {
@@ -44,20 +44,20 @@ impl VerdeCore {
 
     /// Starts a new Verde Session
     pub fn start_session(&mut self) -> anyhow::Result<&mut Self> {
-        if self.project.is_none() {
-            return Err(anyhow!("Please ensure a project is loaded before starting a session."));
+        if let Some(project) = self.project.take() {
+            match &self.session {
+                None => self.session = Some(VerdeSession::default()),
+                Some(session) => {
+                    match session.state {
+                        SessionState::Active => println!("Session is already active"),
+                        SessionState::Offline => session.start(project),
+                        SessionState::Error => session.get_latest_error(),
+                    };
+                }
+            };
+        } else {
+            bail!("Please ensure a project is loaded before starting a session.");
         }
-
-        match &self.session {
-            None => self.session = Some(VerdeSession::default()),
-            Some(session) => {
-                match session.state {
-                    SessionState::Active => println!("Session is already active"),
-                    SessionState::Offline => session.start(self.project.as_ref().unwrap()),
-                    SessionState::Error => session.get_latest_error(),
-                };
-            }
-        };
 
         Ok(self)
     }

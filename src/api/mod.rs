@@ -5,9 +5,12 @@
  */
 mod sync;
 
+use crate::core::project::VerdeProject;
+use std::sync::Arc;
 use warp::Filter;
 
-/// Returns all api routes combined
-pub fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
-    sync::sync()
+pub fn get_api(
+    project: Arc<VerdeProject>,
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
+    sync::filters::sync(project)
 }
