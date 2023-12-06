@@ -10,8 +10,11 @@
     "docs:build": "vitepress build",
     "docs:serve": "vitepress serve"
   },
+  "engines": {
+    "node": ">=20.10.0"
+  },
   "devDependencies": {
-    "vitepress": "1.0.0-rc.20"
+    "vitepress": "1.0.0-rc.31"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -25,5 +28,9 @@
     "@algolia/client-search": {
       "optional": true
     }
+  },
+  "volta": {
+    "node": "20.10.0",
+    "pnpm": "8.11.0"
   }
 }
