@@ -105,8 +105,8 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
     },
     {
       text: "CLI & API Reference",
-      base: "/",
-      link: "/reference/"
+      base: "/reference/",
+      link: "/"
     }
   ];
 }
