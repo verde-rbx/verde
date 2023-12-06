@@ -53,6 +53,7 @@ impl ProjectNode {
         }
 
         Node {
+            class_name: self.class_name.to_owned(),
             path: self.path.to_owned(),
             properties: None,
             contents: Some(child_nodes),

@@ -19,11 +19,15 @@ fn save_mock_project() -> File {
     let project_contents = r#"
       name: Verde Test Project
       tree:
+        .className: DataModel
         ReplicatedStorage:
+          .className: ReplicatedStorage
           .path: src/shared
         ServerScriptService:
+          .className: ServerScriptService
           .path: src/server
         StarterPlayer:
+          .className: StarterPlayer
           StarterPlayerScripts:
             .path: src/client
     "#;
@@ -38,11 +42,13 @@ fn create_mock_project() -> VerdeProject {
     VerdeProject {
         name: String::from("Verde Test Project"),
         tree: Node {
+            class_name: Some(String::from("DataModel")),
             path: None,
             properties: None,
             contents: Some(BTreeMap::<String, Node>::from([(
                 String::from("ServerScriptService"),
                 Node {
+                    class_name: Some(String::from("ServerScriptService")),
                     path: Some(String::from("src/server")),
                     properties: None,
                     contents: None,
@@ -88,7 +94,7 @@ fn save_project() {
     let file_content = fs::read(project_path).unwrap();
     assert_eq!(
         str::from_utf8(&file_content).unwrap(),
-        "name: Verde Test Project\ntree:\n  ServerScriptService:\n    .path: src/server\n"
+        "name: Verde Test Project\ntree:\n  .className: DataModel\n  ServerScriptService:\n    .className: ServerScriptService\n    .path: src/server\n"
     );
 
     // Cleanup and delete file
