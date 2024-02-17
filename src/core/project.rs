@@ -22,7 +22,7 @@ pub const DEFAULT_PROJECT: &str = "verde.yaml";
 pub struct Node {
   /// The classname for the instance.
   /// TODO: Fetch instance types from rbx api and auto resolve best one if not specified (ReplicatedStorage -> ReplicatedStorage)
-  #[serde(rename = ".className", skip_serializing_if = "Option::is_none")]
+  #[serde(rename = ".class", skip_serializing_if = "Option::is_none")]
   pub class_name: Option<String>,
 
   /// Path (relative to source directory)
@@ -51,6 +51,9 @@ impl Node {
       }
     }
   }
+
+  /// Populates the nodes contents based on the file path
+  pub fn populate(&self) {}
 }
 
 /// Project Structure

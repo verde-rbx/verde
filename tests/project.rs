@@ -19,15 +19,15 @@ fn save_mock_project() -> File {
   let project_contents = r#"
       name: Verde Test Project
       tree:
-        .className: DataModel
+        .class: DataModel
         ReplicatedStorage:
-          .className: ReplicatedStorage
+          .class: ReplicatedStorage
           .path: src/shared
         ServerScriptService:
-          .className: ServerScriptService
+          .class: ServerScriptService
           .path: src/server
         StarterPlayer:
-          .className: StarterPlayer
+          .class: StarterPlayer
           StarterPlayerScripts:
             .path: src/client
     "#;
@@ -94,7 +94,7 @@ fn save_project() {
   let file_content = fs::read(project_path).unwrap();
   assert_eq!(
         str::from_utf8(&file_content).unwrap(),
-        "name: Verde Test Project\ntree:\n  .className: DataModel\n  ServerScriptService:\n    .className: ServerScriptService\n    .path: src/server\n"
+        "name: Verde Test Project\ntree:\n  .class: DataModel\n  ServerScriptService:\n    .class: ServerScriptService\n    .path: src/server\n"
     );
 
   // Cleanup and delete file
