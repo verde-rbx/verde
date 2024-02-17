@@ -10,27 +10,26 @@ use std::{net::IpAddr, path::PathBuf};
 #[derive(Parser)]
 /// Starts the Verde server to begin the synchronisation process
 pub struct ServeArgs {
-    
-    /// The project file to configure the server with
-    #[arg(long, alias="path", value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
-    project: PathBuf,
+  /// The project file to configure the server with
+  #[arg(long, alias="path", value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
+  project: PathBuf,
 
-    /// The host ip address to serve and listen to requests on
-    #[arg(long, alias="address", value_hint=ValueHint::Hostname, default_value_t = session::DEFAULT_HOST)]
-    host: IpAddr,
+  /// The host ip address to serve and listen to requests on
+  #[arg(long, alias="address", value_hint=ValueHint::Hostname, default_value_t = session::DEFAULT_HOST)]
+  host: IpAddr,
 
-    /// The port to serve and listen to requests on
-    #[arg(short, long, default_value_t = session::DEFAULT_PORT)]
-    port: u16,
+  /// The port to serve and listen to requests on
+  #[arg(short, long, default_value_t = session::DEFAULT_PORT)]
+  port: u16,
 }
 
 impl ServeArgs {
-    pub fn execute(self) -> anyhow::Result<()> {
-        VerdeCore::new()
-            .project(self.project.to_str().unwrap())?
-            .start_session()?;
+  pub fn execute(self) -> anyhow::Result<()> {
+    VerdeCore::new()
+      .project(self.project.to_str().unwrap())?
+      .start_session()?;
 
-        println!("Session ended gracefully.");
-        Ok(())
-    }
+    println!("Session ended gracefully.");
+    Ok(())
+  }
 }

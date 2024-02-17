@@ -4,3 +4,4 @@ edition = "2021"
 max_width = 120
 # imports_granularity = "Crate"
 newline_style = "Unix"
+tab_spaces = 2

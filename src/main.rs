@@ -7,8 +7,8 @@ use clap::Parser;
 use verde::cli::VerdeCli;
 
 fn main() -> anyhow::Result<()> {
-    let command = VerdeCli::parse();
-    command.execute()?;
+  let command = VerdeCli::parse();
+  command.execute()?;
 
-    Ok(())
+  Ok(())
 }

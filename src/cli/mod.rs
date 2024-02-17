@@ -17,27 +17,27 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, propagate_version = true)]
 pub struct VerdeCli {
-    #[command(subcommand)]
-    command: Commands,
+  #[command(subcommand)]
+  command: Commands,
 }
 
 impl VerdeCli {
-    pub fn execute(self) -> anyhow::Result<()> {
-        match self.command {
-            Commands::Convert(command) => command.execute()?,
-            Commands::Init(command) => command.execute()?,
-            Commands::Serve(command) => command.execute()?,
-            Commands::Sourcemap(command) => command.execute()?,
-        }
-
-        Ok(())
+  pub fn execute(self) -> anyhow::Result<()> {
+    match self.command {
+      Commands::Convert(command) => command.execute()?,
+      Commands::Init(command) => command.execute()?,
+      Commands::Serve(command) => command.execute()?,
+      Commands::Sourcemap(command) => command.execute()?,
     }
+
+    Ok(())
+  }
 }
 
 #[derive(Parser)]
 pub enum Commands {
-    Convert(ConvertArgs),
-    Init(InitArgs),
-    Serve(ServeArgs),
-    Sourcemap(SourcemapArgs),
+  Convert(ConvertArgs),
+  Init(InitArgs),
+  Serve(ServeArgs),
+  Sourcemap(SourcemapArgs),
 }

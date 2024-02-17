@@ -10,7 +10,7 @@ use std::sync::Arc;
 use warp::Filter;
 
 pub fn get_api(
-    project: Arc<VerdeProject>,
+  project: Arc<VerdeProject>,
 ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
-    sync::filters::sync(project)
+  sync::filters::sync(project)
 }

@@ -5,6 +5,7 @@
   ],
   "debug.allowBreakpointsEverywhere": true,
   "editor.indentSize": 2,
+  "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.defaultFormatter": "rust-lang.rust-analyzer",
   "files.eol": "\n",

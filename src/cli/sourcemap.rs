@@ -4,8 +4,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use crate::core::{
-    project::{self, VerdeProject},
-    sourcemap::VerdeSourcemap,
+  project::{self, VerdeProject},
+  sourcemap::VerdeSourcemap,
 };
 use clap::{Parser, ValueHint};
 use std::{fs::File, path::PathBuf};
@@ -14,19 +14,19 @@ use std::{fs::File, path::PathBuf};
 /// Creates a sourcemap using the project file.
 ///
 pub struct SourcemapArgs {
-    #[arg(value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
-    project: PathBuf,
+  #[arg(value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
+  project: PathBuf,
 }
 
 impl SourcemapArgs {
-    pub fn execute(self) -> anyhow::Result<()> {
-        let mut proj_file = File::open(self.project)?;
-        let proj = VerdeProject::from(&mut proj_file)?;
-        let sourcemap = VerdeSourcemap::from_project(&proj);
+  pub fn execute(self) -> anyhow::Result<()> {
+    let mut proj_file = File::open(self.project)?;
+    let proj = VerdeProject::from(&mut proj_file)?;
+    let sourcemap = VerdeSourcemap::from_project(&proj);
 
-        // TODO: Do we want file output as well?
-        println!("{}", serde_json::to_string(&sourcemap)?);
+    // TODO: Do we want file output as well?
+    println!("{}", serde_json::to_string(&sourcemap)?);
 
-        Ok(())
-    }
+    Ok(())
+  }
 }
