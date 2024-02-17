@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "rust-lang.rust-analyzer",
-    "panicbit.cargo",
     "vadimcn.vscode-lldb",
     "swellaby.vscode-rust-test-adapter"
   ]
