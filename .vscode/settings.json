@@ -4,7 +4,7 @@
     ".\\Cargo.toml"
   ],
   "debug.allowBreakpointsEverywhere": true,
-  "editor.indentSize": 4,
+  "editor.indentSize": 2,
   "editor.insertSpaces": true,
   "editor.defaultFormatter": "rust-lang.rust-analyzer",
   "files.eol": "\n",
@@ -15,5 +15,6 @@
   },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "testExplorer.useNativeTesting": true
 }
