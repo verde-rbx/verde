@@ -53,10 +53,16 @@ impl ProjectNode {
       child_nodes.insert(key.to_string(), child.convert_node());
     }
 
+    // Convert properties to verde format
+    let overwrite_descendants = self.ignore_unknown_instances.and_then(|f| match f {
+      true => Some(false),
+      _ => None,
+    });
+
     Node {
       class_name: self.class_name.to_owned(),
       path: self.path.to_owned(),
-      overwrite_descendants: self.ignore_unknown_instances.map(|f| !f),
+      overwrite_descendants,
       properties: None, // TODO: Support properties
       contents: Some(child_nodes),
     }
