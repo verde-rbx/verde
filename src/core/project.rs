@@ -29,6 +29,10 @@ pub struct Node {
   #[serde(rename = ".path", skip_serializing_if = "Option::is_none")]
   pub path: Option<String>,
 
+  /// Determines if untracked descendants should be forcibly overwritten
+  #[serde(rename = ".force", skip_serializing_if = "Option::is_none")]
+  pub overwrite_descendants: Option<bool>,
+
   // Properties applied to the related Roblox instance
   #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
   pub properties: Option<BTreeMap<String, String>>,
@@ -87,6 +91,7 @@ impl VerdeProject {
       tree: Node {
         class_name: Some(String::from("DataModel")),
         path: None,
+        overwrite_descendants: None,
         properties: None,
         contents: Some(BTreeMap::<String, Node>::from([
           (
@@ -94,6 +99,7 @@ impl VerdeProject {
             Node {
               class_name: Some(String::from("ServerScriptService")),
               path: Some(String::from("src/server")),
+              overwrite_descendants: None,
               properties: None,
               contents: None,
             },
@@ -103,12 +109,14 @@ impl VerdeProject {
             Node {
               class_name: Some(String::from("ReplicatedStorage")),
               path: Some(String::from("src/shared")),
+              overwrite_descendants: None,
               properties: None,
               contents: Some(BTreeMap::<String, Node>::from([(
                 String::from("client"),
                 Node {
                   class_name: None,
                   path: Some(String::from("src/client")),
+                  overwrite_descendants: None,
                   properties: None,
                   contents: None,
                 },

@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use crate::core::project::{Node, VerdeProject};
+use anyhow::Context;
 use serde::{self, Deserialize};
 use serde_json;
 use std::{collections::BTreeMap, net::IpAddr};
@@ -55,7 +56,8 @@ impl ProjectNode {
     Node {
       class_name: self.class_name.to_owned(),
       path: self.path.to_owned(),
-      properties: None,
+      overwrite_descendants: self.ignore_unknown_instances.map(|f| !f),
+      properties: None, // TODO: Support properties
       contents: Some(child_nodes),
     }
   }
@@ -63,7 +65,7 @@ impl ProjectNode {
 
 /// Converts the associated project file from Rojo to Verde
 pub fn convert(buffer: &str) -> anyhow::Result<VerdeProject> {
-  let rojo_project: Project = serde_json::from_str(buffer)?;
+  let rojo_project: Project = serde_json::from_str(buffer).context("Failed to deserialize project buffer.")?;
   Ok(VerdeProject {
     name: rojo_project.name,
     tree: rojo_project.tree.convert_node(),

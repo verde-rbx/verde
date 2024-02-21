@@ -40,7 +40,7 @@ mod handlers {
   use std::{convert::Infallible, sync::Arc};
   use warp::http::StatusCode;
 
-  pub async fn sync_heartbeat(project: Arc<VerdeProject>) -> Result<impl warp::Reply, Infallible> {
+  pub async fn sync_heartbeat(_project: Arc<VerdeProject>) -> Result<impl warp::Reply, Infallible> {
     Ok(StatusCode::OK)
   }
 }

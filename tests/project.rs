@@ -44,12 +44,14 @@ fn create_mock_project() -> VerdeProject {
     tree: Node {
       class_name: Some(String::from("DataModel")),
       path: None,
+      overwrite_descendants: None,
       properties: None,
       contents: Some(BTreeMap::<String, Node>::from([(
         String::from("ServerScriptService"),
         Node {
           class_name: Some(String::from("ServerScriptService")),
           path: Some(String::from("src/server")),
+          overwrite_descendants: None,
           properties: None,
           contents: None,
         },
