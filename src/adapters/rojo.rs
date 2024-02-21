@@ -55,8 +55,8 @@ impl ProjectNode {
 
     // Convert properties to verde format
     let overwrite_descendants = self.ignore_unknown_instances.and_then(|f| match f {
-      true => Some(false),
-      _ => None,
+      true => None,
+      _ => Some(true),
     });
 
     Node {
