@@ -11,7 +11,8 @@ use std::{
   str,
 };
 use tempfile::tempfile;
-use verde::core::project::{self, Node, VerdeProject};
+use verde::core::node::Node;
+use verde::core::project::{self, VerdeProject};
 
 /// Saves a mock project
 fn save_mock_project() -> File {

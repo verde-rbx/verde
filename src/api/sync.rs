@@ -5,7 +5,7 @@
  */
 
 pub mod filters {
-  use super::handlers;
+  use crate::api::sync::handlers;
   use crate::core::project::VerdeProject;
   use std::{convert::Infallible, sync::Arc};
   use warp::{path, Filter};
