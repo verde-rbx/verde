@@ -5,8 +5,9 @@
  */
 mod rojo;
 
+use crate::adapters::rojo::RojoProject;
 use crate::core::project::VerdeProject;
-use anyhow::bail;
+use anyhow::Context;
 use std::{fs, path::Path};
 
 /// Available adapter types
@@ -34,14 +35,13 @@ fn detect_project(path: &Path) -> Option<Adapters> {
 
 /// Converts the project file type using an adapter to a Verde project
 pub fn convert_project(path: &Path) -> anyhow::Result<VerdeProject> {
-  let project_type = detect_project(path);
+  let project_type = detect_project(path).context("Unable to detect project type.").unwrap();
 
   // Open file and read contents
   let buffer = fs::read_to_string(path)?;
-  let converted = match project_type {
-    Some(Adapters::Rojo) => rojo::convert(&buffer),
-    None => bail!("Unable to detect project type."),
-  }?;
+  let project = match project_type {
+    Adapters::Rojo => serde_json::from_str::<RojoProject>(&buffer)?.into(),
+  };
 
-  Ok(converted)
+  Ok(project)
 }

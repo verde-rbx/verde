@@ -4,9 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use crate::core::{node::Node, project::VerdeProject};
-use anyhow::Context;
 use serde::{self, Deserialize};
-use serde_json;
 use std::{collections::BTreeMap, net::IpAddr};
 
 // Rojo project structure taken from the Rojo github:
@@ -14,10 +12,10 @@ use std::{collections::BTreeMap, net::IpAddr};
 // https://github.com/rojo-rbx/rojo/blob/master/src/project.rs
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
-pub struct Project {
+pub struct RojoProject {
   pub name: String,
 
-  pub tree: ProjectNode,
+  pub tree: RojoProjectNode,
 
   #[serde(skip_serializing_if = "Option::is_none")]
   pub serve_port: Option<u16>,
@@ -26,17 +24,26 @@ pub struct Project {
   pub serve_address: Option<IpAddr>,
 }
 
+impl From<RojoProject> for VerdeProject {
+  fn from(value: RojoProject) -> Self {
+    Self {
+      name: value.name,
+      tree: value.tree.into(),
+    }
+  }
+}
+
 // Rojo project node taken from the Rojo github:
 // This node structure has been modified to remove properties that are not yet supported by Verde
 // https://github.com/rojo-rbx/rojo/blob/master/src/project.rs
 #[derive(Deserialize)]
-pub struct ProjectNode {
+pub struct RojoProjectNode {
   #[serde(rename = "$className", skip_serializing_if = "Option::is_none")]
   pub class_name: Option<String>,
 
   /// Contains all of the children of the described instance.
   #[serde(flatten)]
-  pub children: BTreeMap<String, ProjectNode>,
+  pub children: BTreeMap<String, RojoProjectNode>,
 
   #[serde(rename = "$ignoreUnknownInstances", skip_serializing_if = "Option::is_none")]
   pub ignore_unknown_instances: Option<bool>,
@@ -45,35 +52,26 @@ pub struct ProjectNode {
   pub path: Option<String>,
 }
 
-impl ProjectNode {
+impl From<RojoProjectNode> for Node {
   /// Converts a Rojo ProjectNode to Verde Node
-  pub fn convert_node(&self) -> Node {
-    let mut child_nodes = BTreeMap::<String, Node>::new();
-    for (key, child) in &self.children {
-      child_nodes.insert(key.to_string(), child.convert_node());
+  fn from(node: RojoProjectNode) -> Self {
+    let mut child_nodes = BTreeMap::<String, Self>::new();
+    for (key, child) in node.children {
+      child_nodes.insert(key.to_string(), child.into());
     }
 
     // Convert properties to verde format
-    let overwrite_descendants = self.ignore_unknown_instances.and_then(|f| match f {
+    let overwrite_descendants = node.ignore_unknown_instances.and_then(|f| match f {
       true => None,
       _ => Some(true),
     });
 
-    Node {
-      class_name: self.class_name.to_owned(),
-      path: self.path.to_owned(),
+    Self {
+      class_name: node.class_name.to_owned(),
+      path: node.path.to_owned(),
       overwrite_descendants,
       properties: None, // TODO: Support properties
       contents: Some(child_nodes),
     }
   }
-}
-
-/// Converts the associated project file from Rojo to Verde
-pub fn convert(buffer: &str) -> anyhow::Result<VerdeProject> {
-  let rojo_project: Project = serde_json::from_str(buffer).context("Failed to deserialize project buffer.")?;
-  Ok(VerdeProject {
-    name: rojo_project.name,
-    tree: rojo_project.tree.convert_node(),
-  })
 }
