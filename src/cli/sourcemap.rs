@@ -12,7 +12,6 @@ use std::{fs::File, path::PathBuf};
 
 #[derive(Parser)]
 /// Creates a sourcemap using the project file.
-///
 pub struct SourcemapArgs {
   #[arg(value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
   project: PathBuf,

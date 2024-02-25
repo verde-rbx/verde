@@ -9,7 +9,7 @@ use clap::{Parser, ValueHint};
 use std::path::PathBuf;
 
 #[derive(Parser)]
-/// Converts support project formats to the Verde project
+/// Converts supported project formats to the Verde project.
 pub struct ConvertArgs {
   // TODO: Allow to omit project path to auto detect project in CWD
   /// The project file to convert.
@@ -19,7 +19,7 @@ pub struct ConvertArgs {
   #[arg(short, long)]
   format: Option<String>,
 
-  /// Where to output
+  /// Where to output.
   #[arg(short, long, value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
   out: PathBuf,
 }

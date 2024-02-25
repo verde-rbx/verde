@@ -10,14 +10,14 @@ pub mod filters {
   use std::{convert::Infallible, sync::Arc};
   use warp::{path, Filter};
 
-  /// Entry point for the sync api
+  /// Entry point for the sync api.
   pub fn sync(
     project: Arc<VerdeProject>,
   ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     sync_heartbeat(project)
   }
 
-  /// Api for requesting heartbeat status of the sync session
+  /// Api for requesting heartbeat status of the sync session.
   pub fn sync_heartbeat(
     project: Arc<VerdeProject>,
   ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
@@ -27,7 +27,7 @@ pub mod filters {
       .and_then(handlers::sync_heartbeat)
   }
 
-  /// Helper for warp
+  /// Helper for warp.
   fn with_project(
     project: Arc<VerdeProject>,
   ) -> impl Filter<Extract = (Arc<VerdeProject>,), Error = Infallible> + Clone {
