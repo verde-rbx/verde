@@ -1,8 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 
-use serde::{Deserialize, Serialize};
-
-/// An instance node.
+/// A node describing an instance in the project tree.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Node {
@@ -20,9 +24,9 @@ pub struct Node {
   pub overwrite_descendants: Option<bool>,
 
   // Properties applied to the related Roblox instance
-  #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
-  pub properties: Option<BTreeMap<String, String>>,
-
+  // #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
+  // pub properties: Option<BTreeMap<String, String>>,
+  // TODO: Implement a roblox typing based on api dump
   /// Additonal instance tree
   #[serde(flatten, skip_serializing_if = "Option::is_none")]
   pub contents: Option<BTreeMap<String, Node>>,

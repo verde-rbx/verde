@@ -70,7 +70,6 @@ impl From<RojoProjectNode> for Node {
       class_name: node.class_name.to_owned(),
       path: node.path.to_owned(),
       overwrite_descendants,
-      properties: None, // TODO: Support properties
       contents: Some(child_nodes),
     }
   }

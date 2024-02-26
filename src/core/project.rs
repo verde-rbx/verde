@@ -49,7 +49,6 @@ impl VerdeProject {
         class_name: Some(String::from("DataModel")),
         path: None,
         overwrite_descendants: None,
-        properties: None,
         contents: Some(BTreeMap::<String, Node>::from([
           (
             String::from("ServerScriptService"),
@@ -57,7 +56,6 @@ impl VerdeProject {
               class_name: Some(String::from("ServerScriptService")),
               path: Some(String::from("src/server")),
               overwrite_descendants: None,
-              properties: None,
               contents: None,
             },
           ),
@@ -67,14 +65,12 @@ impl VerdeProject {
               class_name: Some(String::from("ReplicatedStorage")),
               path: Some(String::from("src/shared")),
               overwrite_descendants: None,
-              properties: None,
               contents: Some(BTreeMap::<String, Node>::from([(
                 String::from("client"),
                 Node {
                   class_name: None,
                   path: Some(String::from("src/client")),
                   overwrite_descendants: None,
-                  properties: None,
                   contents: None,
                 },
               )])),
