@@ -8,10 +8,10 @@ mod init;
 mod serve;
 mod sourcemap;
 
-use self::convert::ConvertArgs;
-use self::init::InitArgs;
-use self::serve::ServeArgs;
-use self::sourcemap::SourcemapArgs;
+use crate::cli::convert::ConvertArgs;
+use crate::cli::init::InitArgs;
+use crate::cli::serve::ServeArgs;
+use crate::cli::sourcemap::SourcemapArgs;
 use clap::Parser;
 
 #[derive(Parser)]

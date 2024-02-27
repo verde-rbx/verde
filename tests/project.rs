@@ -4,14 +4,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use std::{
-  collections::{BTreeMap, HashMap},
+  collections::BTreeMap,
   fs::{self, File},
   io::{Seek, Write},
   path::Path,
   str,
 };
 use tempfile::tempfile;
-use verde::core::node::Node;
+use verde::core::node::base::Node;
 use verde::core::project::{self, VerdeProject};
 
 /// Saves a mock project
@@ -108,8 +108,7 @@ fn get_node_paths() {
   let project = create_mock_project();
 
   // Get node paths (similar to create_watchers())
-  let mut node_map = HashMap::<String, Node>::new();
-  project.tree.get_paths(&mut node_map);
+  let node_map = project.tree.get_paths();
 
   // Confirm path
   assert!(node_map.contains_key("src/server"));

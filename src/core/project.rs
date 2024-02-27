@@ -3,12 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-use crate::core::node::Node;
+use crate::core::node::base::Node;
 use anyhow::Context;
 use notify::RecommendedWatcher;
 use serde::{Deserialize, Serialize};
 use std::{
-  collections::{BTreeMap, HashMap},
+  collections::BTreeMap,
   fs::{self, File},
   io::Read,
   path::Path,
@@ -109,8 +109,8 @@ impl VerdeProject {
   /// Creates watchers for defined paths
   pub fn create_watcher(&self) -> anyhow::Result<RecommendedWatcher> {
     // Construct a map of tracked nodes
-    let mut map = HashMap::<String, Node>::new();
-    self.tree.get_paths(&mut map);
+    let _map = self.tree.get_paths();
+    // todo: track changes
 
     notify::recommended_watcher(|_x| {}).context("Failed to create recommended watcher")
   }

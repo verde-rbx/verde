@@ -8,8 +8,8 @@ pub mod project;
 pub mod session;
 pub mod sourcemap;
 
-use self::project::VerdeProject;
-use self::session::{SessionState, VerdeSession};
+use crate::core::project::VerdeProject;
+use crate::core::session::{SessionState, VerdeSession};
 use anyhow::bail;
 use std::fs::File;
 
