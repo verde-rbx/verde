@@ -5,7 +5,6 @@
  */
 use crate::core::node::base::Node;
 use anyhow::Context;
-use notify::RecommendedWatcher;
 use serde::{Deserialize, Serialize};
 use std::{
   collections::BTreeMap,
@@ -104,15 +103,6 @@ impl VerdeProject {
     fs::write(destination, content).with_context(|| format!("Failed to write project to {}", destination.display()))?;
 
     Ok(())
-  }
-
-  /// Creates watchers for defined paths
-  pub fn create_watcher(&self) -> anyhow::Result<RecommendedWatcher> {
-    // Construct a map of tracked nodes
-    let _map = self.tree.get_paths();
-    // todo: track changes
-
-    notify::recommended_watcher(|_x| {}).context("Failed to create recommended watcher")
   }
 }
 

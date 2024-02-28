@@ -25,6 +25,9 @@ pub struct VerdeSession {
   /// The current state of the session.
   pub state: SessionState,
 
+  /// The project tied to the session.
+  pub project: Arc<VerdeProject>,
+
   /// The tokio runtime for asynchronous tasks
   runtime: Runtime,
 }
@@ -48,18 +51,20 @@ impl VerdeSession {
   /// ```rs
   /// VerdeSession::default()
   /// ```
-  pub fn new() -> Self {
-    Self::default()
+  pub fn new(project: &Arc<VerdeProject>) -> Self {
+    VerdeSession {
+      project: Arc::clone(project),
+      ..Default::default()
+    }
   }
 
   /// Starts the session and begins listening
-  pub fn start(&self, project: &VerdeProject) {
+  pub fn start(&self) {
     println!("Serving on port {}", self.port);
 
     // Start listening on api
     self.runtime.block_on(async {
-      let api_session = Arc::new(project.clone());
-      let api = api::get_api(api_session);
+      let api = api::get_api(self.project.clone());
       warp::serve(api).run(SocketAddr::new(self.host, self.port)).await;
     })
   }
@@ -71,6 +76,7 @@ impl Default for VerdeSession {
       host: DEFAULT_HOST,
       port: DEFAULT_PORT,
       state: SessionState::Offline,
+      project: Arc::default(),
       runtime: Builder::new_multi_thread().enable_all().build().unwrap(),
     }
   }

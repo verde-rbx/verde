@@ -12,10 +12,11 @@ use crate::core::project::VerdeProject;
 use crate::core::session::{SessionState, VerdeSession};
 use anyhow::bail;
 use std::fs::File;
+use std::sync::Arc;
 
 pub struct VerdeCore {
   /// Current loaded project file
-  pub project: Option<VerdeProject>,
+  pub project: Option<Arc<VerdeProject>>,
 
   pub session: Option<VerdeSession>,
 }
@@ -36,7 +37,8 @@ impl VerdeCore {
       Some(_) => println!("A project has already been specified"),
       None => {
         let mut project_file = File::open(path)?;
-        self.project = Some(VerdeProject::from(&mut project_file)?);
+        let project = VerdeProject::from(&mut project_file)?;
+        self.project = Some(Arc::new(project));
       }
     }
 
@@ -44,17 +46,13 @@ impl VerdeCore {
   }
 
   /// Starts a new Verde Session
-  pub fn start_session(&mut self) -> anyhow::Result<&mut Self> {
+  pub fn start_session(&self) -> anyhow::Result<&Self> {
     if let Some(project) = &self.project {
-      match &self.session {
-        None => self.session = Some(VerdeSession::default()),
-        Some(session) => {
-          match session.state {
-            SessionState::Active => println!("Session is already active"),
-            SessionState::Offline => session.start(project),
-            SessionState::Error => println!("Session has entered an errored state."),
-          };
-        }
+      let session = VerdeSession::new(project);
+      match session.state {
+        SessionState::Active => println!("Session is already active"),
+        SessionState::Offline => session.start(),
+        SessionState::Error => println!("Session has entered an errored state."),
       };
     } else {
       bail!("Please ensure a project is loaded before starting a session.");
