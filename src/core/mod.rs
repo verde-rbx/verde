@@ -45,14 +45,14 @@ impl VerdeCore {
 
   /// Starts a new Verde Session
   pub fn start_session(&mut self) -> anyhow::Result<&mut Self> {
-    if let Some(project) = self.project.take() {
+    if let Some(project) = &self.project {
       match &self.session {
         None => self.session = Some(VerdeSession::default()),
         Some(session) => {
           match session.state {
             SessionState::Active => println!("Session is already active"),
             SessionState::Offline => session.start(project),
-            SessionState::Error => session.get_latest_error(),
+            SessionState::Error => println!("Session has entered an errored state."),
           };
         }
       };
