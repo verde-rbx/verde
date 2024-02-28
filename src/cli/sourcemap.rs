@@ -9,7 +9,7 @@ use crate::core::{
 };
 use anyhow::bail;
 use clap::{Parser, ValueHint};
-use std::{fs::File, path::PathBuf};
+use std::path::PathBuf;
 
 #[derive(Parser)]
 /// Creates a sourcemap using the project file.
@@ -27,8 +27,8 @@ impl SourcemapArgs {
     }
 
     // Open file and create sourcemap from project
-    let mut proj_file = File::open(self.project)?;
-    let proj = VerdeProject::from(&mut proj_file)?;
+    let path_str = path.to_str().unwrap_or(project::DEFAULT_PROJECT);
+    let proj = VerdeProject::try_from(path_str)?;
     let sourcemap = VerdeSourcemap::from_project(&proj);
 
     // TODO: Do we want file output as well?

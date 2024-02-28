@@ -10,7 +10,7 @@ use std::{
   collections::BTreeMap,
   fs::{self, File},
   io::Read,
-  path::Path,
+  path::{Path, PathBuf},
   result::Result::Ok,
 };
 
@@ -34,6 +34,10 @@ pub struct VerdeProject {
   /// Name of project
   pub name: String,
 
+  /// The root of the project.
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub root: Option<PathBuf>,
+
   /// The instance tree
   pub tree: Node,
 }
@@ -44,6 +48,7 @@ impl VerdeProject {
   pub fn new() -> Self {
     Self {
       name: String::from("A Verde Project"),
+      root: None,
       tree: Node {
         class_name: Some(String::from("DataModel")),
         path: None,
@@ -80,16 +85,6 @@ impl VerdeProject {
     }
   }
 
-  /// Creates a new VerdeProject from the specified file.
-  pub fn from(project: &mut File) -> anyhow::Result<Self> {
-    let mut buffer = String::new();
-    project
-      .read_to_string(&mut buffer)
-      .with_context(|| format!("Failed to read file {:#?}", project))?;
-
-    serde_yaml::from_str(&buffer).context("Failed to deserialise yaml to VerdeProject.")
-  }
-
   /// Saves the VerdeProject to the file system.
   pub fn save(&self) -> anyhow::Result<()> {
     let dest = Path::new(DEFAULT_PROJECT);
@@ -103,6 +98,32 @@ impl VerdeProject {
     fs::write(destination, content).with_context(|| format!("Failed to write project to {}", destination.display()))?;
 
     Ok(())
+  }
+}
+
+impl TryFrom<&str> for VerdeProject {
+  type Error = anyhow::Error;
+
+  fn try_from(value: &str) -> anyhow::Result<Self> {
+    // Open project file from path provided
+    let mut project_file = File::open(value)?;
+    let mut buffer = String::new();
+    project_file
+      .read_to_string(&mut buffer)
+      .with_context(|| format!("Failed to read file {:#?}", project_file))?;
+
+    // Deserialise project and set root
+    let mut project = serde_yaml::from_str::<Self>(&buffer).context("Failed to deserialise yaml to VerdeProject.")?;
+
+    // Set project root
+    if project.root.is_none() {
+      let mut filepath = PathBuf::from(value);
+      filepath.pop(); // remove verde.yaml
+
+      project.root = Some(filepath);
+    }
+
+    Ok(project)
   }
 }
 

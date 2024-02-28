@@ -5,9 +5,15 @@
  */
 use crate::api;
 use crate::core::VerdeProject;
+use notify_debouncer_full::{
+  new_debouncer,
+  notify::{RecursiveMode, Watcher},
+  DebounceEventResult,
+};
 use std::{
   net::{IpAddr, Ipv4Addr, SocketAddr},
   sync::Arc,
+  time::Duration,
 };
 use tokio::runtime::{Builder, Runtime};
 
@@ -58,9 +64,27 @@ impl VerdeSession {
     }
   }
 
+  /// Setup watcher and watch for changes
+  pub fn watch(&self) {
+    let mut debouncer = new_debouncer(
+      Duration::from_secs(2),
+      None,
+      |result: DebounceEventResult| match result {
+        Ok(events) => events.iter().for_each(|event| println!("{event:?}")),
+        Err(errors) => errors.iter().for_each(|error| println!("{error:?}")),
+      },
+    )
+    .unwrap();
+
+    let project = Arc::clone(&self.project);
+    let root = project.root.as_ref().unwrap();
+    debouncer.watcher().watch(root, RecursiveMode::Recursive).unwrap();
+  }
+
   /// Starts the session and begins listening
   pub fn start(&self) {
     println!("Serving on port {}", self.port);
+    self.watch();
 
     // Start listening on api
     self.runtime.block_on(async {

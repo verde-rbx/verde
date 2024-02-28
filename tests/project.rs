@@ -7,16 +7,16 @@ use std::{
   collections::BTreeMap,
   fs::{self, File},
   io::{Seek, Write},
-  path::Path,
+  path::{Path, PathBuf},
   str,
 };
-use tempfile::tempfile;
+use tempfile::tempdir;
 use verde::core::node::base::Node;
 use verde::core::project::{self, VerdeProject};
 
 /// Saves a mock project
-fn save_mock_project() -> File {
-  let mut temp_file = tempfile().unwrap();
+fn save_mock_project(filepath: &PathBuf) {
+  let mut temp_file = File::create(filepath).unwrap();
   let project_contents = r#"
       name: Verde Test Project
       tree:
@@ -35,13 +35,13 @@ fn save_mock_project() -> File {
 
   temp_file.write_all(project_contents.as_bytes()).unwrap();
   temp_file.seek(std::io::SeekFrom::Start(0)).unwrap();
-  temp_file
 }
 
 /// Creates a mock project
 fn create_mock_project() -> VerdeProject {
   VerdeProject {
     name: String::from("Verde Test Project"),
+    root: None,
     tree: Node {
       class_name: Some(String::from("DataModel")),
       path: None,
@@ -62,8 +62,11 @@ fn create_mock_project() -> VerdeProject {
 #[test]
 /// Test to ensure a project can be deserialised correctly
 fn new_project_from_path() {
-  let mut project_file = save_mock_project();
-  let project = project::VerdeProject::from(&mut project_file).unwrap();
+  let dir = tempdir().unwrap();
+  let project_path = dir.path().join("verde.yaml");
+  let str_path = project_path.to_str().unwrap();
+  save_mock_project(&project_path);
+  let project = project::VerdeProject::try_from(str_path).unwrap();
 
   // Checking to ensure the project name is deserialised correctly
   assert_eq!(project.name, "Verde Test Project");

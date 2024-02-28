@@ -11,7 +11,6 @@ pub mod sourcemap;
 use crate::core::project::VerdeProject;
 use crate::core::session::{SessionState, VerdeSession};
 use anyhow::bail;
-use std::fs::File;
 use std::sync::Arc;
 
 pub struct VerdeCore {
@@ -36,8 +35,7 @@ impl VerdeCore {
     match self.project {
       Some(_) => println!("A project has already been specified"),
       None => {
-        let mut project_file = File::open(path)?;
-        let project = VerdeProject::from(&mut project_file)?;
+        let project = VerdeProject::try_from(path)?;
         self.project = Some(Arc::new(project));
       }
     }
