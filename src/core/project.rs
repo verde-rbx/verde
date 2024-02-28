@@ -8,6 +8,7 @@ use anyhow::Context;
 use serde::{Deserialize, Serialize};
 use std::{
   collections::BTreeMap,
+  env::current_dir,
   fs::{self, File},
   io::Read,
   path::{Path, PathBuf},
@@ -120,7 +121,8 @@ impl TryFrom<&str> for VerdeProject {
       let mut filepath = PathBuf::from(value);
       filepath.pop(); // remove verde.yaml
 
-      project.root = Some(filepath);
+      let absolute_path = current_dir()?.join(filepath);
+      project.root = Some(absolute_path);
     }
 
     Ok(project)
