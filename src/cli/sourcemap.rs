@@ -7,6 +7,7 @@ use crate::core::{
   project::{self, VerdeProject},
   sourcemap::VerdeSourcemap,
 };
+use anyhow::bail;
 use clap::{Parser, ValueHint};
 use std::{fs::File, path::PathBuf};
 
@@ -19,6 +20,13 @@ pub struct SourcemapArgs {
 
 impl SourcemapArgs {
   pub fn execute(self) -> anyhow::Result<()> {
+    // Confirm path
+    let path = self.project.as_path();
+    if !path.is_file() {
+      bail!("'project' must point to a file. Got {}", path.display());
+    }
+
+    // Open file and create sourcemap from project
     let mut proj_file = File::open(self.project)?;
     let proj = VerdeProject::from(&mut proj_file)?;
     let sourcemap = VerdeSourcemap::from_project(&proj);

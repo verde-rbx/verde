@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use crate::core::{project, session, VerdeCore};
+use anyhow::bail;
 use clap::{Parser, ValueHint};
 use std::{net::IpAddr, path::PathBuf};
 
@@ -25,10 +26,22 @@ pub struct ServeArgs {
 
 impl ServeArgs {
   pub fn execute(self) -> anyhow::Result<()> {
-    VerdeCore::new()
-      .project(self.project.to_str().unwrap())?
-      .start_session()?;
+    // Validate path is a file
+    let path = self.project.as_path();
+    if !path.is_file() {
+      bail!("'project' must point to a file. Got {}", path.display());
+    }
 
+    // TODO: Check that it's a valid project file. (.yml?)
+
+    // Create core if path can be stringified.
+    if let Some(path_str) = path.to_str() {
+      VerdeCore::new().project(path_str)?.start_session()?;
+    } else {
+      bail!("No path specified.")
+    }
+
+    // Cleanup
     println!("Session ended gracefully.");
     Ok(())
   }

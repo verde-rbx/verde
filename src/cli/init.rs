@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use crate::core::project::VerdeProject;
+use anyhow::Context;
 use clap::Parser;
 
 #[derive(Parser)]
@@ -13,7 +14,7 @@ pub struct InitArgs {}
 impl InitArgs {
   pub fn execute(self) -> anyhow::Result<()> {
     let project = VerdeProject::default();
-    project.save()?;
+    project.save().context("Failed to save project file.")?;
 
     println!("Successfully initialised new Verde project");
     Ok(())
