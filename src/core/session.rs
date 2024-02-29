@@ -5,10 +5,11 @@
  */
 use crate::api;
 use crate::core::VerdeProject;
+use notify::RecommendedWatcher;
 use notify_debouncer_full::{
   new_debouncer,
   notify::{RecursiveMode, Watcher},
-  DebounceEventResult,
+  DebounceEventHandler, DebounceEventResult, Debouncer, FileIdMap,
 };
 use std::{
   net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -65,33 +66,34 @@ impl VerdeSession {
   }
 
   /// Setup watcher and watch for changes
-  pub fn watch(&self) {
-    let mut debouncer = new_debouncer(
-      Duration::from_secs(2),
-      None,
-      |result: DebounceEventResult| match result {
-        Ok(events) => events.iter().for_each(|event| println!("{event:?}")),
-        Err(errors) => errors.iter().for_each(|error| println!("{error:?}")),
-      },
-    )
-    .unwrap();
+  pub fn watch<F: DebounceEventHandler>(&self, handler: F) -> Box<Debouncer<RecommendedWatcher, FileIdMap>> {
+    let mut debouncer = new_debouncer(Duration::from_secs(2), None, handler).unwrap();
 
     let project = Arc::clone(&self.project);
     let root = project.root.as_ref().unwrap();
     debouncer.watcher().watch(root, RecursiveMode::Recursive).unwrap();
     debouncer.cache().add_root(root, RecursiveMode::Recursive);
+    Box::new(debouncer)
   }
 
   /// Starts the session and begins listening
   pub fn start(&self) {
     println!("Serving on port {}", self.port);
-    self.watch();
+
+    // Setup watcher
+    let debouncer = self.watch(|result: DebounceEventResult| match result {
+      Ok(events) => events.iter().for_each(|event| println!("{event:?}")),
+      Err(error) => error.iter().for_each(|error| println!("{error:?}")),
+    });
 
     // Start listening on api
     self.runtime.block_on(async {
-      let api = api::get_api(self.project.clone());
+      let api = api::get_api(Arc::clone(&self.project));
       warp::serve(api).run(SocketAddr::new(self.host, self.port)).await;
-    })
+    });
+
+    debouncer.stop();
+    println!("Stopped watching..");
   }
 }
 
