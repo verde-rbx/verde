@@ -79,6 +79,7 @@ impl VerdeSession {
     let project = Arc::clone(&self.project);
     let root = project.root.as_ref().unwrap();
     debouncer.watcher().watch(root, RecursiveMode::Recursive).unwrap();
+    debouncer.cache().add_root(root, RecursiveMode::Recursive);
   }
 
   /// Starts the session and begins listening
