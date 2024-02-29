@@ -118,10 +118,10 @@ impl TryFrom<&str> for VerdeProject {
 
     // Set project root
     if project.root.is_none() {
-      let mut filepath = PathBuf::from(value);
-      filepath.pop(); // remove verde.yaml
+      let filepath = PathBuf::from(value);
+      let mut absolute_path = current_dir()?.join(filepath);
+      absolute_path.pop(); // remove verde.yaml
 
-      let absolute_path = current_dir()?.join(filepath);
       project.root = Some(absolute_path);
     }
 
