@@ -3,11 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-pub mod base;
-pub mod csv_node;
-pub mod script_node;
-pub mod yaml_node;
-
 use globset::{Glob, GlobSet, GlobSetBuilder};
 
 /// Valid transformers

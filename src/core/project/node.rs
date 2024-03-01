@@ -49,6 +49,3 @@ impl Node {
     map
   }
 }
-
-/// The base for all node types
-pub trait NodeBase: From<Node> {}

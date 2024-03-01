@@ -11,8 +11,7 @@ use std::{
   str,
 };
 use tempfile::tempdir;
-use verde::core::node::base::Node;
-use verde::core::project::{self, VerdeProject};
+use verde::core::project::{self, node::Node, VerdeProject};
 
 /// Saves a mock project
 fn save_mock_project(filepath: &PathBuf) {
@@ -64,9 +63,8 @@ fn create_mock_project() -> VerdeProject {
 fn new_project_from_path() {
   let dir = tempdir().unwrap();
   let project_path = dir.path().join("verde.yaml");
-  let str_path = project_path.to_str().unwrap();
   save_mock_project(&project_path);
-  let project = project::VerdeProject::try_from(str_path).unwrap();
+  let project = project::VerdeProject::try_from(&project_path).unwrap();
 
   // Checking to ensure the project name is deserialised correctly
   assert_eq!(project.name, "Verde Test Project");

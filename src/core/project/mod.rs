@@ -3,7 +3,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-use crate::core::node::base::Node;
+pub mod node;
+
+use crate::core::project::node::Node;
 use anyhow::Context;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -102,10 +104,10 @@ impl VerdeProject {
   }
 }
 
-impl TryFrom<&str> for VerdeProject {
+impl TryFrom<&PathBuf> for VerdeProject {
   type Error = anyhow::Error;
 
-  fn try_from(value: &str) -> anyhow::Result<Self> {
+  fn try_from(value: &PathBuf) -> anyhow::Result<Self> {
     // Open project file from path provided
     let mut project_file = File::open(value)?;
     let mut buffer = String::new();
@@ -118,8 +120,7 @@ impl TryFrom<&str> for VerdeProject {
 
     // Set project root
     if project.root.is_none() {
-      let filepath = PathBuf::from(value);
-      let mut absolute_path = current_dir()?.join(filepath);
+      let mut absolute_path = current_dir()?.join(value);
       absolute_path.pop(); // remove verde.yaml
 
       project.root = Some(absolute_path);

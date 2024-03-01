@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-pub mod node;
+pub mod payload;
 pub mod project;
 pub mod session;
 pub mod sourcemap;
@@ -11,6 +11,7 @@ pub mod sourcemap;
 use crate::core::project::VerdeProject;
 use crate::core::session::{SessionState, VerdeSession};
 use anyhow::bail;
+use std::path::PathBuf;
 use std::sync::Arc;
 
 pub struct VerdeCore {
@@ -31,11 +32,12 @@ impl VerdeCore {
   }
 
   /// Sets the current Verde Project
-  pub fn project(&mut self, path: &str) -> anyhow::Result<&mut Self> {
+  pub fn project(&mut self, path_str: &str) -> anyhow::Result<&mut Self> {
     match self.project {
       Some(_) => println!("A project has already been specified"),
       None => {
-        let project = VerdeProject::try_from(path)?;
+        let path = PathBuf::from(path_str);
+        let project = VerdeProject::try_from(&path)?;
         self.project = Some(Arc::new(project));
       }
     }

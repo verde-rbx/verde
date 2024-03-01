@@ -27,8 +27,7 @@ impl SourcemapArgs {
     }
 
     // Open file and create sourcemap from project
-    let path_str = path.to_str().unwrap_or(project::DEFAULT_PROJECT);
-    let proj = VerdeProject::try_from(path_str)?;
+    let proj = VerdeProject::try_from(&self.project)?;
     let sourcemap = VerdeSourcemap::from_project(&proj);
 
     // TODO: Do we want file output as well?
