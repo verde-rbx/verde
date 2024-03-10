@@ -5,42 +5,37 @@
  */
 
 pub mod filters {
-  use crate::api::sync::handlers;
-  use crate::core::project::VerdeProject;
+  use crate::{api::sync::handlers, core::payload::Payload};
   use std::{convert::Infallible, sync::Arc};
   use warp::{path, Filter};
 
   /// Entry point for the sync api.
-  pub fn sync(
-    project: Arc<VerdeProject>,
-  ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
-    sync_heartbeat(project)
+  pub fn sync(payload: Arc<Payload>) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
+    sync_heartbeat(payload)
   }
 
   /// Api for requesting heartbeat status of the sync session.
   pub fn sync_heartbeat(
-    project: Arc<VerdeProject>,
+    payload: Arc<Payload>,
   ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     path!("heartbeat")
       .and(warp::get())
-      .and(with_project(project))
+      .and(with_payload(payload))
       .and_then(handlers::sync_heartbeat)
   }
 
   /// Helper for warp.
-  fn with_project(
-    project: Arc<VerdeProject>,
-  ) -> impl Filter<Extract = (Arc<VerdeProject>,), Error = Infallible> + Clone {
-    warp::any().map(move || Arc::clone(&project))
+  fn with_payload(payload: Arc<Payload>) -> impl Filter<Extract = (Arc<Payload>,), Error = Infallible> + Clone {
+    warp::any().map(move || Arc::clone(&payload))
   }
 }
 
 mod handlers {
-  use crate::core::project::VerdeProject;
+  use crate::core::payload::Payload;
   use std::{convert::Infallible, sync::Arc};
   use warp::http::StatusCode;
 
-  pub async fn sync_heartbeat(_project: Arc<VerdeProject>) -> Result<impl warp::Reply, Infallible> {
+  pub async fn sync_heartbeat(_payload: Arc<Payload>) -> Result<impl warp::Reply, Infallible> {
     Ok(StatusCode::OK)
   }
 }

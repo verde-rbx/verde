@@ -23,38 +23,33 @@ type VerdeDebouncer = Debouncer<RecommendedWatcher, FileIdMap>;
 
 /// The Verde watcher.
 pub struct VerdeWatcher {
-  /// The verde project associated with this watcher.
-  project: Arc<VerdeProject>,
-
   /// The debouncer watching for file system events.
-  debouncer: VerdeDebouncer,
+  _debouncer: VerdeDebouncer,
 
   /// The debounced event receiver channel.
   watch_rx: mpsc::Receiver<DebouncedEvent>,
 
-  /// The payload sender channel.
-  payload_tx: mpsc::Sender<Payload>,
-
-  /// The payload receiver channel.
-  payload_rx: mpsc::Receiver<Payload>,
+  /// The payload.
+  pub payload: Arc<Payload>,
 }
 
 impl VerdeWatcher {
   /// Create a new Verde watcher for the specified project.
   pub fn new(project: &Arc<VerdeProject>) -> anyhow::Result<Self> {
     let (watch_tx, watch_rx) = mpsc::channel(1); // watch send/receive queue 1 item
-    let (payload_tx, payload_rx) = mpsc::channel::<Payload>(1); // payload send/receive queue 1 item
 
+    // Create debounce watcher
     let watch_project = Arc::clone(project);
     let root = watch_project.root.as_ref().unwrap().clone();
-    let debouncer = create_watcher(watch_tx, vec![root])?;
+    let _debouncer = create_watcher(watch_tx, vec![root])?;
+
+    // Create initial payload
+    let payload = Arc::new(Payload {});
 
     Ok(Self {
-      project: watch_project,
-      debouncer,
+      _debouncer,
       watch_rx,
-      payload_tx,
-      payload_rx,
+      payload,
     })
   }
 
@@ -68,7 +63,10 @@ impl VerdeWatcher {
   }
 
   /// Transforms the debounced event into a payload event.
-  async fn transform_event(&mut self, event: DebouncedEvent) {}
+  async fn transform_event(&mut self, event: DebouncedEvent) {
+    println!("{event:?}");
+    todo!("Transform debounced events into payloads and adjust the payload arc")
+  }
 }
 
 /// Creates a new file system watcher piping events to the watch transmitter.

@@ -63,15 +63,19 @@ impl VerdeSession {
   pub fn start(&self) -> anyhow::Result<()> {
     println!("Serving on port {}", self.port);
 
-    // Setup api and watcher
+    // Setup watcher
     let watcher = VerdeWatcher::new(&self.project)?;
 
-    // Start listening on api
+    // Start serve api
     self.runtime.block_on(async {
-      let api = api::get_api(Arc::clone(&self.project));
-      let handle = watcher.start();
+      // Create api route
+      let payload = Arc::clone(&watcher.payload);
+      let api = api::get_api(payload);
+
+      // Start watching and serving api
+      let watch_handle = watcher.start();
       warp::serve(api).run(SocketAddr::new(self.host, self.port)).await;
-      let _ = handle.await;
+      watch_handle.await;
     });
 
     Ok(())
