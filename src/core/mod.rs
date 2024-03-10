@@ -7,6 +7,7 @@ pub mod payload;
 pub mod project;
 pub mod session;
 pub mod sourcemap;
+pub mod watcher;
 
 use crate::core::project::VerdeProject;
 use crate::core::session::{SessionState, VerdeSession};
@@ -51,7 +52,7 @@ impl VerdeCore {
       let session = VerdeSession::new(project);
       match session.state {
         SessionState::Active => println!("Session is already active"),
-        SessionState::Offline => session.start(),
+        SessionState::Offline => session.start()?,
         SessionState::Error => println!("Session has entered an errored state."),
       };
     } else {

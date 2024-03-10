@@ -5,6 +5,9 @@
  */
 use globset::{Glob, GlobSet, GlobSetBuilder};
 
+/// Payload for a response
+pub struct Payload {}
+
 /// Valid transformers
 #[allow(dead_code)]
 enum NodeTransformers {
