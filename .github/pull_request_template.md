@@ -9,7 +9,7 @@
 ### ❓ Type of change
 <!-- What types of changes does your code introduce? Put an `x` in all the boxes that apply. -->
 
-- [ ] 📖 Docs (updates to the documentation, readme or JSdoc annotations)
+- [ ] 📖 Docs (updates to the documentation, readme or RustDoc annotations)
 - [ ] 🐞 Fix (a non-breaking change that fixes an issue)
 - [ ] 👌 Enhancement (improving an existing functionality like performance)
 - [ ] ✨ Feature (a non-breaking change that adds functionality)
