@@ -46,12 +46,7 @@ pub enum SessionState {
 }
 
 impl VerdeSession {
-  /// Creates a new VerdeSession.
-  ///
-  /// This is the same as calling
-  /// ```rs
-  /// VerdeSession::default()
-  /// ```
+  /// Creates a new VerdeSession with the specified project.
   pub fn new(project: &Arc<VerdeProject>) -> Self {
     VerdeSession {
       project: Arc::clone(project),

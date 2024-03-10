@@ -15,6 +15,7 @@ use anyhow::bail;
 use std::path::PathBuf;
 use std::sync::Arc;
 
+#[derive(Default)]
 pub struct VerdeCore {
   /// Current loaded project file
   pub project: Option<Arc<VerdeProject>>,
@@ -25,11 +26,9 @@ pub struct VerdeCore {
 // TODO: I think this is redundent and session/project should be their own thing
 //       Session relies on project so making them in this structure makes it difficult to pass them around
 impl VerdeCore {
+  /// Creates the Verde Core using defaults.
   pub fn new() -> Self {
-    VerdeCore {
-      project: None,
-      session: None,
-    }
+    Self::default()
   }
 
   /// Sets the current Verde Project
@@ -60,11 +59,5 @@ impl VerdeCore {
     }
 
     Ok(self)
-  }
-}
-
-impl Default for VerdeCore {
-  fn default() -> Self {
-    Self::new()
   }
 }

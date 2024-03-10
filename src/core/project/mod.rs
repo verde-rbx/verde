@@ -49,43 +49,7 @@ pub struct VerdeProject {
 impl VerdeProject {
   /// Creates a VerdeProject using defaults.
   pub fn new() -> Self {
-    Self {
-      name: String::from("A Verde Project"),
-      root: None,
-      tree: Node {
-        class_name: Some(String::from("DataModel")),
-        path: None,
-        overwrite_descendants: None,
-        contents: Some(BTreeMap::<String, Node>::from([
-          (
-            String::from("ServerScriptService"),
-            Node {
-              class_name: Some(String::from("ServerScriptService")),
-              path: Some(String::from("src/server")),
-              overwrite_descendants: None,
-              contents: None,
-            },
-          ),
-          (
-            String::from("ReplicatedStorage"),
-            Node {
-              class_name: Some(String::from("ReplicatedStorage")),
-              path: Some(String::from("src/shared")),
-              overwrite_descendants: None,
-              contents: Some(BTreeMap::<String, Node>::from([(
-                String::from("client"),
-                Node {
-                  class_name: None,
-                  path: Some(String::from("src/client")),
-                  overwrite_descendants: None,
-                  contents: None,
-                },
-              )])),
-            },
-          ),
-        ])),
-      },
-    }
+    Self::default()
   }
 
   /// Saves the VerdeProject to the file system.
@@ -132,6 +96,42 @@ impl TryFrom<&PathBuf> for VerdeProject {
 
 impl Default for VerdeProject {
   fn default() -> Self {
-    Self::new()
+    Self {
+      name: String::from("A Verde Project"),
+      root: None,
+      tree: Node {
+        class_name: Some(String::from("DataModel")),
+        path: None,
+        overwrite_descendants: None,
+        contents: Some(BTreeMap::<String, Node>::from([
+          (
+            String::from("ServerScriptService"),
+            Node {
+              class_name: Some(String::from("ServerScriptService")),
+              path: Some(String::from("src/server")),
+              overwrite_descendants: None,
+              contents: None,
+            },
+          ),
+          (
+            String::from("ReplicatedStorage"),
+            Node {
+              class_name: Some(String::from("ReplicatedStorage")),
+              path: Some(String::from("src/shared")),
+              overwrite_descendants: None,
+              contents: Some(BTreeMap::<String, Node>::from([(
+                String::from("client"),
+                Node {
+                  class_name: None,
+                  path: Some(String::from("src/client")),
+                  overwrite_descendants: None,
+                  contents: None,
+                },
+              )])),
+            },
+          ),
+        ])),
+      },
+    }
   }
 }
