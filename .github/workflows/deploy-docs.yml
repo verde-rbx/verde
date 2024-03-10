@@ -24,31 +24,34 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       # We need all history for doc edit dates
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 
 
-      - uses: pnpm/action-setup@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
         with:
-          version: 8.7.5
+          version: 8
 
-      - uses: actions/setup-node@v3
+      - name: Setup node
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: pnpm
           cache-dependency-path: './docs/pnpm-lock.yaml'
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build docs
         run: pnpm run docs:build
 
-      - uses: actions/configure-pages@v2
+      - uses: actions/configure-pages@v4
 
-      - uses: actions/upload-pages-artifact@v1
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: docs/.vitepress/dist
 
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4

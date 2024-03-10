@@ -11,7 +11,8 @@ jobs:
     name: Lint / Formatting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install rust
         uses: moonrepo/setup-rust@v1
@@ -23,11 +24,13 @@ jobs:
       - run: rustup component add clippy
       - name: Run clippy
         run: cargo clippy -- -D warnings
+
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install rust
         uses: moonrepo/setup-rust@v1
