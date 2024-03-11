@@ -5,10 +5,15 @@
  */
 use crate::core::payload::Payload;
 use crate::core::project::VerdeProject;
-use anyhow::Context;
+use anyhow::{bail, Context};
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use notify_debouncer_full::{new_debouncer, DebounceEventResult, DebouncedEvent, Debouncer, FileIdMap};
-use std::{path::PathBuf, sync::Arc, time::Duration};
+use std::{
+  path::PathBuf,
+  str::FromStr,
+  sync::{Arc, RwLock},
+  time::Duration,
+};
 use tokio::sync::mpsc;
 
 // See trunk for a good notify watcher implementation
@@ -30,7 +35,7 @@ pub struct VerdeWatcher {
   watch_rx: mpsc::Receiver<DebouncedEvent>,
 
   /// The payload.
-  pub payload: Arc<Payload>,
+  pub payload: Arc<RwLock<Payload>>,
 }
 
 impl VerdeWatcher {
@@ -39,12 +44,17 @@ impl VerdeWatcher {
     let (watch_tx, watch_rx) = mpsc::channel(1); // watch send/receive queue 1 item
 
     // Create debounce watcher
-    let watch_project = Arc::clone(project);
-    let root = watch_project.root.as_ref().unwrap().clone();
-    let _debouncer = create_watcher(watch_tx, vec![root])?;
+    let node_paths = project.tree.get_paths();
+    let paths = node_paths
+      .keys()
+      .filter_map(|s| PathBuf::from_str(s).ok())
+      .filter(|p| p.exists())
+      .collect();
+
+    let _debouncer = create_watcher(watch_tx, paths)?;
 
     // Create initial payload
-    let payload = Arc::new(Payload {});
+    let payload = Arc::new(RwLock::new(Payload::default()));
 
     Ok(Self {
       _debouncer,
@@ -57,20 +67,24 @@ impl VerdeWatcher {
   pub async fn start(mut self) {
     loop {
       if let Some(ev) = self.watch_rx.recv().await {
-        self.transform_event(ev).await;
+        self.transform_event(ev).await
       }
     }
   }
 
   /// Transforms the debounced event into a payload event.
   async fn transform_event(&mut self, event: DebouncedEvent) {
-    println!("{event:?}");
-    todo!("Transform debounced events into payloads and adjust the payload arc")
+    println!("transform {event:?}");
   }
 }
 
 /// Creates a new file system watcher piping events to the watch transmitter.
 pub fn create_watcher(watch_tx: mpsc::Sender<DebouncedEvent>, paths: Vec<PathBuf>) -> anyhow::Result<VerdeDebouncer> {
+  // We shouldnt get any empty paths if project is correct
+  if paths.is_empty() {
+    bail!("No valid paths found.");
+  }
+
   // Create watcher (in the future we can probably allow specifying polling explicitly for rare cases)
   let mut debouncer = new_debouncer(
     DEBOUNCE_DURATION,

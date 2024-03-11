@@ -5,8 +5,17 @@
  */
 use globset::{Glob, GlobSet, GlobSetBuilder};
 
+struct PayloadInstance {}
+
 /// Payload for a response
-pub struct Payload {}
+#[derive(Default)]
+pub struct Payload {
+  /// The instance paths to destroy.
+  destroying: Vec<String>,
+
+  /// The instances to add/change
+  changing: Vec<PayloadInstance>,
+}
 
 /// Valid transformers
 #[allow(dead_code)]

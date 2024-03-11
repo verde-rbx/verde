@@ -6,17 +6,22 @@
 
 pub mod filters {
   use crate::{api::sync::handlers, core::payload::Payload};
-  use std::{convert::Infallible, sync::Arc};
+  use std::{
+    convert::Infallible,
+    sync::{Arc, RwLock},
+  };
   use warp::{path, Filter};
 
   /// Entry point for the sync api.
-  pub fn sync(payload: Arc<Payload>) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
+  pub fn sync(
+    payload: Arc<RwLock<Payload>>,
+  ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     sync_heartbeat(payload)
   }
 
   /// Api for requesting heartbeat status of the sync session.
   pub fn sync_heartbeat(
-    payload: Arc<Payload>,
+    payload: Arc<RwLock<Payload>>,
   ) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     path!("heartbeat")
       .and(warp::get())
@@ -25,17 +30,22 @@ pub mod filters {
   }
 
   /// Helper for warp.
-  fn with_payload(payload: Arc<Payload>) -> impl Filter<Extract = (Arc<Payload>,), Error = Infallible> + Clone {
+  fn with_payload(
+    payload: Arc<RwLock<Payload>>,
+  ) -> impl Filter<Extract = (Arc<RwLock<Payload>>,), Error = Infallible> + Clone {
     warp::any().map(move || Arc::clone(&payload))
   }
 }
 
 mod handlers {
   use crate::core::payload::Payload;
-  use std::{convert::Infallible, sync::Arc};
+  use std::{
+    convert::Infallible,
+    sync::{Arc, RwLock},
+  };
   use warp::http::StatusCode;
 
-  pub async fn sync_heartbeat(_payload: Arc<Payload>) -> Result<impl warp::Reply, Infallible> {
+  pub async fn sync_heartbeat(_payload: Arc<RwLock<Payload>>) -> Result<impl warp::Reply, Infallible> {
     Ok(StatusCode::OK)
   }
 }

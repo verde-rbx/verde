@@ -10,7 +10,10 @@ use std::{
   net::{IpAddr, Ipv4Addr, SocketAddr},
   sync::Arc,
 };
-use tokio::runtime::{Builder, Runtime};
+use tokio::{
+  join,
+  runtime::{Builder, Runtime},
+};
 
 pub const DEFAULT_HOST: IpAddr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
 pub const DEFAULT_PORT: u16 = 3000;
@@ -65,12 +68,15 @@ impl VerdeSession {
     self.runtime.block_on(async {
       // Create api route
       let payload = Arc::clone(&watcher.payload);
-      let api = api::get_api(payload);
-
-      // Start watching and serving api
-      let watch_handle = watcher.start();
-      warp::serve(api).run(SocketAddr::new(self.host, self.port)).await;
-      watch_handle.await;
+      match api::get_routes(payload) {
+        Ok(api) => {
+          // Start watching and serving api
+          let watch_fut = watcher.start();
+          let api_fut = warp::serve(api).run(SocketAddr::new(self.host, self.port));
+          join!(watch_fut, api_fut);
+        }
+        Err(api_err) => println!("Failed to start api. {api_err:?}"),
+      }
     });
 
     Ok(())

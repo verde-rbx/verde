@@ -6,9 +6,16 @@
 mod sync;
 
 use crate::core::payload::Payload;
-use std::sync::Arc;
+use anyhow::bail;
+use std::sync::{Arc, RwLock};
 use warp::Filter;
 
-pub fn get_api(payload: Arc<Payload>) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
-  sync::filters::sync(payload)
+pub fn get_routes(
+  payload: Arc<RwLock<Payload>>,
+) -> anyhow::Result<impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone> {
+  if !payload.is_poisoned() {
+    Ok(sync::filters::sync(payload))
+  } else {
+    bail!("Unable to use poisoned payload. Try restarting Verde.")
+  }
 }
