@@ -16,11 +16,6 @@ use std::{
 };
 use tokio::sync::mpsc;
 
-// See trunk for a good notify watcher implementation
-// Watcher: https://github.com/trunk-rs/trunk/blob/main/src/watch.rs
-// Move watcher specific code to watcher.rs the above example has a ignore file example
-// Ignore file example can be used with the glob rules to create payload structs
-
 /// The duration for the debounce watcher events.
 const DEBOUNCE_DURATION: Duration = Duration::from_secs(2);
 
