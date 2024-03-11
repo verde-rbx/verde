@@ -47,8 +47,16 @@ impl VerdeWatcher {
     let node_paths = project.tree.get_paths();
     let paths = node_paths
       .keys()
-      .filter_map(|s| PathBuf::from_str(s).ok())
-      .filter(|p| p.exists())
+      .filter_map(|s| match PathBuf::from_str(s) {
+        Ok(e) => {
+          if e.try_exists().is_ok_and(|f| f) {
+            e.canonicalize().ok()
+          } else {
+            None
+          }
+        }
+        Err(_) => None,
+      })
       .collect();
 
     let _debouncer = create_watcher(watch_tx, paths)?;
@@ -75,6 +83,8 @@ impl VerdeWatcher {
   /// Transforms the debounced event into a payload event.
   async fn transform_event(&mut self, event: DebouncedEvent) {
     println!("transform {event:?}");
+    // TODO: Get the file, find the node? construct the PayloadInstance
+    // Then add to Payload
   }
 }
 
@@ -82,7 +92,7 @@ impl VerdeWatcher {
 pub fn create_watcher(watch_tx: mpsc::Sender<DebouncedEvent>, paths: Vec<PathBuf>) -> anyhow::Result<VerdeDebouncer> {
   // We shouldnt get any empty paths if project is correct
   if paths.is_empty() {
-    bail!("No valid paths found.");
+    bail!("Unable to find any directories to watch. Please check your project file.");
   }
 
   // Create watcher (in the future we can probably allow specifying polling explicitly for rare cases)
@@ -91,7 +101,7 @@ pub fn create_watcher(watch_tx: mpsc::Sender<DebouncedEvent>, paths: Vec<PathBuf
     None,
     move |result: DebounceEventResult| match result {
       Ok(events) => events.into_iter().for_each(|event| {
-        let _ = watch_tx.blocking_send(event);
+        watch_tx.blocking_send(event).unwrap();
       }),
       Err(error) => error.iter().for_each(|error| println!("{error:?}")),
     },
@@ -99,6 +109,7 @@ pub fn create_watcher(watch_tx: mpsc::Sender<DebouncedEvent>, paths: Vec<PathBuf
   .with_context(|| "failed to create watcher")?;
 
   // Setup watcher and cache for each specified root
+  // The paths should be canonicalized so we dont need to do any extra processing
   for path in paths {
     debouncer
       .watcher()
