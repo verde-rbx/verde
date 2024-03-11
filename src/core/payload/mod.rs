@@ -4,17 +4,48 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 use globset::{Glob, GlobSet, GlobSetBuilder};
+use std::{collections::HashMap, time::SystemTime};
 
-struct PayloadInstance {}
+pub struct PayloadInstance {}
 
 /// Payload for a response
 #[derive(Default)]
 pub struct Payload {
   /// The instance paths to destroy.
-  destroying: Vec<String>,
+  pub destroying: Vec<String>,
 
   /// The instances to add/change
-  changing: Vec<PayloadInstance>,
+  pub changing: HashMap<String, PayloadInstance>,
+
+  /// The alst time the payload was edited.
+  last_update: Option<SystemTime>,
+
+  /// The last time the payload was read + cleared.
+  last_read: Option<SystemTime>,
+}
+
+impl Payload {
+  /// Clears all the values in the payload.
+  pub fn clear(&mut self) {
+    self.destroying.clear();
+    self.changing.clear();
+    self.last_read = Some(SystemTime::now());
+  }
+
+  /// Adds a new roblox instance path to destroy.
+  pub fn add_destroying(&mut self, instance: String) {
+    if self.changing.contains_key(&instance) {
+      self.changing.remove(&instance);
+    }
+
+    self.destroying.push(instance);
+    self.last_update = Some(SystemTime::now())
+  }
+
+  /// Adds a new roblox instance to update/create.
+  pub fn add_changing(&mut self) {
+    todo!("Add changing. Add to changing dict, check destroying, check timestamps")
+  }
 }
 
 /// Valid transformers
