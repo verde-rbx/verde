@@ -39,11 +39,12 @@ impl SourcemapArgs {
     match self.out {
       Some(out) => {
         let json_output = serde_json::to_vec(&sourcemap)?;
-        let mut out_file = File::create(out).context("Failed to create file.")?;
+        let mut out_file = File::create(&out).context("Failed to create file.")?;
         out_file
           .write_all(&json_output)
           .context("Failed to write json to buffer.")?;
 
+        println!("Generated sourcemap and saved to {:?}.", out.display());
         Ok(())
       }
       None => {

@@ -10,6 +10,7 @@ use std::{net::IpAddr, path::PathBuf};
 
 #[derive(Parser)]
 /// Starts the Verde server to begin the synchronisation process.
+/// Begins watching for changes and serving files.
 pub struct ServeArgs {
   /// The project file to configure the server with.
   #[arg(long, alias="path", value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
@@ -31,8 +32,6 @@ impl ServeArgs {
     if !path.is_file() {
       bail!("'project' must point to a file. Got {}", path.display());
     }
-
-    // TODO: Check that it's a valid project file. (.yml?)
 
     // Create core if path can be stringified.
     if let Some(path_str) = path.to_str() {
