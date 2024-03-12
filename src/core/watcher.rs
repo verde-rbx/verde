@@ -3,11 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-use crate::core::payload::Payload;
+use crate::core::payload::{Payload, PayloadAction, PayloadInstance};
 use crate::core::project::VerdeProject;
 use anyhow::{bail, Context};
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use notify_debouncer_full::{new_debouncer, DebounceEventResult, DebouncedEvent, Debouncer, FileIdMap};
+use std::time::SystemTime;
 use std::{
   path::PathBuf,
   str::FromStr,
@@ -80,6 +81,14 @@ impl VerdeWatcher {
     println!("transform {event:?}");
     // TODO: Get the file, find the node? construct the PayloadInstance
     // Then add to Payload
+    if let Ok(mut payload) = self.payload.try_write() {
+      let action = match event.kind {
+        notify::EventKind::Remove(_) => PayloadAction::Delete(SystemTime::now()),
+        _ => PayloadAction::Change(PayloadInstance {}),
+      };
+
+      payload.add_payload(String::from("TODO: Get roblox instance path."), action)
+    }
   }
 }
 

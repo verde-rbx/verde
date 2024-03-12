@@ -43,9 +43,9 @@ mod handlers {
     convert::Infallible,
     sync::{Arc, RwLock},
   };
-  use warp::http::StatusCode;
 
   pub async fn sync_heartbeat(_payload: Arc<RwLock<Payload>>) -> Result<impl warp::Reply, Infallible> {
-    Ok(StatusCode::OK)
+    let r = _payload.read().unwrap().clone();
+    Ok(warp::reply::json(&r))
   }
 }
