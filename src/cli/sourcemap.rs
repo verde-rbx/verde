@@ -7,15 +7,20 @@ use crate::core::{
   project::{self, VerdeProject},
   sourcemap::VerdeSourcemap,
 };
-use anyhow::bail;
+use anyhow::{bail, Context};
 use clap::{Parser, ValueHint};
-use std::path::PathBuf;
+use std::{fs::File, io::Write, path::PathBuf};
 
 #[derive(Parser)]
-/// Creates a sourcemap using the project file.
+/// Creates a new sourcemap file using a project file.
 pub struct SourcemapArgs {
+  /// The project file to create a sourcemap of.
   #[arg(value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
   project: PathBuf,
+
+  /// Sourcemap output file. Leaving unspecified will output to stdout.
+  #[arg(short, long, value_hint=ValueHint::FilePath, default_value = None)]
+  out: Option<PathBuf>,
 }
 
 impl SourcemapArgs {
@@ -23,16 +28,29 @@ impl SourcemapArgs {
     // Confirm path
     let path = self.project.as_path();
     if !path.is_file() {
-      bail!("'project' must point to a file. Got {}", path.display());
+      bail!("'project' must point to a file. Got {path:?}");
     }
 
     // Open file and create sourcemap from project
     let proj = VerdeProject::try_from(&self.project)?;
     let sourcemap = VerdeSourcemap::from_project(&proj);
 
-    // TODO: Do we want file output as well?
-    println!("{}", serde_json::to_string(&sourcemap)?);
+    // Output to 'out' file or stdout.
+    match self.out {
+      Some(out) => {
+        let json_output = serde_json::to_vec(&sourcemap)?;
+        let mut out_file = File::create(out).context("Failed to create file.")?;
+        out_file
+          .write_all(&json_output)
+          .context("Failed to write json to buffer.")?;
 
-    Ok(())
+        Ok(())
+      }
+      None => {
+        let json_output = serde_json::to_string(&sourcemap)?;
+        println!("{json_output:?}");
+        Ok(())
+      }
+    }
   }
 }
