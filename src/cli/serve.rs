@@ -9,10 +9,18 @@ use clap::{Parser, ValueHint};
 use std::{net::IpAddr, path::PathBuf};
 
 #[derive(Parser)]
-/// Starts the Verde server to begin the synchronisation process.
-/// Begins watching for changes and serving files.
+/// Starts the Verde synchronisation server.
+///
+/// Loads the project file and begins watching the configured
+/// files for changes. An api accessible through the host and port
+/// will provide access to the watched files for use by the Verde
+/// studio plugin.
 pub struct ServeArgs {
   /// The project file to configure the server with.
+  ///
+  /// A valid Verde yaml project which contains the filepath
+  /// configuration for the file watcher and mappings for the Roblox
+  /// DataModel.
   #[arg(long, alias="path", value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
   project: PathBuf,
 

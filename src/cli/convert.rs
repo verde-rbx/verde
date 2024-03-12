@@ -10,16 +10,28 @@ use std::path::PathBuf;
 
 #[derive(Parser)]
 /// Converts supported project formats to the Verde project.
+///
+/// Verde will accept a number of project formats from different Roblox
+/// synchronisation tools and convert them into the Verde project format.
+/// An adapter will be selected either automatically or manually using
+/// the format argument.
 pub struct ConvertArgs {
-  // TODO: Allow to omit project path to auto detect project in CWD
   /// The project file to convert.
+  ///
+  /// The input project file must be a supported project file type, this
+  /// currently means only *.project.json files using the Rojo structure.
   project: PathBuf,
 
   /// The format to convert from.
+  ///
+  /// This overrides the automatic formatter to force Verde to convert using
+  /// a specified adapter. Currently, only the Rojo adapter is supported.
   #[arg(short, long)]
   format: Option<String>,
 
-  /// Where to output.
+  /// The output project.
+  ///
+  /// This is the file to output after converting the project.
   #[arg(short, long, value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
   out: PathBuf,
 }

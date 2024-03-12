@@ -8,7 +8,12 @@ use anyhow::Context;
 use clap::Parser;
 
 #[derive(Parser)]
-/// Initialises a new Verde project with defaults
+/// Initialise a new Verde project.
+///
+/// This will initialise a new project using Verde defaults.
+/// A verde.yaml file, and a src directory containing
+/// a client script, server script and a module script will be
+/// created in the CWD.
 pub struct InitArgs {}
 
 impl InitArgs {
