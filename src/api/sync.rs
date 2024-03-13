@@ -46,6 +46,10 @@ mod handlers {
 
   pub async fn sync_heartbeat(_payload: Arc<RwLock<Payload>>) -> Result<impl warp::Reply, Infallible> {
     let r = _payload.read().unwrap().clone();
+    if let Ok(mut w) = _payload.try_write() {
+      w.clear();
+    }
+
     Ok(warp::reply::json(&r))
   }
 }
