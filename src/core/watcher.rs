@@ -8,7 +8,6 @@ use crate::core::project::VerdeProject;
 use anyhow::{bail, Context};
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use notify_debouncer_full::{new_debouncer, DebounceEventResult, DebouncedEvent, Debouncer, FileIdMap};
-use std::time::SystemTime;
 use std::{
   path::PathBuf,
   str::FromStr,
@@ -78,16 +77,32 @@ impl VerdeWatcher {
 
   /// Transforms the debounced event into a payload event.
   async fn transform_event(&mut self, event: DebouncedEvent) {
-    println!("transform {event:?}");
-    // TODO: Get the file, find the node? construct the PayloadInstance
-    // Then add to Payload
-    if let Ok(mut payload) = self.payload.try_write() {
-      let action = match event.kind {
-        notify::EventKind::Remove(_) => PayloadAction::Delete(SystemTime::now()),
-        _ => PayloadAction::Change(PayloadInstance {}),
-      };
+    // We only want to track file changes.
+    if let Some(file_path) = event.paths.first() {
+      if !file_path.is_file() {
+        return;
+      }
 
-      payload.add_payload(String::from("TODO: Get roblox instance path."), action)
+      // Get the Node associated with file
+      // - Create Roblox instance path (game.workspace.x)
+      //      init.lua -> game.workspace.parent_dir
+      //      *.lua -> game.workspace.parent_dir.script
+      // - Get Classname (Script, ModuleScript, LocalScript)
+
+      // Then add to Payload
+      if let Ok(mut payload) = self.payload.try_write() {
+        let payload_instance = PayloadInstance {
+          instance: file_path.to_string_lossy().into_owned(),
+          value: None,
+        };
+
+        let action = match event.kind {
+          notify::EventKind::Remove(_) => PayloadAction::Delete(payload_instance),
+          _ => PayloadAction::Change(payload_instance),
+        };
+
+        payload.add_payload(action)
+      }
     }
   }
 }
