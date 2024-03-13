@@ -18,8 +18,8 @@ enum Adapters {
 /// Detects the project file type
 fn detect_project(path: &Path) -> Option<Adapters> {
   if path.is_file() {
-    let file_name = path.file_name().unwrap().to_str().unwrap();
-    let suffix = file_name.split_once('.').unwrap().1;
+    let file_name = path.file_name()?.to_str()?;
+    let suffix = file_name.split_once('.')?.1;
     return match suffix {
       "project.json" => Some(Adapters::Rojo),
       _ => None,
