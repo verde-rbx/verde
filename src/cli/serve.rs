@@ -1,8 +1,6 @@
-/**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 use crate::core::{project, session, VerdeCore};
 use anyhow::bail;
 use clap::{Parser, ValueHint};
@@ -14,7 +12,7 @@ use std::{net::IpAddr, path::PathBuf};
 /// files for changes. An api accessible through the host and port
 /// will provide access to the watched files for use by the Verde
 /// studio plugin.
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 pub struct ServeArgs {
   /// The project file to configure the server with.
   ///

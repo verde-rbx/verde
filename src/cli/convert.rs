@@ -1,8 +1,6 @@
-/**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 use crate::{adapters::convert_project, core::project};
 use anyhow::bail;
 use clap::{Parser, ValueHint};
@@ -14,7 +12,7 @@ use std::path::PathBuf;
 /// synchronisation tools and convert them into the Verde project format.
 /// An adapter will be selected either automatically or manually using
 /// the format argument.
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 pub struct ConvertArgs {
   /// The project file to convert.
   ///
