@@ -33,7 +33,7 @@ impl SourcemapArgs {
 
     // Open file and create sourcemap from project
     let proj = VerdeProject::try_from(&self.project)?;
-    let sourcemap = VerdeSourcemap::from_project(&proj);
+    let sourcemap = VerdeSourcemap::from(&proj);
 
     // Output to 'out' file or stdout.
     match self.out {
