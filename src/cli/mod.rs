@@ -24,13 +24,11 @@ pub struct VerdeCli {
 impl VerdeCli {
   pub fn execute(self) -> anyhow::Result<()> {
     match self.command {
-      Commands::Convert(command) => command.execute()?,
-      Commands::Init(command) => command.execute()?,
-      Commands::Serve(command) => command.execute()?,
-      Commands::Sourcemap(command) => command.execute()?,
+      Commands::Convert(command) => command.execute(),
+      Commands::Init(command) => command.execute(),
+      Commands::Serve(command) => command.execute(),
+      Commands::Sourcemap(command) => command.execute(),
     }
-
-    Ok(())
   }
 }
 
