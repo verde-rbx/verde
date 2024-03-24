@@ -11,8 +11,8 @@ use anyhow::{bail, Context};
 use clap::{Parser, ValueHint};
 use std::{fs::File, io::Write, path::PathBuf};
 
-#[derive(Parser)]
 /// Creates a new sourcemap file using a project file.
+#[derive(Parser, Debug)]
 pub struct SourcemapArgs {
   /// The project file to create a sourcemap of.
   #[arg(value_hint=ValueHint::FilePath, default_value = project::DEFAULT_PROJECT)]
@@ -24,7 +24,7 @@ pub struct SourcemapArgs {
 }
 
 impl SourcemapArgs {
-  pub fn execute(self) -> anyhow::Result<()> {
+  pub fn execute(&self) -> anyhow::Result<()> {
     // Confirm path
     let path = self.project.as_path();
     if !path.is_file() {
@@ -36,10 +36,10 @@ impl SourcemapArgs {
     let sourcemap = VerdeSourcemap::from(&proj);
 
     // Output to 'out' file or stdout.
-    match self.out {
+    match &self.out {
       Some(out) => {
         let json_output = serde_json::to_vec(&sourcemap)?;
-        let mut out_file = File::create(&out).context("Failed to create file.")?;
+        let mut out_file = File::create(out).context("Failed to create file.")?;
         out_file
           .write_all(&json_output)
           .context("Failed to write json to buffer.")?;

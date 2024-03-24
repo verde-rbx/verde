@@ -12,6 +12,7 @@ use crate::cli::convert::ConvertArgs;
 use crate::cli::init::InitArgs;
 use crate::cli::serve::ServeArgs;
 use crate::cli::sourcemap::SourcemapArgs;
+use anyhow::Context;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -24,15 +25,16 @@ pub struct VerdeCli {
 impl VerdeCli {
   pub fn execute(self) -> anyhow::Result<()> {
     match self.command {
-      Commands::Convert(command) => command.execute(),
-      Commands::Init(command) => command.execute(),
-      Commands::Serve(command) => command.execute(),
-      Commands::Sourcemap(command) => command.execute(),
+      Commands::Convert(ref command) => command.execute(),
+      Commands::Init(ref command) => command.execute(),
+      Commands::Serve(ref command) => command.execute(),
+      Commands::Sourcemap(ref command) => command.execute(),
     }
+    .with_context(|| format!("Error whilst executing command {:?}", self.command))
   }
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 pub enum Commands {
   Convert(ConvertArgs),
   Init(InitArgs),

@@ -8,13 +8,13 @@ use anyhow::bail;
 use clap::{Parser, ValueHint};
 use std::{net::IpAddr, path::PathBuf};
 
-#[derive(Parser)]
 /// Starts the Verde synchronisation server.
 ///
 /// Loads the project file and begins watching the configured
 /// files for changes. An api accessible through the host and port
 /// will provide access to the watched files for use by the Verde
 /// studio plugin.
+#[derive(Parser, Debug)]
 pub struct ServeArgs {
   /// The project file to configure the server with.
   ///
@@ -34,7 +34,7 @@ pub struct ServeArgs {
 }
 
 impl ServeArgs {
-  pub fn execute(self) -> anyhow::Result<()> {
+  pub fn execute(&self) -> anyhow::Result<()> {
     // Validate path is a file
     let path = self.project.as_path();
     if !path.is_file() {

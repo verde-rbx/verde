@@ -8,13 +8,13 @@ use anyhow::bail;
 use clap::{Parser, ValueHint};
 use std::path::PathBuf;
 
-#[derive(Parser)]
 /// Converts supported project formats to the Verde project.
 ///
 /// Verde will accept a number of project formats from different Roblox
 /// synchronisation tools and convert them into the Verde project format.
 /// An adapter will be selected either automatically or manually using
 /// the format argument.
+#[derive(Parser, Debug)]
 pub struct ConvertArgs {
   /// The project file to convert.
   ///
@@ -37,7 +37,7 @@ pub struct ConvertArgs {
 }
 
 impl ConvertArgs {
-  pub fn execute(self) -> anyhow::Result<()> {
+  pub fn execute(&self) -> anyhow::Result<()> {
     // Confirm path
     let path = self.project.as_path();
     if !path.is_file() {

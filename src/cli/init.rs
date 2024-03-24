@@ -7,17 +7,17 @@ use crate::core::project::VerdeProject;
 use anyhow::Context;
 use clap::Parser;
 
-#[derive(Parser)]
 /// Initialise a new Verde project.
 ///
 /// This will initialise a new project using Verde defaults.
 /// A verde.yaml file, and a src directory containing
 /// a client script, server script and a module script will be
 /// created in the CWD.
+#[derive(Parser, Debug)]
 pub struct InitArgs {}
 
 impl InitArgs {
-  pub fn execute(self) -> anyhow::Result<()> {
+  pub fn execute(&self) -> anyhow::Result<()> {
     let project = VerdeProject::default();
     project.save().context("Failed to save project file.")?;
 
