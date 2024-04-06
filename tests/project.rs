@@ -38,6 +38,7 @@ fn save_mock_project(filepath: &PathBuf) {
 fn create_mock_project() -> VerdeProject {
   VerdeProject {
     name: String::from("Verde Test Project"),
+    project_root: None,
     root: None,
     tree: Node {
       class_name: Some(String::from("DataModel")),

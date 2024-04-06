@@ -26,6 +26,7 @@ impl From<RojoProject> for VerdeProject {
   fn from(value: RojoProject) -> Self {
     Self {
       name: value.name,
+      project_root: None,
       root: None,
       tree: value.tree.into(),
     }

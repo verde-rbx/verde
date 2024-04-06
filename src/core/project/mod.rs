@@ -35,6 +35,11 @@ pub struct VerdeProject {
   /// Name of project
   pub name: String,
 
+  /// The root of the project file.
+  /// Calculated based on the root.
+  #[serde(skip_serializing)]
+  pub project_root: Option<PathBuf>,
+
   /// The root of the project.
   #[serde(skip_serializing_if = "Option::is_none")]
   pub root: Option<PathBuf>,
@@ -83,8 +88,9 @@ impl TryFrom<&PathBuf> for VerdeProject {
     // Set project root
     if project.root.is_none() {
       let mut absolute_path = current_dir()?.join(value);
-      absolute_path.pop(); // remove verde.yaml
+      project.project_root = Some(absolute_path.clone());
 
+      absolute_path.pop(); // remove verde.yaml
       project.root = Some(absolute_path);
     }
 
@@ -96,6 +102,7 @@ impl Default for VerdeProject {
   fn default() -> Self {
     Self {
       name: String::from("A Verde Project"),
+      project_root: None,
       root: None,
       tree: Node {
         class_name: Some(String::from("DataModel")),
