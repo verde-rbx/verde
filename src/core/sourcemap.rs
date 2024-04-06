@@ -16,8 +16,8 @@ pub struct VerdeSourcemap<'a> {
   pub class_name: &'a str,
 
   /// The file paths associated with the node.
-  #[serde(skip_serializing_if = "Option::is_none")]
-  pub file_paths: Option<Vec<&'a Path>>,
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub file_paths: Vec<&'a Path>,
 
   /// Child nodes.
   #[serde(skip_serializing_if = "Option::is_none")]
@@ -33,7 +33,7 @@ fn populate_children(tree: &Node) -> Option<Vec<VerdeSourcemap<'_>>> {
       children.push(VerdeSourcemap {
         name: key,
         class_name: child.class_name.as_ref().unwrap_or(key),
-        file_paths: None,
+        file_paths: vec![],
         children: populate_children(child),
       })
     }
@@ -46,12 +46,16 @@ fn populate_children(tree: &Node) -> Option<Vec<VerdeSourcemap<'_>>> {
 
 impl<'a> From<&'a VerdeProject> for VerdeSourcemap<'a> {
   fn from(project: &'a VerdeProject) -> Self {
-    let populated_children = populate_children(&project.tree);
-    VerdeSourcemap {
-      name: &project.name,
-      class_name: "DataModel",
-      file_paths: project.project_root.as_deref().map(|r| vec![r]),
-      children: populated_children,
+    if let Some(project_root) = &project.project_root {
+      let populated_children = populate_children(&project.tree);
+      VerdeSourcemap {
+        name: &project.name,
+        class_name: "DataModel",
+        file_paths: vec![project_root],
+        children: populated_children,
+      }
+    } else {
+      panic!("No project root node.")
     }
   }
 }
