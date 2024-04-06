@@ -50,7 +50,7 @@ impl<'a> From<&'a VerdeProject> for VerdeSourcemap<'a> {
     VerdeSourcemap {
       name: &project.name,
       class_name: "DataModel",
-      file_paths: None,
+      file_paths: project.project_root.as_deref().map(|r| vec![r]),
       children: populated_children,
     }
   }
