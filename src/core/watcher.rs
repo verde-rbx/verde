@@ -65,7 +65,7 @@ impl VerdeWatcher {
   }
 
   /// Starts listening for events.
-  pub async fn start(mut self) {
+  pub async fn start(&mut self) {
     loop {
       if let Some(ev) = self.watch_rx.recv().await {
         self.transform_event(ev).await

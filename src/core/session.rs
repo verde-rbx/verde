@@ -60,7 +60,7 @@ impl VerdeSession {
     println!("Serving on port {}", self.port);
 
     // Setup watcher
-    let watcher = VerdeWatcher::new(&self.project)?;
+    let mut watcher = VerdeWatcher::new(&self.project)?;
 
     // Start serve api
     self.runtime.block_on(async {
