@@ -24,11 +24,11 @@ pub struct VerdeCli {
 
 impl VerdeCli {
   pub fn execute(self) -> anyhow::Result<()> {
-    match self.command {
-      Commands::Convert(ref command) => command.execute(),
-      Commands::Init(ref command) => command.execute(),
-      Commands::Serve(ref command) => command.execute(),
-      Commands::Sourcemap(ref command) => command.execute(),
+    match &self.command {
+      Commands::Convert(command) => command.execute(),
+      Commands::Init(command) => command.execute(),
+      Commands::Serve(command) => command.execute(),
+      Commands::Sourcemap(command) => command.execute(),
     }
     .with_context(|| format!("Error whilst executing command {}", self.command))
   }
