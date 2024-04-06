@@ -47,7 +47,7 @@ impl SourcemapArgs {
       }
       None => {
         let json_output = serde_json::to_string(&sourcemap)?;
-        println!("{json_output:?}");
+        println!("{json_output}");
         Ok(())
       }
     }
