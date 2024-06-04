@@ -17,7 +17,7 @@ hero:
       link: /guide/quick-start
     - theme: alt
       text: View on GitHub
-      link: https://github.com/quantix-dev/verde  
+      link: https://github.com/quantix-dev/verde
 features:
   - icon: 🔄
     title: File Synchronisation

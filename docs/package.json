@@ -1,22 +1,33 @@
 {
   "name": "verde-docs",
   "type": "module",
-  "repository": "https://github.com/quantix-dev/verde",
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.1.4",
   "author": "quantix-dev",
   "license": "MPL-2.0",
-  "version": "0.1.0",
+  "repository": "https://github.com/quantix-dev/verde",
+  "engines": {
+    "node": ">=20.11.1"
+  },
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
-    "docs:serve": "vitepress serve"
+    "docs:serve": "vitepress serve",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
-  "engines": {
-    "node": ">=20.10.0"
+  "peerDependenciesMeta": {
+    "@algolia/client-search": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.6.4",
-    "eslint": "^8.56.0",
-    "vitepress": "1.0.0-rc.42"
+    "@antfu/eslint-config": "^2.20.0",
+    "@vue/tsconfig": "^0.5.1",
+    "eslint": "^9.4.0",
+    "eslint-plugin-format": "^0.1.1",
+    "vitepress": "1.2.3",
+    "vue": "^3.4.27"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -26,13 +37,8 @@
       ]
     }
   },
-  "peerDependenciesMeta": {
-    "@algolia/client-search": {
-      "optional": true
-    }
-  },
   "volta": {
     "node": "20.11.1",
-    "pnpm": "8.15.3"
+    "pnpm": "9.1.4"
   }
 }

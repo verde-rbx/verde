@@ -1,121 +1,127 @@
-import { DefaultTheme, defineConfig } from "vitepress";
-import pkg from "../package.json";
+import type { DefaultTheme } from 'vitepress'
+import { defineConfig } from 'vitepress'
+import pkg from '../package.json'
 
 // https://vitepress.vuejs.org/config/app-configs
 export default defineConfig({
-  lang: "en-GB",
-  title: "Verde",
-  description:
-    "Syncs file systems between roblox studio and your editor of choice",
+  // https://vitepress.dev/reference/site-config#site-metadata
+  title: 'Verde',
+  description: 'Syncs file systems between roblox studio and your editor of choice',
+  head: [
+    ['link', { rel: 'icon', href: '/verde.svg' }],
+    ['meta', { name: 'theme-color', content: '#' }],
+    ['meta', { name: 'og:type', content: 'website' }],
+    ['meta', { name: 'og:locale', content: 'en' }],
+    ['meta', { name: 'og:site_name', content: 'Verde' }],
+  ],
+  lang: 'en-GB',
 
-  lastUpdated: true,
+  // https://vitepress.dev/reference/site-config#routing
   cleanUrls: true,
 
-  sitemap: {
-    hostname: "https://verde.quantix.dev",
-  },
+  // https://vitepress.dev/reference/site-config#build
+  srcDir: 'src',
 
-  head: [
-    ["link", { rel: "icon", href: "/verde.svg" }],
-    ["meta", { name: "theme-color", content: "#" }],
-    ["meta", { name: "og:type", content: "website" }],
-    ["meta", { name: "og:locale", content: "en" }],
-    ["meta", { name: "og:site_name", content: "Verde" }],
-  ],
+  // https://vitepress.dev/reference/site-config#theming
+  lastUpdated: true,
 
+  // https://vitepress.dev/reference/site-config#customization
   markdown: {
-    theme: "monokai",
+    theme: 'monokai',
     lineNumbers: true,
+  },
+  sitemap: {
+    hostname: 'https://verde.quantix.dev',
   },
 
   themeConfig: {
-    logo: "/verde.svg",
+    logo: '/verde.svg',
     search: {
       // TODO: Change to algolia once released
-      provider: "local",
+      provider: 'local',
     },
     nav: [
       {
-        text: "Guide",
-        link: "/guide/introduction",
-        activeMatch: "/guide/",
+        text: 'Guide',
+        link: '/guide/introduction',
+        activeMatch: '/guide/',
       },
       {
-        text: "Reference",
-        link: "/reference/",
-        activeMatch: "/reference/",
+        text: 'Reference',
+        link: '/reference/',
+        activeMatch: '/reference/',
       },
       {
         text: pkg.version,
         items: [
           {
-            text: "Release Notes",
-            link: "https://github.com/quantix-dev/verde/releases/latest",
+            text: 'Release Notes',
+            link: 'https://github.com/quantix-dev/verde/releases/latest',
           },
           {
-            text: "Contributing",
-            link: "https://github.com/quantix-dev/verde/blob/main/.github/CONTRIBUTING.md",
+            text: 'Contributing',
+            link: 'https://github.com/quantix-dev/verde/blob/main/.github/CONTRIBUTING.md',
           },
         ],
       },
     ],
     socialLinks: [
-      { icon: "github", link: "https://github.com/quantix-dev/verde" },
+      { icon: 'github', link: 'https://github.com/quantix-dev/verde' },
     ],
     sidebar: {
-      "/guide/": {
-        base: "/guide/",
+      '/guide/': {
+        base: '/guide/',
         items: sidebarGuide(),
       },
-      "/reference/": {
-        base: "/reference/",
+      '/reference/': {
+        base: '/reference/',
         items: sidebarReference(),
       },
     },
     editLink: {
-      pattern: "https://github.com/quantix-dev/verde/tree/main/docs/:path",
-      text: "Contribute to this page on GitHub",
+      pattern: 'https://github.com/quantix-dev/verde/tree/main/docs/:path',
+      text: 'Contribute to this page on GitHub',
     },
     footer: {
-      message: "Released under the Mozilla Public License Version 2.0.",
+      message: 'Released under the Mozilla Public License Version 2.0.',
     },
   },
-});
+})
 
 function sidebarGuide(): DefaultTheme.SidebarItem[] {
   return [
     {
-      text: "Guide",
+      text: 'Guide',
       items: [
-        { text: "Introduction", link: "introduction" },
-        { text: "Quick Start", link: "quick-start" },
+        { text: 'Introduction', link: 'introduction' },
+        { text: 'Quick Start', link: 'quick-start' },
       ],
     },
     {
-      text: "Studio Plugin",
+      text: 'Studio Plugin',
       items: [
-        { text: "Introduction", link: "plugin" },
-      ]
+        { text: 'Introduction', link: 'plugin' },
+      ],
     },
     {
-      text: "Project",
+      text: 'Project',
       items: [
-        { text: "Introduction", link: "project" },
-      ]
+        { text: 'Introduction', link: 'project' },
+      ],
     },
     {
-      text: "CLI & API Reference",
-      base: "/reference/",
-      link: "/"
-    }
-  ];
+      text: 'CLI & API Reference',
+      base: '/reference/',
+      link: '/',
+    },
+  ]
 }
 
 function sidebarReference(): DefaultTheme.SidebarItem[] {
   return [
     {
-      text: "Reference",
-      items: [{ text: "CLI", link: "cli" }],
+      text: 'Reference',
+      items: [{ text: 'CLI', link: 'cli' }],
     },
-  ];
+  ]
 }

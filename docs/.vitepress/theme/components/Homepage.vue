@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { VPTeamMembers, VPTeamPage, VPTeamPageSection } from 'vitepress/theme'
 
-const members = [
-  // {
-  //   name: 'Game Name',
-  //   title: 'Author Name'
-  // }
-]
+interface HomepageProps {
+  members: Array<{ name: string, title: string }>
+}
+
+defineProps<HomepageProps>()
 </script>
 
 <template>
