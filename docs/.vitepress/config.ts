@@ -1,4 +1,3 @@
-import type { DefaultTheme } from 'vitepress'
 import { defineConfig } from 'vitepress'
 import pkg from '../package.json'
 
@@ -71,11 +70,41 @@ export default defineConfig({
     sidebar: {
       '/guide/': {
         base: '/guide/',
-        items: sidebarGuide(),
+        items: [
+          {
+            text: 'Guide',
+            items: [
+              { text: 'Introduction', link: 'introduction' },
+              { text: 'Quick Start', link: 'quick-start' },
+            ],
+          },
+          {
+            text: 'Studio Plugin',
+            items: [
+              { text: 'Introduction', link: 'plugin' },
+            ],
+          },
+          {
+            text: 'Project',
+            items: [
+              { text: 'Introduction', link: 'project' },
+            ],
+          },
+          {
+            text: 'CLI & API Reference',
+            base: '/reference/',
+            link: '/',
+          },
+        ],
       },
       '/reference/': {
         base: '/reference/',
-        items: sidebarReference(),
+        items: [
+          {
+            text: 'Reference',
+            items: [{ text: 'CLI', link: 'cli' }],
+          },
+        ],
       },
     },
     editLink: {
@@ -87,41 +116,3 @@ export default defineConfig({
     },
   },
 })
-
-function sidebarGuide(): DefaultTheme.SidebarItem[] {
-  return [
-    {
-      text: 'Guide',
-      items: [
-        { text: 'Introduction', link: 'introduction' },
-        { text: 'Quick Start', link: 'quick-start' },
-      ],
-    },
-    {
-      text: 'Studio Plugin',
-      items: [
-        { text: 'Introduction', link: 'plugin' },
-      ],
-    },
-    {
-      text: 'Project',
-      items: [
-        { text: 'Introduction', link: 'project' },
-      ],
-    },
-    {
-      text: 'CLI & API Reference',
-      base: '/reference/',
-      link: '/',
-    },
-  ]
-}
-
-function sidebarReference(): DefaultTheme.SidebarItem[] {
-  return [
-    {
-      text: 'Reference',
-      items: [{ text: 'CLI', link: 'cli' }],
-    },
-  ]
-}
