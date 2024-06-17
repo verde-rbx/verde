@@ -11,7 +11,7 @@ use std::{
 };
 
 /// Metadata for a Roblox instance payload.
-#[derive(Clone, Serialize, Eq, PartialEq)]
+#[derive(Clone, Serialize, Eq)]
 pub struct PayloadInstance {
   /// The Roblox instance path.
   pub instance: String,
@@ -27,8 +27,14 @@ impl Hash for PayloadInstance {
   }
 }
 
+impl PartialEq for PayloadInstance {
+  fn eq(&self, other: &Self) -> bool {
+    self.instance == other.instance
+  }
+}
+
 /// Payload action.
-#[derive(Clone, Serialize, Eq, Hash, PartialEq)]
+#[derive(Clone, Serialize, Eq)]
 pub enum PayloadAction {
   /// Delete payload action.
   /// The value is the time the action was requested.
@@ -37,6 +43,27 @@ pub enum PayloadAction {
   /// Change/Add payload action.
   /// The value is the payload instance.
   Change(PayloadInstance),
+}
+
+// Hash based only on inner payload instance.
+impl Hash for PayloadAction {
+  fn hash<H: Hasher>(&self, state: &mut H) {
+    match self {
+      PayloadAction::Change(v) => v.hash(state),
+      PayloadAction::Delete(v) => v.hash(state),
+    };
+  }
+}
+
+impl PartialEq for PayloadAction {
+  fn eq(&self, other: &Self) -> bool {
+    match (self, other) {
+      (PayloadAction::Change(v), PayloadAction::Change(v1)) => v.eq(v1),
+      (PayloadAction::Change(v), PayloadAction::Delete(v1)) => v.eq(v1),
+      (PayloadAction::Delete(v), PayloadAction::Delete(v1)) => v.eq(v1),
+      (PayloadAction::Delete(v), PayloadAction::Change(v1)) => v.eq(v1),
+    }
+  }
 }
 
 /// Payload for a response.

@@ -89,10 +89,10 @@ impl VerdeWatcher {
 
       match self.payload.try_write() {
         Err(err) => println!("Failed to get a write on the payload {err}"),
-        Ok(mut payload) => {
-          let action = transform_file(file_path, &event.kind);
-          payload.add_payload(action)
-        }
+        Ok(mut payload) => match transform_file(file_path, &event.kind) {
+          Ok(v) => payload.add_payload(v),
+          Err(err) => println!("Failed to transform payload {err}"),
+        },
       }
 
       // 1. Check that the file is one of the allowed file types (*.lua(u))
