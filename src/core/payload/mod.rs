@@ -1,11 +1,17 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+pub mod transform;
+
 use serde::Serialize;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{
+  collections::HashSet,
+  hash::{Hash, Hasher},
+  time::{SystemTime, UNIX_EPOCH},
+};
 
 /// Metadata for a Roblox instance payload.
-#[derive(Serialize, Clone)]
+#[derive(Clone, Serialize, Eq, PartialEq)]
 pub struct PayloadInstance {
   /// The Roblox instance path.
   pub instance: String,
@@ -15,8 +21,14 @@ pub struct PayloadInstance {
   pub value: Option<String>,
 }
 
+impl Hash for PayloadInstance {
+  fn hash<H: Hasher>(&self, state: &mut H) {
+    self.instance.hash(state);
+  }
+}
+
 /// Payload action.
-#[derive(Serialize, Clone)]
+#[derive(Clone, Serialize, Eq, Hash, PartialEq)]
 pub enum PayloadAction {
   /// Delete payload action.
   /// The value is the time the action was requested.
@@ -27,20 +39,11 @@ pub enum PayloadAction {
   Change(PayloadInstance),
 }
 
-impl PayloadAction {
-  fn get_instance(&self) -> &String {
-    match self {
-      Self::Change(c) => &c.instance,
-      Self::Delete(d) => &d.instance,
-    }
-  }
-}
-
 /// Payload for a response.
-#[derive(Default, Serialize, Clone)]
+#[derive(Clone, Default, Serialize)]
 pub struct Payload {
   /// The instances to add/change
-  pub events: Vec<PayloadAction>,
+  pub events: HashSet<PayloadAction>,
 
   /// The alst time the payload was edited.
   last_update: Option<u128>,
@@ -58,11 +61,7 @@ impl Payload {
 
   /// Adds a new Roblox instance to update/create/delete.
   pub fn add_payload(&mut self, payload: PayloadAction) {
-    self.events.push(payload);
-    self
-      .events
-      .dedup_by(|a, b| a.get_instance().eq_ignore_ascii_case(b.get_instance()));
-
+    self.events.replace(payload);
     self.last_update = Some(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis());
   }
 }

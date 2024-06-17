@@ -14,6 +14,8 @@ use std::{
 };
 use tokio::sync::mpsc;
 
+use super::payload::transform::transform_file;
+
 /// The duration for the debounce watcher events.
 const DEBOUNCE_DURATION: Duration = Duration::from_secs(2);
 
@@ -23,6 +25,9 @@ type VerdeDebouncer = Debouncer<RecommendedWatcher, FileIdMap>;
 pub struct VerdeWatcher {
   /// The debouncer watching for file system events.
   _debouncer: VerdeDebouncer,
+
+  /// The verde project currently being watched.
+  _project: Arc<VerdeProject>,
 
   /// The debounced event receiver channel.
   watch_rx: mpsc::Receiver<DebouncedEvent>,
@@ -59,6 +64,7 @@ impl VerdeWatcher {
 
     Ok(Self {
       _debouncer,
+      _project: Arc::clone(project),
       watch_rx,
       payload,
     })
@@ -81,26 +87,25 @@ impl VerdeWatcher {
         return;
       }
 
-      // Get the Node associated with file
-      // - Create Roblox instance path (game.workspace.x)
-      //      init.lua -> game.workspace.parent_dir
-      //      *.lua -> game.workspace.parent_dir.script
-      // - Get Classname (Script, ModuleScript, LocalScript)
-
-      // Then add to Payload
-      if let Ok(mut payload) = self.payload.try_write() {
-        let payload_instance = PayloadInstance {
-          instance: file_path.to_string_lossy().into_owned(),
-          value: None,
-        };
-
-        let action = match event.kind {
-          notify::EventKind::Remove(_) => PayloadAction::Delete(payload_instance),
-          _ => PayloadAction::Change(payload_instance),
-        };
-
-        payload.add_payload(action)
+      match self.payload.try_write() {
+        Err(err) => println!("Failed to get a write on the payload {err}"),
+        Ok(mut payload) => {
+          let action = transform_file(file_path, &event.kind);
+          payload.add_payload(action)
+        }
       }
+
+      // 1. Check that the file is one of the allowed file types (*.lua(u))
+      // 1.1 Glob on file name?
+      // 1.2 For now we only handle .lua(u) so we can probably just check the extension.
+
+      // 2. Get associated node from project, cancel if one isnt found.
+      // 2.1 perform a get_paths() on the project tree (it's not on the watcher as an Arc)
+      // 2.2 update the get_paths to automatically canonicalise the paths as used in the watcher start method.
+      // 2.3 Construct the roblox instance path based on the node path (combine classnames etc)
+
+      // 3. Perform file-specific transformations (init.lua -> parent of elements)
+      // 3.1 Transform the roblox instance path according to these transformations. (for now its just init / .server.lua / .client.lua)
     }
   }
 }
@@ -123,7 +128,7 @@ pub fn create_watcher(watch_tx: mpsc::Sender<DebouncedEvent>, paths: Vec<PathBuf
       Err(error) => error.iter().for_each(|error| println!("{error:?}")),
     },
   )
-  .with_context(|| "failed to create watcher")?;
+  .with_context(|| "Failed to create watcher")?;
 
   // Setup watcher and cache for each specified root
   // The paths should be canonicalized so we dont need to do any extra processing

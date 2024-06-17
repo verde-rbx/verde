@@ -42,9 +42,9 @@ mod handlers {
     sync::{Arc, RwLock},
   };
 
-  pub async fn sync_heartbeat(_payload: Arc<RwLock<Payload>>) -> Result<impl warp::Reply, Infallible> {
-    let r = _payload.read().unwrap().clone();
-    if let Ok(mut w) = _payload.try_write() {
+  pub async fn sync_heartbeat(payload: Arc<RwLock<Payload>>) -> Result<impl warp::Reply, Infallible> {
+    let r = payload.read().unwrap().clone();
+    if let Ok(mut w) = payload.try_write() {
       w.clear();
     }
 

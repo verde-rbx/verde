@@ -94,9 +94,9 @@ fn save_project() {
   // Checking file content to ensure it is as expected
   let file_content = fs::read(project_path).unwrap();
   assert_eq!(
-        str::from_utf8(&file_content).unwrap(),
-        "name: Verde Test Project\ntree:\n  .class: DataModel\n  ServerScriptService:\n    .class: ServerScriptService\n    .path: src/server\n"
-    );
+    str::from_utf8(&file_content).unwrap(),
+    "name: Verde Test Project\ntree:\n  .class: DataModel\n  ServerScriptService:\n    .class: ServerScriptService\n    .path: src/server\n"
+  );
 
   // Cleanup and delete file
   fs::remove_file(project_path).unwrap();
