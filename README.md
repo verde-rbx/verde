@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://verde.quantix.dev">
-        <img src="./docs/public/verde.svg" alt="Verde" width="250">
+        <img src="./docs/src/public/verde.svg" alt="Verde" width="250">
     </a>
 </p>
 
