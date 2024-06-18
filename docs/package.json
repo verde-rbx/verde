@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.1.4",
   "author": "quantix-dev",
   "license": "MPL-2.0",
-  "repository": "https://github.com/quantix-dev/verde",
+  "repository": "https://github.com/verde-rbx/verde",
   "engines": {
     "node": ">=20.11.1"
   },

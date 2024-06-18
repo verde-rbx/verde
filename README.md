@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/quantix-dev/verde/releases/latest"><img src="https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/release.yml?label=build&logo=github" alt="Build Workflow Status"></a>
-    <a href="https://verde.quantix.dev"><img src="https://img.shields.io/github/actions/workflow/status/quantix-dev/verde/deploy-docs.yml?label=docs&logo=github" alt="Docs Workflow Status"></a>
-    <a href="https://codecov.io/github/quantix-dev/verde"><img alt="Codecov" src="https://codecov.io/github/quantix-dev/verde/graph/badge.svg?token=M7HHNI1Z5E"></a>
+    <a href="https://github.com/verde-rbx/verde/releases/latest"><img src="https://img.shields.io/github/actions/workflow/status/verde-rbx/verde/release.yml?label=build&logo=github" alt="Build Workflow Status"></a>
+    <a href="https://verde.quantix.dev"><img src="https://img.shields.io/github/actions/workflow/status/verde-rbx/verde/deploy-docs.yml?label=docs&logo=github" alt="Docs Workflow Status"></a>
+    <a href="https://codecov.io/github/verde-rbx/verde"><img alt="Codecov" src="https://codecov.io/github/verde-rbx/verde/graph/badge.svg?token=M7HHNI1Z5E"></a>
     <a href="./Cargo.toml"><img alt="Rust MSRV" src="https://img.shields.io/badge/rust-1.70-brightgreen?style=flat&logo=rust"></a>
-    <a href="./LICENSE.txt"><img src="https://img.shields.io/github/license/quantix-dev/verde?cacheSeconds=60480" alt="GitHub License"></a>
+    <a href="./LICENSE.txt"><img src="https://img.shields.io/github/license/verde-rbx/verde?cacheSeconds=60480" alt="GitHub License"></a>
 </p>
 
 > [!IMPORTANT]\
@@ -26,7 +26,7 @@ There are a number of ways to setup Verde on your machine:
 By using [foreman](https://github.com/Roblox/foreman)
 
 ### 2. Global Install
-By using the Verde installer utility, available from [releases](https://github.com/quantix-dev/verde/releases). You can easily install Verde globally on your computer.
+By using the Verde installer utility, available from [releases](https://github.com/verde-rbx/verde/releases). You can easily install Verde globally on your computer.
 
 ## 🤝 Contributing
 We are happy to accept any contributions to Verde so that we can build a better tool together.

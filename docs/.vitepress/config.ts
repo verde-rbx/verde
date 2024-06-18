@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitepress'
 import pkg from '../package.json'
 
+const repo = pkg.repository
+
 // https://vitepress.vuejs.org/config/app-configs
 export default defineConfig({
   // https://vitepress.dev/reference/site-config#site-metadata
@@ -55,17 +57,17 @@ export default defineConfig({
         items: [
           {
             text: 'Release Notes',
-            link: 'https://github.com/quantix-dev/verde/releases/latest',
+            link: `${repo}/releases/latest`,
           },
           {
             text: 'Contributing',
-            link: 'https://github.com/quantix-dev/verde/blob/main/.github/CONTRIBUTING.md',
+            link: `${repo}/blob/main/.github/CONTRIBUTING.md`,
           },
         ],
       },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/quantix-dev/verde' },
+      { icon: 'github', link: repo },
     ],
     sidebar: {
       '/guide/': {
@@ -108,7 +110,7 @@ export default defineConfig({
       },
     },
     editLink: {
-      pattern: 'https://github.com/quantix-dev/verde/tree/main/docs/:path',
+      pattern: `${repo}/tree/main/docs/:path`,
       text: 'Contribute to this page on GitHub',
     },
     footer: {
