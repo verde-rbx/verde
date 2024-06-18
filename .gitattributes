@@ -1,5 +1,9 @@
-docs/.vitepress/* linguist-vendored=false
-*.luau linguist-language=Lua
+*.luau linguist-language=Luau
+*.lua linguist-language=Luau
+
+# Exclude documentation
+docs/* linguist-documentation
+
 *.png binary
 *.svg binary
 *.jpg binary
