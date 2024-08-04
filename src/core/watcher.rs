@@ -1,6 +1,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+use crate::core::payload::transform::transform_file;
 use crate::core::payload::Payload;
 use crate::core::project::VerdeProject;
 use anyhow::{bail, Context};
@@ -14,12 +15,10 @@ use std::{
 };
 use tokio::sync::mpsc;
 
-use super::payload::transform::transform_file;
+type VerdeDebouncer = Debouncer<RecommendedWatcher, FileIdMap>;
 
 /// The duration for the debounce watcher events.
-const DEBOUNCE_DURATION: Duration = Duration::from_secs(2);
-
-type VerdeDebouncer = Debouncer<RecommendedWatcher, FileIdMap>;
+const DEBOUNCE_DURATION: Duration = Duration::from_millis(250);
 
 /// The Verde watcher.
 pub struct VerdeWatcher {
@@ -27,7 +26,7 @@ pub struct VerdeWatcher {
   _debouncer: VerdeDebouncer,
 
   /// The verde project currently being watched.
-  _project: Arc<VerdeProject>,
+  project: Arc<VerdeProject>,
 
   /// The debounced event receiver channel.
   watch_rx: mpsc::Receiver<DebouncedEvent>,
@@ -64,49 +63,39 @@ impl VerdeWatcher {
 
     Ok(Self {
       _debouncer,
-      _project: Arc::clone(project),
+      project: Arc::clone(project),
       watch_rx,
       payload,
     })
   }
 
   /// Starts listening for events.
-  pub async fn start(&mut self) {
+  pub async fn start(&mut self) -> anyhow::Result<()> {
     loop {
       if let Some(ev) = self.watch_rx.recv().await {
-        self.transform_event(ev).await
+        self
+          .transform_event(ev)
+          .await
+          .with_context(|| "Failed to transform file event.")?;
       }
     }
   }
 
   /// Transforms the debounced event into a payload event.
-  async fn transform_event(&mut self, event: DebouncedEvent) {
+  async fn transform_event(&mut self, event: DebouncedEvent) -> anyhow::Result<()> {
     // We only want to track file changes.
     if let Some(file_path) = event.paths.first() {
       if !file_path.is_file() {
-        return;
+        return Ok(());
       }
 
-      match self.payload.try_write() {
-        Err(err) => println!("Failed to get a write on the payload {err}"),
-        Ok(mut payload) => match transform_file(file_path, &event.kind) {
-          Ok(v) => payload.add_payload(v),
-          Err(err) => println!("Failed to transform payload {err}"),
-        },
+      if let Ok(mut payload) = self.payload.try_write() {
+        let file = transform_file(file_path, &event.kind, &self.project)?;
+        payload.add_payload(file);
       }
-
-      // 1. Check that the file is one of the allowed file types (*.lua(u))
-      // 1.1 Glob on file name?
-      // 1.2 For now we only handle .lua(u) so we can probably just check the extension.
-
-      // 2. Get associated node from project, cancel if one isnt found.
-      // 2.1 perform a get_paths() on the project tree (it's not on the watcher as an Arc)
-      // 2.2 update the get_paths to automatically canonicalise the paths as used in the watcher start method.
-      // 2.3 Construct the roblox instance path based on the node path (combine classnames etc)
-
-      // 3. Perform file-specific transformations (init.lua -> parent of elements)
-      // 3.1 Transform the roblox instance path according to these transformations. (for now its just init / .server.lua / .client.lua)
     }
+
+    Ok(())
   }
 }
 

@@ -24,26 +24,6 @@ pub struct VerdeSourcemap<'a> {
   pub children: Option<Vec<VerdeSourcemap<'a>>>,
 }
 
-fn populate_children(tree: &Node) -> Option<Vec<VerdeSourcemap<'_>>> {
-  if let Some(contents) = &tree.contents {
-    let mut children = Vec::with_capacity(contents.len());
-    for (key, child) in contents.iter() {
-      // TODO: Use node helper to get className
-      // TODO: Use node helper to get files under base path
-      children.push(VerdeSourcemap {
-        name: key,
-        class_name: child.class_name.as_ref().unwrap_or(key),
-        file_paths: vec![],
-        children: populate_children(child),
-      })
-    }
-
-    return Some(children);
-  }
-
-  None
-}
-
 impl<'a> From<&'a VerdeProject> for VerdeSourcemap<'a> {
   fn from(project: &'a VerdeProject) -> Self {
     if let Some(project_root) = &project.project_root {
@@ -58,4 +38,23 @@ impl<'a> From<&'a VerdeProject> for VerdeSourcemap<'a> {
       panic!("No project root node.")
     }
   }
+}
+
+/// Populates the sourcemap with nodes
+fn populate_children(tree: &Node) -> Option<Vec<VerdeSourcemap<'_>>> {
+  if let Some(contents) = &tree.contents {
+    let mut children = Vec::with_capacity(contents.len());
+    for (key, child) in contents.iter() {
+      children.push(VerdeSourcemap {
+        name: key,
+        class_name: child.class_name.as_ref().unwrap_or(key),
+        file_paths: vec![],
+        children: populate_children(child),
+      })
+    }
+
+    return Some(children);
+  }
+
+  None
 }

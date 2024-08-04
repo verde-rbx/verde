@@ -122,17 +122,28 @@ impl Default for VerdeProject {
             String::from("ReplicatedStorage"),
             Node {
               class_name: Some(String::from("ReplicatedStorage")),
-              path: Some(String::from("src/shared")),
+              path: None,
               overwrite_descendants: None,
-              contents: Some(BTreeMap::<String, Node>::from([(
-                String::from("client"),
-                Node {
-                  class_name: None,
-                  path: Some(String::from("src/client")),
-                  overwrite_descendants: None,
-                  contents: None,
-                },
-              )])),
+              contents: Some(BTreeMap::<String, Node>::from([
+                (
+                  String::from("shared"),
+                  Node {
+                    class_name: None,
+                    path: Some(String::from("src/shared")),
+                    overwrite_descendants: None,
+                    contents: None,
+                  },
+                ),
+                (
+                  String::from("client"),
+                  Node {
+                    class_name: None,
+                    path: Some(String::from("src/client")),
+                    overwrite_descendants: None,
+                    contents: None,
+                  },
+                ),
+              ])),
             },
           ),
         ])),

@@ -45,7 +45,6 @@ pub enum PayloadAction {
   Change(PayloadInstance),
 }
 
-// Hash based only on inner payload instance.
 impl Hash for PayloadAction {
   fn hash<H: Hasher>(&self, state: &mut H) {
     match self {

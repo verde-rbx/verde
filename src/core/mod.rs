@@ -13,16 +13,16 @@ use anyhow::bail;
 use std::path::PathBuf;
 use std::sync::Arc;
 
+/// The core Verde state
 #[derive(Default)]
 pub struct VerdeCore {
   /// Current loaded project file
   pub project: Option<Arc<VerdeProject>>,
 
+  /// The current session
   pub session: Option<VerdeSession>,
 }
 
-// TODO: I think this is redundent and session/project should be their own thing
-//       Session relies on project so making them in this structure makes it difficult to pass them around
 impl VerdeCore {
   /// Creates the Verde Core using defaults.
   pub fn new() -> Self {

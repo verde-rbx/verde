@@ -53,7 +53,6 @@ pub struct RojoProjectNode {
 }
 
 impl From<RojoProjectNode> for Node {
-  /// Converts a Rojo ProjectNode to Verde Node
   fn from(node: RojoProjectNode) -> Self {
     let mut child_nodes = BTreeMap::<String, Self>::new();
     for (key, child) in node.children {
@@ -67,8 +66,8 @@ impl From<RojoProjectNode> for Node {
     });
 
     Self {
-      class_name: node.class_name.to_owned(),
-      path: node.path.to_owned(),
+      class_name: node.class_name.clone(),
+      path: node.path.clone(),
       overwrite_descendants,
       contents: Some(child_nodes),
     }

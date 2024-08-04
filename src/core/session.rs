@@ -16,6 +16,18 @@ use tokio::{
 pub const DEFAULT_HOST: IpAddr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
 pub const DEFAULT_PORT: u16 = 3000;
 
+/// Describes the current state of the session.
+pub enum SessionState {
+  /// Session is actively watching and synchronising files.
+  Active,
+
+  /// Session is not externally accessible and is closed.
+  Offline,
+
+  /// Session encountered an error and cannot continue.
+  Error,
+}
+
 /// Manages the Verde Session and state.
 pub struct VerdeSession {
   /// The hostname the session will listen on.
@@ -32,18 +44,6 @@ pub struct VerdeSession {
 
   /// The tokio runtime for asynchronous tasks
   runtime: Runtime,
-}
-
-/// Describes the current state of the session.
-pub enum SessionState {
-  /// Session is actively watching and synchronising files.
-  Active,
-
-  /// Session is not externally accessible and is closed.
-  Offline,
-
-  /// Session encountered an error and cannot continue.
-  Error,
 }
 
 impl VerdeSession {
@@ -71,7 +71,11 @@ impl VerdeSession {
           // Start watching and serving api
           let watch_fut = watcher.start();
           let api_fut = warp::serve(api).run(SocketAddr::new(self.host, self.port));
-          join!(watch_fut, api_fut);
+          let (watcher_res, _api_res) = join!(watch_fut, api_fut);
+          match watcher_res {
+            Ok(()) => println!("Watcher stopped."),
+            Err(err) => println!("Watcher failed {err}"),
+          };
         }
         Err(api_err) => println!("Failed to start api. {api_err:?}"),
       }

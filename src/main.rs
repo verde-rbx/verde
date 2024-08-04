@@ -9,6 +9,5 @@ use verde::cli::VerdeCli;
 fn main() -> anyhow::Result<()> {
   let command = VerdeCli::parse();
   command.execute()?;
-
   Ok(())
 }
