@@ -1,8 +1,9 @@
 name: "plugin"
-tree: 
-  Verde:
-    .path: "src/"
-    storybook:
-      .path: "storybook/"
-    packages:
-      .path: "Packages/"
+tree:
+  Workspace:
+    Verde:
+      .path: "src/"
+      storybook:
+        .path: "storybook/"
+      packages:
+        .path: "Packages/"

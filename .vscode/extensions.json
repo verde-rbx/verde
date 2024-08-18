@@ -2,6 +2,6 @@
   "recommendations": [
     "rust-lang.rust-analyzer",
     "vadimcn.vscode-lldb",
-    "swellaby.vscode-rust-test-adapter"
+    "tamasfe.even-better-toml"
   ]
 }
