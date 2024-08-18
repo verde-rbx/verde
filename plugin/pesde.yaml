@@ -1,0 +1,19 @@
+name: verde/plugin
+version: 0.1.0
+description: The verde roblox plugin.
+license: MPL-2.0
+authors:
+- quantix-dev
+repository: https://github.com/verde-rbx/verde
+exports: {}
+path_style: !roblox
+  place: {}
+private: false
+realm: development
+indices:
+  default: https://github.com/daimond113/pesde-index
+dependencies:
+  vide:
+    wally: wally#centau/vide
+    version: ^0.1.1
+    index_url: https://github.com/UpliftGames/wally-index
