@@ -1,5 +1,0 @@
-[tools]
-pesde = { github = "daimond113/pesde", version = "0.4.7" }
-stylua = { github = "JohnnyMorganz/StyLua", version = "0.18.1" }
-# Bootstrap with Verde in the future
-rojo = { github = "rojo-rbx/rojo", version = "7.4.3" }
