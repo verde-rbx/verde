@@ -2,12 +2,12 @@
   "name": "verde-docs",
   "type": "module",
   "version": "0.1.0",
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.12.2",
   "author": "quantix-dev",
   "license": "MPL-2.0",
   "repository": "https://github.com/verde-rbx/verde",
   "engines": {
-    "node": ">=20.11.1"
+    "node": ">=20.18.0"
   },
   "scripts": {
     "docs:dev": "vitepress dev",
@@ -22,12 +22,12 @@
     }
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.20.0",
+    "@antfu/eslint-config": "^3.8.0",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^9.4.0",
-    "eslint-plugin-format": "^0.1.1",
-    "vitepress": "^1.2.3",
-    "vue": "^3.4.27"
+    "eslint": "^9.13.0",
+    "eslint-plugin-format": "^0.1.2",
+    "vitepress": "^1.4.1",
+    "vue": "^3.5.12"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -38,7 +38,7 @@
     }
   },
   "volta": {
-    "node": "20.11.1",
-    "pnpm": "9.1.4"
+    "node": "20.18.0",
+    "pnpm": "9.12.2"
   }
 }

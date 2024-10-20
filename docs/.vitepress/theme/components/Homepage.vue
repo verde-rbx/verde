@@ -18,7 +18,7 @@ defineProps<HomepageProps>()
         Games using Verde to enhance the developer experience.
       </template>
       <template #members>
-        <VPTeamMembers v-if="members.length > 0" :members="members" />
+        <VPTeamMembers v-if="members.length" :members="members" />
         <p v-else class="lead-text">
           Currently no games are using Verde.<br>
           Suggest your game by contacting <code>quantix.dev</code> on discord,
