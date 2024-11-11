@@ -19,14 +19,7 @@
 Verde is a synchronisation tool that will allow you to use off-platform tools such as [Visual Studio Code](https://code.visualstudio.com/) or [Git](https://git-scm.com/).<br>You can learn more about Verde and what it can do in the [Introduction](https://verde.quantix.dev/guide/) section of our documentation.
 
 ## 🔧 Setup
-Verde is made up of two components. The Roblox Studio plugin and the CLI Tool.
-There are a number of ways to setup Verde on your machine:
-
-### 1. Foreman Setup (Recommended)
-By using [foreman](https://github.com/Roblox/foreman)
-
-### 2. Global Install
-By using the Verde installer utility, available from [releases](https://github.com/verde-rbx/verde/releases). You can easily install Verde globally on your computer.
+In Development
 
 ## 🤝 Contributing
 We are happy to accept any contributions to Verde so that we can build a better tool together.

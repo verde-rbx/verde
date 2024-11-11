@@ -1,17 +1,16 @@
 --[[
-	This Source Code Form is subject to the terms of the Mozilla Public
-	License, v. 2.0. If a copy of the MPL was not distributed with this
-	file, You can obtain one at http://mozilla.org/MPL/2.0/.
---]]
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+]]
 
 if not plugin then
     return error("Please run Verde in a plugin context")
 end
 
-local vide = require(script.Parent.packages.vide)
-vide.strict = false -- Disable strict mode in production for performance improvement
-
 local store = require(script.Parent.store)
+local vide = require(script.Parent.packages.vide)
+vide.strict = true -- Disable strict mode in production for performance improvement
 
 -- Setup Plugin Widget
 local widgetSettings = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, true, false, 320, 210, 300, 210)

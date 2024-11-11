@@ -10,6 +10,9 @@ export type SessionData = {}
 local Session = {}
 Session.__index = Session
 
+--[[
+    Creates a new session.
+]]
 function Session.new(_host: string?, _port: number?, _secure: boolean?)
     local sessionData = {
         BaseUrl = `{if _secure then "https" else "http"}://{_host}:{_port}`,

@@ -20,7 +20,6 @@ pub fn transform_file(
     notify::EventKind::Remove(_) => PayloadAction::Delete(payload_instance),
     _ => PayloadAction::Change(payload_instance),
   };
-  // TODO: delete does a transform even though it's irrelevant
 
   Ok(action)
 }
@@ -34,7 +33,6 @@ fn transform_script(file_path: &Path, project: &Arc<VerdeProject>) -> anyhow::Re
 
   // Get file contents
   let contents = fs::read_to_string(file_path)?;
-
   Ok(PayloadInstance {
     instance: instance_path,
     value: Some(contents),
