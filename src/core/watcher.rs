@@ -5,7 +5,7 @@ use crate::core::payload::transform::transform_file;
 use crate::core::payload::Payload;
 use crate::core::project::VerdeProject;
 use anyhow::{bail, Context};
-use notify::{RecommendedWatcher, RecursiveMode, Watcher};
+use notify::{RecommendedWatcher, RecursiveMode};
 use notify_debouncer_full::{new_debouncer, DebounceEventResult, DebouncedEvent, Debouncer, FileIdMap};
 use std::{
   path::PathBuf,
@@ -123,11 +123,8 @@ pub fn create_watcher(watch_tx: mpsc::Sender<DebouncedEvent>, paths: Vec<PathBuf
   // The paths should be canonicalized so we dont need to do any extra processing
   for path in paths {
     debouncer
-      .watcher()
       .watch(&path, RecursiveMode::Recursive)
       .with_context(|| format!("Failed to watch {path:?} for file changes."))?;
-
-    debouncer.cache().add_root(&path, RecursiveMode::Recursive);
   }
 
   Ok(debouncer)

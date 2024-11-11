@@ -71,7 +71,7 @@ impl VerdeSession {
           // Start watching and serving api
           let watch_fut = watcher.start();
           let api_fut = warp::serve(api).run(SocketAddr::new(self.host, self.port));
-          let (watcher_res, _api_res) = join!(watch_fut, api_fut);
+          let (watcher_res, _) = join!(watch_fut, api_fut);
           match watcher_res {
             Ok(()) => println!("Watcher stopped."),
             Err(err) => println!("Watcher failed {err}"),
