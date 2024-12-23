@@ -6,14 +6,13 @@ mod init;
 mod serve;
 mod sourcemap;
 
-use std::fmt::Display;
-
 use crate::cli::convert::ConvertArgs;
 use crate::cli::init::InitArgs;
 use crate::cli::serve::ServeArgs;
 use crate::cli::sourcemap::SourcemapArgs;
 use anyhow::Context;
 use clap::{Parser, Subcommand};
+use std::fmt::Display;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, propagate_version = true)]

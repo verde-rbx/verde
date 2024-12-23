@@ -3,11 +3,12 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #![forbid(unsafe_code)]
 
+mod cli;
+
 use clap::Parser;
-use verde::cli::VerdeCli;
 
 fn main() -> anyhow::Result<()> {
-  let command = VerdeCli::parse();
+  let command = cli::VerdeCli::parse();
   command.execute()?;
   Ok(())
 }

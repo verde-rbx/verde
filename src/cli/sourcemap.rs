@@ -1,13 +1,13 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
-use crate::core::{
-  project::{self, VerdeProject},
-  sourcemap::VerdeSourcemap,
-};
 use anyhow::{bail, Context};
 use clap::{Parser, ValueHint};
 use std::{fs::File, io::Write, path::PathBuf};
+use verde::core::{
+  project::{self, VerdeProject},
+  sourcemap::VerdeSourcemap,
+};
 
 /// Creates a new sourcemap file using a project file.
 #[derive(Parser)]

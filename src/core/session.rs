@@ -1,9 +1,8 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
-use crate::api;
-use crate::core::watcher::VerdeWatcher;
-use crate::core::VerdeProject;
+use super::project::VerdeProject;
+use crate::{api, core::watcher::VerdeWatcher};
 use std::{
   net::{IpAddr, Ipv4Addr, SocketAddr},
   sync::Arc,

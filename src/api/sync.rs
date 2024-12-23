@@ -3,7 +3,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 pub mod filters {
-  use crate::{api::sync::handlers, core::payload::Payload};
+  use super::handlers;
+  use crate::core::payload::Payload;
   use std::{
     convert::Infallible,
     sync::{Arc, RwLock},
