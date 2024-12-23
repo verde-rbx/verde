@@ -33,10 +33,10 @@ fn detect_project(path: &Path) -> Option<Adapters> {
 
 /// Converts the project file type using an adapter to a Verde project
 pub fn convert_project(path: &Path) -> anyhow::Result<VerdeProject> {
-  let project_type = detect_project(path).context("Unable to detect project type.").unwrap();
+  let project_type = detect_project(path).with_context(|| format!("Unable to detect project type at {path:?}."))?;
 
   // Open file and read contents
-  let buffer = fs::read_to_string(path)?;
+  let buffer = fs::read_to_string(path).with_context(|| format!("Failed to read project at {path:?}"))?;
   let project = match project_type {
     Adapters::Rojo => serde_json::from_str::<RojoProject>(&buffer)?.into(),
   };
