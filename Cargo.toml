@@ -2,7 +2,7 @@
 name = "verde"
 version = "0.1.0-beta"
 authors = ["quantix <me@quantix.dev>"]
-rust-version = "1.74"
+rust-version = "1.77"
 edition = "2021"
 description = "Synchronise files between Roblox Studio and your editor of choice"
 documentation = "https://verde.quantix.dev/guide/introduction"
