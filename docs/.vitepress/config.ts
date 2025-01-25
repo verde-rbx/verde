@@ -1,3 +1,4 @@
+import footnote from 'markdown-it-footnote'
 import { defineConfig } from 'vitepress'
 import pkg from '../package.json'
 
@@ -30,7 +31,11 @@ export default defineConfig({
   markdown: {
     theme: 'monokai',
     lineNumbers: true,
+    config(md) {
+      md.use(footnote)
+    },
   },
+
   sitemap: {
     hostname: 'https://verde.quantix.dev',
   },

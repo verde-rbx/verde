@@ -24,3 +24,8 @@
     --vp-home-hero-image-filter: blur(72px);
   }
 }
+
+.footnote-item {
+  font-size: 0.8rem;
+  color: oklch(0.708 0 0);
+}
