@@ -22,11 +22,13 @@
     }
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.13.0",
+    "@antfu/eslint-config": "^3.16.0",
+    "@types/markdown-it-footnote": "^3.0.4",
     "@vue/tsconfig": "^0.7.0",
-    "eslint": "^9.18.0",
+    "eslint": "^9.19.0",
     "eslint-plugin-format": "^1.0.1",
-    "vitepress": "^1.5.0",
+    "markdown-it-footnote": "^4.0.0",
+    "vitepress": "^1.6.3",
     "vue": "^3.5.13"
   },
   "pnpm": {
@@ -38,7 +40,7 @@
     }
   },
   "volta": {
-    "node": "22.13.0",
-    "pnpm": "9.15.3"
+    "node": "22.13.1",
+    "pnpm": "9.15.4"
   }
 }
