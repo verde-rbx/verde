@@ -41,7 +41,7 @@ impl VerdeWatcher {
     let (watch_tx, watch_rx) = mpsc::channel(1); // watch send/receive queue 1 item
 
     // Create debounce watcher
-    let node_paths = project.tree.get_paths();
+    let node_paths = project.tree.get_roots();
     let paths = node_paths
       .keys()
       .filter_map(|s| match PathBuf::from_str(s) {

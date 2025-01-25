@@ -2,10 +2,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, HashMap};
+use std::{
+  collections::{BTreeMap, HashMap},
+  path::Path,
+  rc::Rc,
+};
 
 /// A node describing an instance in the project tree.
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Default, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Node {
   /// The classname for the instance.
@@ -21,29 +25,80 @@ pub struct Node {
   #[serde(rename = ".force", skip_serializing_if = "Option::is_none")]
   pub overwrite_descendants: Option<bool>,
 
-  // Properties applied to the related Roblox instance
-  // #[serde(rename = ".properties", skip_serializing_if = "Option::is_none")]
-  // pub properties: Option<BTreeMap<String, String>>,
-  // TODO: Implement a roblox typing based on api dump
   /// Additonal instance tree
   #[serde(flatten, skip_serializing_if = "Option::is_none")]
   pub contents: Option<BTreeMap<String, Node>>,
+
+  /// Cached logical grouping
+  #[serde(skip_serializing)]
+  pub logical_roots: Option<Rc<BTreeMap<String, Node>>>,
+
+  /// Full calculated roblox path
+  #[serde(skip_serializing)]
+  pub roblox_path: Option<String>,
 }
 
 impl Node {
-  /// Recursively locates the paths of child nodes and creates a flattened structure with nodes attached to their paths.
-  pub fn get_paths(&self) -> HashMap<String, Node> {
-    let mut map = HashMap::<String, Node>::new();
-    if let Some(path) = &self.path {
-      map.insert(path.clone(), self.clone());
-    }
+  /// Identifies each path root.
+  pub fn get_roots(&self) -> HashMap<String, Node> {
+    let mut roots: HashMap<String, Node> = HashMap::new();
 
-    if let Some(contents) = &self.contents {
-      for node in contents.values() {
-        map.extend(node.get_paths());
+    let mut stack = vec![self];
+    while let Some(node) = stack.pop() {
+      if let Some(path) = &node.path {
+        roots.insert(path.clone(), self.clone());
+      }
+
+      // Add children to stack
+      if let Some(children) = &node.contents {
+        for child in children.values() {
+          stack.push(child);
+        }
       }
     }
 
-    map
+    roots
+  }
+
+  /// Logically groups root paths to the same structure as a file system.
+  pub fn group_roots(&self) -> Rc<BTreeMap<String, Node>> {
+    if let Some(cached) = &self.logical_roots {
+      return cached.clone();
+    }
+
+    let mut roots: BTreeMap<String, Node> = BTreeMap::new();
+    let mut stack = vec![self];
+    while let Some(node) = stack.pop() {
+      if let Some(path) = &node.path {
+        let components = Path::new(path).components();
+
+        // Add additional paths
+        let mut current_root = &mut roots;
+        for component in components {
+          if let Some(comp) = component.as_os_str().to_str() {
+            let next = current_root.entry(comp.to_owned()).or_insert_with(|| Node {
+              contents: Some(BTreeMap::<String, Node>::new()),
+              ..node.clone()
+            });
+
+            current_root = next.contents.as_mut().unwrap();
+          }
+        }
+      }
+
+      // Add children to stack
+      if let Some(children) = &node.contents {
+        for child in children.values() {
+          stack.push(child);
+        }
+      }
+    }
+
+    Rc::new(roots)
+  }
+
+  /// Precalculates values
+  pub fn precalculate(&mut self) {
+    self.logical_roots = Some(self.group_roots());
   }
 }

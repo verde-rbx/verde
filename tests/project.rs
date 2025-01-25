@@ -51,8 +51,10 @@ fn create_mock_project() -> VerdeProject {
           path: Some(String::from("src/server")),
           overwrite_descendants: None,
           contents: None,
+          ..Default::default()
         },
       )])),
+      ..Default::default()
     },
   }
 }
@@ -108,7 +110,7 @@ fn get_node_paths() {
   let project = create_mock_project();
 
   // Get node paths (similar to create_watchers())
-  let node_map = project.tree.get_paths();
+  let node_map = project.tree.get_roots();
 
   // Confirm path
   assert!(node_map.contains_key("src/server"));

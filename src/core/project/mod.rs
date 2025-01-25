@@ -69,6 +69,28 @@ impl VerdeProject {
 
     Ok(())
   }
+
+  /// Finds a node in the project using the provided path.
+  pub fn find_node(&self, path: &Path) -> Option<Node> {
+    let paths = self.tree.group_roots();
+    let mut current_node: Option<&Node> = None;
+    for component in path.components() {
+      if let Some(path) = component.as_os_str().to_str() {
+        let owned_path = path.to_owned();
+        if let Some(node) = current_node {
+          if let Some(contents) = &node.contents {
+            current_node = contents.get(&owned_path).or(Some(node));
+
+            continue;
+          }
+        }
+
+        current_node = paths.get(path);
+      }
+    }
+
+    current_node.cloned()
+  }
 }
 
 impl TryFrom<&PathBuf> for VerdeProject {
@@ -94,6 +116,7 @@ impl TryFrom<&PathBuf> for VerdeProject {
       project.root = Some(absolute_path);
     }
 
+    project.tree.precalculate();
     Ok(project)
   }
 }
@@ -116,6 +139,7 @@ impl Default for VerdeProject {
               path: Some(String::from("src/server")),
               overwrite_descendants: None,
               contents: None,
+              ..Default::default()
             },
           ),
           (
@@ -132,6 +156,7 @@ impl Default for VerdeProject {
                     path: Some(String::from("src/shared")),
                     overwrite_descendants: None,
                     contents: None,
+                    ..Default::default()
                   },
                 ),
                 (
@@ -141,12 +166,15 @@ impl Default for VerdeProject {
                     path: Some(String::from("src/client")),
                     overwrite_descendants: None,
                     contents: None,
+                    ..Default::default()
                   },
                 ),
               ])),
+              ..Default::default()
             },
           ),
         ])),
+        ..Default::default()
       },
     }
   }

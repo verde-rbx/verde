@@ -70,6 +70,7 @@ impl From<RojoProjectNode> for Node {
       path: node.path.clone(),
       overwrite_descendants,
       contents: Some(child_nodes),
+      ..Default::default()
     }
   }
 }
