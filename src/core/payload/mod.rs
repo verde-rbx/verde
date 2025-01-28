@@ -14,7 +14,7 @@ use std::{
 #[derive(Clone, Serialize, Eq)]
 pub struct PayloadInstance {
   /// The Roblox instance path.
-  pub instance: String,
+  pub instance: Vec<String>,
 
   /// The value of the instance.
   /// In this case only the Script source is supported.

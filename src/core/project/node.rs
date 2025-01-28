@@ -3,9 +3,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 use serde::{Deserialize, Serialize};
 use std::{
-  collections::{BTreeMap, HashMap},
-  path::Path,
-  rc::Rc,
+  collections::BTreeMap,
+  path::{Path, PathBuf},
 };
 
 /// A node describing an instance in the project tree.
@@ -30,45 +29,40 @@ pub struct Node {
   pub contents: Option<BTreeMap<String, Node>>,
 
   /// Cached logical grouping
-  #[serde(skip_serializing)]
-  pub logical_roots: Option<Rc<BTreeMap<String, Node>>>,
+  #[serde(skip)]
+  pub logical_roots: Option<BTreeMap<String, Node>>,
 
   /// Full calculated roblox path
-  #[serde(skip_serializing)]
-  pub roblox_path: Option<String>,
+  #[serde(skip)]
+  pub roblox_path: Option<Vec<String>>,
 }
 
 impl Node {
-  /// Identifies each path root.
-  pub fn get_roots(&self) -> HashMap<String, Node> {
-    let mut roots: HashMap<String, Node> = HashMap::new();
-
-    let mut stack = vec![self];
-    while let Some(node) = stack.pop() {
-      if let Some(path) = &node.path {
-        roots.insert(path.clone(), self.clone());
-      }
-
-      // Add children to stack
-      if let Some(children) = &node.contents {
-        for child in children.values() {
-          stack.push(child);
+  /// Retrieves valid node roots.
+  /// A root is considered valid if it exists in the FS.
+  pub fn get_roots(&self) -> Vec<PathBuf> {
+    self
+      .into_iter()
+      .filter_map(|node| {
+        let path = node.path.clone()?;
+        let path_buf = PathBuf::from(path);
+        if path_buf.try_exists().is_ok_and(|f| f) {
+          return path_buf.canonicalize().ok();
         }
-      }
-    }
 
-    roots
+        None
+      })
+      .collect()
   }
 
   /// Logically groups root paths to the same structure as a file system.
-  pub fn group_roots(&self) -> Rc<BTreeMap<String, Node>> {
+  pub fn group_roots(&self) -> BTreeMap<String, Self> {
     if let Some(cached) = &self.logical_roots {
       return cached.clone();
     }
 
-    let mut roots: BTreeMap<String, Node> = BTreeMap::new();
-    let mut stack = vec![self];
-    while let Some(node) = stack.pop() {
+    let mut roots: BTreeMap<String, Self> = BTreeMap::new();
+    for node in self {
       if let Some(path) = &node.path {
         let components = Path::new(path).components();
 
@@ -76,8 +70,8 @@ impl Node {
         let mut current_root = &mut roots;
         for component in components {
           if let Some(comp) = component.as_os_str().to_str() {
-            let next = current_root.entry(comp.to_owned()).or_insert_with(|| Node {
-              contents: Some(BTreeMap::<String, Node>::new()),
+            let next = current_root.entry(comp.to_owned()).or_insert_with(|| Self {
+              contents: Some(BTreeMap::<String, Self>::new()),
               ..node.clone()
             });
 
@@ -85,20 +79,62 @@ impl Node {
           }
         }
       }
-
-      // Add children to stack
-      if let Some(children) = &node.contents {
-        for child in children.values() {
-          stack.push(child);
-        }
-      }
     }
 
-    Rc::new(roots)
+    roots
+  }
+
+  /// Calculates roblox paths for every node in the tree.
+  fn calculate_paths(&mut self) {
+    let mut node_depth = 0;
+    let mut nodes_left: Vec<usize> = vec![1];
+    let mut stack: Vec<(Option<String>, &mut Node)> = vec![(None, self)];
+    let mut path_stack: Vec<String> = vec![];
+    while let Some((name, node)) = stack.pop() {
+      // Node path depth
+      while let Some(0) = nodes_left.get(node_depth) {
+        path_stack.pop();
+        node_depth -= 1;
+      }
+      nodes_left[node_depth] -= 1;
+
+      // Add child nodes
+      let path = node.class_name.clone().or(name);
+      if let Some(contents) = &mut node.contents {
+        if !contents.is_empty() {
+          node_depth += 1;
+          if nodes_left.len() - 1 < node_depth {
+            nodes_left.push(contents.len());
+          } else {
+            nodes_left[node_depth] = contents.len();
+          }
+
+          // Add child nodes.
+          for child in contents.iter_mut() {
+            stack.push((Some(child.0.clone()), child.1));
+          }
+
+          // Generate path for parent node.
+          if let Some(path) = &path {
+            path_stack.push(path.clone());
+            node.roblox_path = Some(path_stack.clone());
+            continue;
+          }
+        }
+      }
+
+      // Generate path
+      if let Some(path) = path {
+        let mut new_path = path_stack.clone();
+        new_path.push(path);
+        node.roblox_path = Some(new_path);
+      }
+    }
   }
 
   /// Precalculates values
   pub fn precalculate(&mut self) {
+    self.calculate_paths();
     self.logical_roots = Some(self.group_roots());
   }
 }

@@ -9,7 +9,6 @@ use notify::{RecommendedWatcher, RecursiveMode};
 use notify_debouncer_full::{new_debouncer, DebounceEventResult, DebouncedEvent, Debouncer, FileIdMap};
 use std::{
   path::PathBuf,
-  str::FromStr,
   sync::{Arc, RwLock},
   time::Duration,
 };
@@ -41,21 +40,7 @@ impl VerdeWatcher {
     let (watch_tx, watch_rx) = mpsc::channel(1); // watch send/receive queue 1 item
 
     // Create debounce watcher
-    let node_paths = project.tree.get_roots();
-    let paths = node_paths
-      .keys()
-      .filter_map(|s| match PathBuf::from_str(s) {
-        Ok(e) => {
-          if e.try_exists().is_ok_and(|f| f) {
-            e.canonicalize().ok()
-          } else {
-            None
-          }
-        }
-        Err(_) => None,
-      })
-      .collect();
-
+    let paths = project.tree.get_roots();
     let _debouncer = create_watcher(watch_tx, paths)?;
 
     // Create initial payload

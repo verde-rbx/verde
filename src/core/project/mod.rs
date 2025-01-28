@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 pub mod node;
+mod node_iter;
 
 use crate::core::project::node::Node;
 use anyhow::Context;
@@ -93,6 +94,9 @@ impl VerdeProject {
   }
 }
 
+unsafe impl Send for VerdeProject {}
+unsafe impl Sync for VerdeProject {}
+
 impl TryFrom<&PathBuf> for VerdeProject {
   type Error = anyhow::Error;
 
@@ -116,7 +120,9 @@ impl TryFrom<&PathBuf> for VerdeProject {
       project.root = Some(absolute_path);
     }
 
+    // Calculate tree values
     project.tree.precalculate();
+
     Ok(project)
   }
 }
