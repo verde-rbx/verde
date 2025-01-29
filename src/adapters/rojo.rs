@@ -1,73 +1,76 @@
-/**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-use crate::core::project::{Node, VerdeProject};
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+use crate::core::project::{node::Node, VerdeProject};
 use serde::{self, Deserialize};
-use serde_json;
-use std::{collections::BTreeMap, fs::File, io::Read, net::IpAddr};
+use std::{collections::BTreeMap, net::IpAddr};
 
 // Rojo project structure taken from the Rojo github:
 // This project structure has been modified to remove properties that are not yet supported by Verde
 // https://github.com/rojo-rbx/rojo/blob/master/src/project.rs
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
-pub struct Project {
-    pub name: String,
+pub struct RojoProject {
+  pub name: String,
 
-    pub tree: ProjectNode,
+  pub tree: RojoProjectNode,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub serve_port: Option<u16>,
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub serve_port: Option<u16>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub serve_address: Option<IpAddr>,
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub serve_address: Option<IpAddr>,
+}
+
+impl From<RojoProject> for VerdeProject {
+  fn from(value: RojoProject) -> Self {
+    Self {
+      name: value.name,
+      project_root: None,
+      root: None,
+      tree: value.tree.into(),
+    }
+  }
 }
 
 // Rojo project node taken from the Rojo github:
 // This node structure has been modified to remove properties that are not yet supported by Verde
 // https://github.com/rojo-rbx/rojo/blob/master/src/project.rs
 #[derive(Deserialize)]
-pub struct ProjectNode {
-    #[serde(rename = "$className", skip_serializing_if = "Option::is_none")]
-    pub class_name: Option<String>,
+pub struct RojoProjectNode {
+  #[serde(rename = "$className", skip_serializing_if = "Option::is_none")]
+  pub class_name: Option<String>,
 
-    /// Contains all of the children of the described instance.
-    #[serde(flatten)]
-    pub children: BTreeMap<String, ProjectNode>,
+  /// Contains all of the children of the described instance.
+  #[serde(flatten)]
+  pub children: BTreeMap<String, RojoProjectNode>,
 
-    #[serde(rename = "$ignoreUnknownInstances", skip_serializing_if = "Option::is_none")]
-    pub ignore_unknown_instances: Option<bool>,
+  #[serde(rename = "$ignoreUnknownInstances", skip_serializing_if = "Option::is_none")]
+  pub ignore_unknown_instances: Option<bool>,
 
-    #[serde(rename = "$path", skip_serializing_if = "Option::is_none")]
-    pub path: Option<String>,
+  #[serde(rename = "$path", skip_serializing_if = "Option::is_none")]
+  pub path: Option<String>,
 }
 
-impl ProjectNode {
-    /// Converts a Rojo ProjectNode to Verde Node
-    pub fn convert_node(&self) -> Node {
-        let mut child_nodes = BTreeMap::<String, Node>::new();
-        for (key, child) in &self.children {
-            child_nodes.insert(key.to_string(), child.convert_node());
-        }
-
-        Node {
-            path: self.path.to_owned(),
-            properties: None,
-            contents: Some(child_nodes),
-        }
+impl From<RojoProjectNode> for Node {
+  fn from(node: RojoProjectNode) -> Self {
+    let mut child_nodes = BTreeMap::<String, Self>::new();
+    for (key, child) in node.children {
+      child_nodes.insert(key.to_string(), child.into());
     }
-}
 
-/// Converts the associated project file from Rojo to Verde
-pub fn convert(project: &mut File) -> anyhow::Result<VerdeProject> {
-    let mut buffer = String::new();
-    project.read_to_string(&mut buffer)?;
-    let rojo_project: Project = serde_json::from_str(&buffer)?;
+    // Convert properties to verde format
+    let overwrite_descendants = node.ignore_unknown_instances.and_then(|f| match f {
+      true => None,
+      _ => Some(true),
+    });
 
-    Ok(VerdeProject {
-        name: rojo_project.name,
-        tree: rojo_project.tree.convert_node(),
-    })
+    Self {
+      class_name: node.class_name.clone(),
+      path: node.path.clone(),
+      overwrite_descendants,
+      contents: Some(child_nodes),
+      ..Default::default()
+    }
+  }
 }

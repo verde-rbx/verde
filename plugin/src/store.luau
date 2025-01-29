@@ -1,23 +1,33 @@
 --[[
     Verde State Store
 
-	Used as a global state management system in the plugin.
-	It's essentially just a key value store of states.
---]]
+    Used as a global state management system in the plugin.
+    It's essentially just a key value store of states.
+]]
 local config = require(script.Parent.config)
 local types = require(script.Parent.types)
 local vide = require(script.Parent.packages.vide)
 
 local source = vide.source
 
+type Views = "sync" | "settings"
+type Store = {
+    [string]: any,
+    UIShown: boolean,
+    ActiveView: Views,
+    Title: string,
+    Toasts: { types.Toast },
+}
+
 local Store = {
     _store = {
-        CurrentMenu = source("home"),
-    } :: types.Store,
+        ActiveView = source("sync"),
+        Title = source("Verde"),
+    } :: Store,
 }
 
 --[[
-	Sets the specified value in the store
+    Sets the specified value in the store
 ]]
 function Store.set(_key: string, _value: unknown)
     local state: vide.Source<typeof(_value)?> = Store.get(_key, _value)
@@ -25,8 +35,8 @@ function Store.set(_key: string, _value: unknown)
 end
 
 --[[
-	Gets the specified state in the store
-	Will create an empty value if one is not found
+    Gets the specified state in the store
+    Will create an empty value if one is not found
 ]]
 function Store.get<T>(_key: string, _defaultValue: unknown?): vide.Source<T?>
     local state = Store._store[_key]
@@ -38,14 +48,14 @@ function Store.get<T>(_key: string, _defaultValue: unknown?): vide.Source<T?>
 end
 
 --[[
-	Gets the specified value in the store
+    Gets the specified value in the store
 ]]
 function Store.getValue<T>(_key: string, _defaultValue: unknown?): T?
     return Store.get(_key, _defaultValue)()
 end
 
 --[[
-	Adds a value to a table state.
+    Adds a value to a table state.
 ]]
 function Store.add(_key: string, _value: unknown, _position: number?)
     local state = Store.get(_key, { _value }) :: vide.Source<{ typeof(_value)? }>
@@ -55,7 +65,7 @@ function Store.add(_key: string, _value: unknown, _position: number?)
 end
 
 --[[
-	Removes a value from a table state.
+    Removes a value from a table state.
 ]]
 function Store.remove<T>(_key: string, _position: number?): vide.Source<{ T }>
     local state = Store.get(_key, {}) :: vide.Source<{ T }>
@@ -75,6 +85,7 @@ for setting, value in config.getSettings() do
     Store.set(setting, value.Default)
 end
 
+-- Internally track settings changes from external sources
 config.settingUpdated(function(_key, _oldValue, _newValue)
     Store.set(_key, _newValue)
 end)

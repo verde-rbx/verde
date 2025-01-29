@@ -10,7 +10,7 @@
                     "$path": "storybook/"
                 },
                 "packages": {
-                    "$path": "Packages/"
+                    "$path": "packages/"
                 }
             }
         }

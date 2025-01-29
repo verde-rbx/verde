@@ -1,5 +1,5 @@
 {
-    "name": "Verde",
+    "name": "plugin",
     "tree": {
         "$className": "DataModel",
         "Workspace": {
@@ -7,7 +7,7 @@
             "Verde": {
                 "$path": "src/",
                 "packages": {
-                    "$path": "Packages/"
+                    "$path": "packages/"
                 }
             }
         }

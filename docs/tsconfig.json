@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "incremental": true,
+    "target": "ESNext",
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "./node_modules/@types/"
+    ],
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitThis": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "**/*.vue",
+    ".vitepress/**/*",
+    ".vitepress/**/*.vue",
+    "types/**/*"
+  ],
+  "exclude": [
+    ".vitepress/dist/**/*",
+    ".vitepress/cache/**/*"
+  ]
+}

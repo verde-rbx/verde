@@ -1,5 +1,6 @@
 {
     "editor.indentSize": 4,
     "editor.detectIndentation": false,
-    "editor.insertSpaces": true
+    "editor.insertSpaces": true,
+    "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json"
 }
