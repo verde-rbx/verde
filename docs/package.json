@@ -2,12 +2,12 @@
   "name": "verde-docs",
   "type": "module",
   "version": "0.1.0",
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.4",
   "author": "quantix-dev",
   "license": "MPL-2.0",
   "repository": "https://github.com/verde-rbx/verde",
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=22.13.1"
   },
   "scripts": {
     "docs:dev": "vitepress dev",
