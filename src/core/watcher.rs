@@ -6,7 +6,7 @@ use crate::core::payload::Payload;
 use crate::core::project::VerdeProject;
 use anyhow::{bail, Context};
 use notify::{RecommendedWatcher, RecursiveMode};
-use notify_debouncer_full::{new_debouncer, DebounceEventResult, DebouncedEvent, Debouncer, FileIdMap};
+use notify_debouncer_full::{new_debouncer, DebounceEventResult, DebouncedEvent, Debouncer, RecommendedCache};
 use std::{
   path::PathBuf,
   sync::{Arc, RwLock},
@@ -14,7 +14,7 @@ use std::{
 };
 use tokio::sync::mpsc;
 
-type VerdeDebouncer = Debouncer<RecommendedWatcher, FileIdMap>;
+type VerdeDebouncer = Debouncer<RecommendedWatcher, RecommendedCache>;
 
 /// The duration for the debounce watcher events.
 const DEBOUNCE_DURATION: Duration = Duration::from_millis(250);
