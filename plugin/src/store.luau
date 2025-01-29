@@ -13,17 +13,17 @@ local source = vide.source
 type Views = "sync" | "settings"
 type Store = {
     [string]: any,
-    UIShown: boolean,
-    ActiveView: Views,
-    Title: string,
-    Toasts: { types.Toast },
+    UIShown: vide.Source<boolean>?,
+    ActiveView: vide.Source<Views>?,
+    Title: vide.Source<string>?,
+    Toasts: vide.Source<{ types.Toast }>?,
 }
 
 local Store = {
     _store = {
-        ActiveView = source("sync"),
+        ActiveView = source("sync" :: Views),
         Title = source("Verde"),
-    } :: Store,
+    },
 }
 
 --[[

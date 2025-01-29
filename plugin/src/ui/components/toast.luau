@@ -23,8 +23,8 @@ export type ToastProps = types.Toast & {
 }
 
 return function(_props)
-    return root(function(_destroy)
-        local instance = source()
+    local _, toast = root(function(destroy)
+        local instance = source() :: vide.Source<ImageButton?>
         local size: UDim2 = text(_props.Message)
         local yOffset = 0
         local position = source(UDim2.new(1, size.X.Offset, 1, 0))
@@ -40,19 +40,21 @@ return function(_props)
             killing = true
             position(UDim2.new(1, size.X.Offset, 1, yOffset))
             task.delay(0.5, function()
-                if instance() then
-                    instance():Destroy()
+                local button = instance()
+                if button then
+                    button:Destroy()
                 end
 
                 store.remove("Toasts", _props.Index())
-                _destroy()
+                destroy()
             end)
         end
 
         -- Watch for position changes
         effect(function()
-            if instance() ~= nil and not killing then
-                yOffset = (_props.Index() - 1) * -(instance().AbsoluteSize.Y + 15)
+            local button = instance()
+            if button and not killing then
+                yOffset = (_props.Index() - 1) * -(button.AbsoluteSize.Y + 15)
                 position(UDim2.new(1, 0, 1, yOffset))
             end
         end)
@@ -72,11 +74,11 @@ return function(_props)
                 kill()
             end,
 
-            action(function(_instance: ImageButton)
+            action(function(_instance)
                 if _props.Lifetime > 0 then
                     timeoutThread = task.delay(_props.Lifetime, kill)
                 end
-                instance(_instance)
+                instance(_instance :: ImageButton)
             end),
 
             -- Top bar
@@ -152,4 +154,6 @@ return function(_props)
             },
         }
     end)
+
+    return toast
 end :: types.Component<ToastProps>

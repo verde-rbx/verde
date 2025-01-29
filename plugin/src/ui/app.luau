@@ -19,7 +19,7 @@ return function()
     local title: vide.Source<string?> = store.get("Title")
 
     return create("Frame") {
-        BackgroundTransparency = 1,
+        BackgroundColor3 = theme.MainBackground,
         Size = UDim2.fromScale(1, 1),
 
         create("UIListLayout") {
