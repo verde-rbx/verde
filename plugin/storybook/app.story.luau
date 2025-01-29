@@ -1,4 +1,4 @@
-local story = require(script.Parent.story)
+local story = require(script.Parent.util)
 
 local app = require(script.Parent.Parent.ui.app)
 

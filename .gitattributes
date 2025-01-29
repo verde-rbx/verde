@@ -4,6 +4,9 @@
 # Exclude documentation
 docs/* linguist-documentation
 
+# Exclude packages
+plugin/packages/* linguist-generated
+
 *.png binary
 *.svg binary
 *.jpg binary

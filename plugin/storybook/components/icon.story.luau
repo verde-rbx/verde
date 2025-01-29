@@ -1,4 +1,4 @@
-local story = require(script.Parent.Parent.story)
+local story = require(script.Parent.Parent.util)
 
 local icon = require(script.Parent.Parent.Parent.ui.components.icon)
 

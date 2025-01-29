@@ -5,8 +5,5 @@
 /*.rbxlx.lock
 /*.rbxl.lock
 
-# Dependencies
-packages/*
-
 # Sourcemap (should auto generate)
 sourcemap.json

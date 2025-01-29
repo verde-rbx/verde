@@ -1,5 +1,5 @@
 local store = require(script.Parent.Parent.Parent.Parent.store)
-local story = require(script.Parent.Parent.Parent.story)
+local story = require(script.Parent.Parent.Parent.util)
 local types = require(script.Parent.Parent.Parent.Parent.types)
 
 local toasts = require(script.Parent.Parent.Parent.Parent.ui.toasts)

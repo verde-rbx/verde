@@ -1,5 +1,5 @@
 --[[
-    Base for a story item
+Base for a story item
 ]]
 
 local types = require(script.Parent.Parent.types)

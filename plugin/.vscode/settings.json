@@ -1,6 +1,9 @@
 {
     "editor.indentSize": 4,
+    "editor.tabSize": 4,
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
-    "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json"
+    "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
+    "stylua.searchParentDirectories": true,
+    "stylua.searchBinaryInPATH": true
 }
