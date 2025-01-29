@@ -7,6 +7,10 @@ local toast = require(script.Parent.components.toast)
 local create = vide.create
 local values = vide.values
 
+--[[
+    Container for the toast notifications.
+    Separate from the widget so as to be persistent.
+]]
 return function()
     local toastQueue = store.get("Toasts", {}) :: vide.Source<{ types.Toast }>
     local toasts = values(toastQueue, function(_value: types.Toast, _index: () -> number)

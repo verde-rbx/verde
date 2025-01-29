@@ -5,9 +5,9 @@ local vide = require(script.Parent.Parent.Parent.packages.vide)
 
 local icon = require(script.Parent.icon)
 
-local useLerp = require(script.Parent.Parent.composables.useLerp)
-local useTextSize = require(script.Parent.Parent.composables.useTextSize)
-local useTimestamp = require(script.Parent.Parent.composables.useTimestamp)
+local lerp = require(script.Parent.Parent.composables.lerp)
+local text = require(script.Parent.Parent.composables.text_size)
+local timestamp = require(script.Parent.Parent.composables.timestamp)
 
 local action = vide.action
 local create = vide.create
@@ -25,9 +25,9 @@ export type ToastProps = types.Toast & {
 return function(_props)
     return root(function(_destroy)
         local instance = source()
-        local size = useTextSize(_props.Message)
-        local position = source(UDim2.new(1, size.X.Offset, 1, 0))
+        local size: UDim2 = text(_props.Message)
         local yOffset = 0
+        local position = source(UDim2.new(1, size.X.Offset, 1, 0))
 
         -- Kill and cleanup toast
         local killing = false
@@ -66,12 +66,16 @@ return function(_props)
             Size = size,
 
             Activated = function()
-                task.cancel(timeoutThread)
+                if timeoutThread then
+                    task.cancel(timeoutThread)
+                end
                 kill()
             end,
 
             action(function(_instance: ImageButton)
-                timeoutThread = task.delay(_props.Lifetime, kill)
+                if _props.Lifetime > 0 then
+                    timeoutThread = task.delay(_props.Lifetime, kill)
+                end
                 instance(_instance)
             end),
 
@@ -80,15 +84,18 @@ return function(_props)
                 AnchorPoint = Vector2.new(0.5, 0),
                 BackgroundTransparency = 1,
                 Position = UDim2.fromScale(0.5, 0),
-                Size = UDim2.fromScale(0.95, 0.3),
+                Size = UDim2.new(1, -10, 0.3, 0),
 
-                icon {},
+                icon {
+                    AnchorPoint = Vector2.new(1, 0.5),
+                    Position = UDim2.new(1, 0, 0.5, 0),
+                },
 
                 create("TextLabel") {
                     AnchorPoint = Vector2.new(0, 0.5),
                     BackgroundTransparency = 1,
                     Position = UDim2.fromScale(0, 0.52),
-                    Text = useTimestamp(_props.Time),
+                    Text = timestamp(_props.Time),
                     TextColor3 = theme.DimmedText,
                     TextScaled = true,
                     TextXAlignment = Enum.TextXAlignment.Left,
@@ -121,7 +128,7 @@ return function(_props)
                 ClipsDescendants = true,
                 Name = "Lifetime",
                 Position = UDim2.fromScale(0, 1),
-                Size = useLerp(
+                Size = lerp(
                     UDim2.fromOffset(size.X.Offset, CORNER_RADIUS),
                     UDim2.fromOffset(0, CORNER_RADIUS),
                     _props.Lifetime or 1

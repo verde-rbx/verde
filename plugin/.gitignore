@@ -6,7 +6,7 @@
 /*.rbxl.lock
 
 # Dependencies
-Packages/*
+packages/*
 
 # Sourcemap (should auto generate)
 sourcemap.json

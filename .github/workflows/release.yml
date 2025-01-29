@@ -12,22 +12,24 @@ jobs:
   build:
     name: Build Artifact - ${{ matrix.os }}
     runs-on: ${{ matrix.machine }}
+    if: success()
     strategy:
       matrix:
         include:
-          - os: windows
-            machine: windows-latest
-            artifact: verde.exe
-
           - os: linux
             machine: ubuntu-latest
             artifact: verde
+
+          - os: windows
+            machine: windows-latest
+            artifact: verde.exe
           
           - os: macos
             machine: macos-latest
             artifact: verde
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install rust
         uses: moonrepo/setup-rust@v1
@@ -38,35 +40,40 @@ jobs:
         run: cargo build --release --locked
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: verde-${{matrix.os}}
           path: target/release/${{ matrix.artifact }}
+  
   release:
     name: Release
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: write
     steps:
       # We need all history for changelog
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v4.1.0
+        uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}" 
           output-file: "false"
           skip-commit: "true"
           skip-git-pull: "true"
-          version-file: "./Cargo.toml,docs/package.json"
+          version-file: "./Cargo.toml,./docs/package.json"
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         id: download
 
       - name: Upload artifacts
         uses: svenstaro/upload-release-action@v2
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ steps.download.outputs.download-path }}

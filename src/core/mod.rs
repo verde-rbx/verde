@@ -1,63 +1,61 @@
-/**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+pub mod payload;
 pub mod project;
 pub mod session;
+pub mod sourcemap;
+pub mod watcher;
 
-use self::project::VerdeProject;
-use self::session::{SessionState, VerdeSession};
-use std::fs::File;
+use crate::core::project::VerdeProject;
+use crate::core::session::{SessionState, VerdeSession};
+use anyhow::bail;
+use std::path::PathBuf;
+use std::sync::Arc;
 
+/// The core Verde state
+#[derive(Default)]
 pub struct VerdeCore {
-    /// Current loaded project file
-    pub project: Option<VerdeProject>,
+  /// Current loaded project file
+  pub project: Option<Arc<VerdeProject>>,
 
-    pub session: Option<VerdeSession>,
+  /// The current session
+  pub session: Option<VerdeSession>,
 }
 
-// TODO: Should builder syntax be separated into VerdeCoreBuilder?
 impl VerdeCore {
-    pub fn new() -> Self {
-        VerdeCore {
-            project: None,
-            session: None,
-        }
+  /// Creates the Verde Core using defaults.
+  pub fn new() -> Self {
+    Self::default()
+  }
+
+  /// Sets the current Verde Project
+  pub fn project(&mut self, path_str: &str) -> anyhow::Result<&mut Self> {
+    match self.project {
+      Some(_) => println!("A project has already been specified"),
+      None => {
+        let path = PathBuf::from(path_str);
+        let project = VerdeProject::try_from(&path)?;
+        self.project = Some(Arc::new(project));
+      }
     }
 
-    /// Sets the current Verde Project
-    pub fn project(&mut self, path: &str) -> anyhow::Result<&mut Self> {
-        match self.project {
-            Some(_) => println!("A project has already been specified"),
-            None => {
-                let mut project_file = File::open(path)?;
-                self.project = Some(VerdeProject::from(&mut project_file)?);
-            }
-        }
+    Ok(self)
+  }
 
-        Ok(self)
+  /// Starts a new Verde Session
+  pub fn start_session(&self) -> anyhow::Result<&Self> {
+    if let Some(project) = &self.project {
+      let session = VerdeSession::new(project);
+      match session.state {
+        SessionState::Active => println!("Session is already active"),
+        SessionState::Offline => session.start()?,
+        SessionState::Error => println!("Session has entered an errored state."),
+      };
+    } else {
+      bail!("Please ensure a project is loaded before starting a session.");
     }
 
-    /// Starts a new Verde Session
-    pub fn start_session(&mut self) -> &mut Self {
-        match &self.session {
-            None => self.session = Some(VerdeSession::default()),
-            Some(session) => {
-                match session.state {
-                    SessionState::Active => println!("Session is already active"),
-                    SessionState::Offline => session.start(),
-                    SessionState::Error => session.get_latest_error(),
-                };
-            }
-        };
-
-        self
-    }
-}
-
-impl Default for VerdeCore {
-    fn default() -> Self {
-        Self::new()
-    }
+    Ok(self)
+  }
 }

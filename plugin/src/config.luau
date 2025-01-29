@@ -1,21 +1,28 @@
 --[[
-	Config
+    Config
 
-	These values are put into the state store when the plugin starts,
-	This can be seen as a read-only version of the intiial plugin state.
+    These values are put into the state store when the plugin starts,
+    This can be seen as a read-only version of the intial plugin state.
 ]]
-
-local types = require(script.Parent.types)
+type SettingUpdateFn = (_key: string, _oldValue: unknown, _newValue: unknown) -> nil
 
 local DEFAULT_CONFIG = table.freeze {
     -- Plugin
     PLUGIN_NAME = "Verde",
     HOST = "localhost",
     PORT = 34872,
-    VERSION = "0.1.0",
+    VERSION = "v0.1.0-beta",
     MENUS = {
         home = "rbxassetid://10734940825",
         settings = "rbxassetid://10734950309",
+    },
+}
+
+type DefaultSettings = {
+    [string]: {
+        Name: string,
+        Type: string,
+        Default: any,
     },
 }
 
@@ -25,9 +32,7 @@ local DEFAULT_SETTINGS = table.freeze {
         Type = "Checkbox",
         Default = true,
     },
-} :: types.DefaultSettings
-
-type SettingUpdateFn = (_key: string, _oldValue: unknown, _newValue: unknown) -> nil
+} :: DefaultSettings
 
 type _Config = {
     _settingCache: {
@@ -37,14 +42,21 @@ type _Config = {
         [number]: SettingUpdateFn,
     },
 }
+type Config = {
+    getSettings: () -> DefaultSettings,
+    getSetting: <T>(_key: string) -> T,
+    updateSetting: (_key: string, _value: unknown) -> (),
+    settingUpdated: (_onUpdate: (_key: string, _oldValue: unknown, _newValue: unknown) -> nil) -> nil,
+    getConfig: () -> { [string]: any },
+}
 
 local Config = {
     _settingCache = {},
     _settingListeners = {},
-} :: _Config & types.Config
+} :: _Config & Config
 
 --[[
-	Retrieves the setting from studio or creates a new setting
+    Retrieves the setting from studio or creates a new setting
 ]]
 function get<T>(_key: string): T
     local val = plugin:GetSetting(_key)
@@ -58,7 +70,7 @@ function get<T>(_key: string): T
 end
 
 --[[
-	Updates a setting value
+    Updates a setting value
 ]]
 function set(_key: string, _value: unknown)
     local oldValue = Config._settingCache[_key]
@@ -74,14 +86,14 @@ function set(_key: string, _value: unknown)
 end
 
 --[[
-	Retrieves all the settings
+    Retrieves all the settings
 ]]
 function Config.getSettings()
     return DEFAULT_SETTINGS
 end
 
 --[[
-	Retrieves a setting value
+    Retrieves a setting value
 ]]
 function Config.getSetting<T>(_key: string): T
     if Config._settingCache[_key] then
@@ -91,6 +103,9 @@ function Config.getSetting<T>(_key: string): T
     return get(_key)
 end
 
+--[[
+    Updates a setting value
+]]
 function Config.updateSetting(_key: string, _value: unknown)
     set(_key, _value)
 end
@@ -103,10 +118,10 @@ function Config.settingUpdated(_onUpdate: SettingUpdateFn)
 end
 
 --[[
-	Returns the config values
+    Returns the config values
 ]]
 function Config.getConfig()
     return DEFAULT_CONFIG
 end
 
-return Config :: types.Config
+return Config :: Config
