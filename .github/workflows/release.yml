@@ -3,10 +3,11 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-?*"
 
 env:
   CARGO_TERM_COLOR: always
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
@@ -16,17 +17,25 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: linux
+          - os: linux - x86_64
             machine: ubuntu-latest
-            artifact: verde
+            target: x86_64-unknown-linux-gnu
+            artifact: verde-linux-x86_64
 
-          - os: windows
+          - os: windows - x86_64
             machine: windows-latest
-            artifact: verde.exe
-          
-          - os: macos
+            target: x86_64-pc-windows-msvc
+            artifact: verde-windows-x86_64
+
+          - os: macos - aarch64
             machine: macos-latest
-            artifact: verde
+            target: aarch64-apple-darwin
+            artifact: verde-macos-aarch64
+
+          - os: macos - x86_64
+            machine: macos-latest
+            target: x86_64-apple-darwin
+            artifact: verde-macos-x86_64
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,22 +44,33 @@ jobs:
         uses: moonrepo/setup-rust@v1
         with:
           cache-target: release
-      
+          targets: ${{ matrix.target }}
+
       - name: Build binary
         run: cargo build --release --locked
+
+      - name: Archive binary
+        shell: bash
+        run: |
+          if [ "${{ matrix.machine }}" = "windows-latest" ]; then
+            powershell -Command "Compress-Archive -Path target/release/verde.exe -DestinationPath ${{ matrix.artifact }}.zip"
+          else
+            zip -rj "${{ matrix.artifact }}.zip" "target/release/verde"
+          fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: verde-${{matrix.os}}
-          path: target/release/${{ matrix.artifact }}
-  
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.zip
+
   release:
     name: Release
     runs-on: ubuntu-latest
     needs: build
     permissions:
       contents: write
+      pull-requests: read
     steps:
       # We need all history for changelog
       - name: Checkout repository
@@ -60,23 +80,65 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v5
+        uses: mikepenz/release-changelog-builder-action@v5
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}" 
-          output-file: "false"
-          skip-commit: "true"
-          skip-git-pull: "true"
-          version-file: "./Cargo.toml,./docs/package.json"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          ignorePreReleases: ${{ !contains(github.ref, '-') }}
+          configurationJson: |
+            {
+              "template": "## 👉 Changelog\n#{{RELEASE_DIFF}}\n\n#{{CHANGELOG}}\n### ❤️ Contributors\n#{{CONTRIBUTORS}}",
+              "pr_template": "- #{{TITLE}} (##{{NUMBER}})",
+              "categories": [
+                {
+                  "title": "### 🚀 Enhancements",
+                  "labels": ["feat", "feature"]
+                },
+                {
+                  "title": "### 🔥 Performance",
+                  "labels": ["perf"]
+                },
+                {
+                  "title": "### 🩹 Fixes",
+                  "labels": ["fix"]
+                },
+                {
+                  "title": "### 💅 Refactors",
+                  "labels": ["refactor"]
+                },
+                {
+                  "title": "### 📖 Documentation",
+                  "labels": ["doc", "docs"]
+                },
+                {
+                  "title": "### 🏠 Chore",
+                  "labels": ["chore"]
+                },
+                {
+                  "title": "### 🤖 CI",
+                  "labels": ["ci"]
+                }
+              ],
+              "label_extractor": [
+                {
+                  "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)",
+                  "target": "$1"
+                }
+              ]
+            }
 
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         id: download
-
-      - name: Upload artifacts
-        uses: svenstaro/upload-release-action@v2
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ steps.download.outputs.download-path }}
-          file_glob: true
-          tag: ${{ github.ref }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+          pattern: verde-*
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        if: ${{ steps.changelog.outputs.failed == 'false' }}
+        with:
+          body: ${{ steps.changelog.outputs.changelog }}
+          files: ${{ steps.download.outputs.download-path }}/verde*
+          prerelease: ${{ contains(github.ref, '-rc') || contains(github.ref, '-b') || contains(github.ref, '-a') }}
+          tag_name: ${{ github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
