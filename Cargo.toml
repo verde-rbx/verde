@@ -12,15 +12,24 @@ license-file = "LICENSE.txt"
 categories = ["command-line-utilities", "development-tools"]
 exclude = ["/docs/**", "/examples/**", "/plugin/**", "/tests/**"]
 
+[lib]
+name = "verde"
+path = "src/lib.rs"
+
+[[bin]]
+name = "verde"
+required-features = ["bin"]
+
 [dependencies]
 anyhow = "1.0"
-clap = { version = "4.5", features = ["derive"] }
+clap = { version = "4.5", features = ["derive"], optional = true }
+crossterm = { version = "0.28.1", optional = true }
 notify = { version = "8.0", default-features = false, features = [
   "macos_kqueue",
 ] }
 notify-debouncer-full = "0.5"
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde_json = { version = "1.0" }
 serde_yaml = "0.9"
 tokio = { version = "1.43", features = ["rt-multi-thread", "macros"] }
 warp = "0.3"
@@ -29,7 +38,10 @@ warp = "0.3"
 tempfile = "3.15"
 
 [features]
+# default = ["converters"]
+bin = ["dep:clap", "dep:crossterm"]
 darklua = []
+# converters = ["dep:serde_json"]
 typescript = []
 
 [profile.release]
