@@ -1,5 +1,7 @@
+local session = require(script.Parent.Parent.Parent.session)
 local store = require(script.Parent.Parent.Parent.store)
-local theme = require(script.Parent.Parent.Parent.theme)
+--local theme = require(script.Parent.Parent.Parent.theme)
+local types = require(script.Parent.Parent.Parent.types)
 local vide = require(script.Parent.Parent.Parent.packages.vide)
 
 local button = require(script.Parent.Parent.components.button)
@@ -21,19 +23,31 @@ return function()
 
         create("UIListLayout") {
             HorizontalAlignment = Enum.HorizontalAlignment.Center,
-            Padding = UDim.new(0, 10)
+            Padding = UDim.new(0, 10),
         },
 
         input {
             Text = connectString,
-            changed("Text", function(a0)
+            changed("Text", function(a0: string)
                 connectString(a0)
-            end)
+            end),
         },
 
         -- Connect button
         button {
             Text = "Connect",
+            Activated = function()
+                local result = session.start(connectString())
+                if result.message then
+                    store.shift(
+                        "Toasts",
+                        {
+                            Message = result.message,
+                            Severity = if result.success then "Info" else "Error",
+                        } :: types.Toast
+                    )
+                end
+            end,
         },
 
         -- Settings view
