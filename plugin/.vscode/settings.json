@@ -5,5 +5,5 @@
     "editor.insertSpaces": true,
     "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
     "stylua.searchParentDirectories": true,
-    "stylua.searchBinaryInPATH": true
+    "stylua.searchBinaryInPATH": true,
 }
