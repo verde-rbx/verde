@@ -56,12 +56,20 @@ end
 
 --[[
     Adds a value to a table state.
+    Defaults to the end of the table.
 ]]
 function Store.add(_key: string, _value: unknown, _position: number?)
     local state = Store.get(_key, { _value }) :: vide.Source<{ typeof(_value)? }>
     local tbl = state()
     table.insert(tbl, _position or (#tbl + 1), _value)
     state(tbl)
+end
+
+--[[
+    Adds a value to the start of a table state.
+]]
+function Store.shift(_key: string, _value: unknown)
+    return Store.add(_key, _value, 1)
 end
 
 --[[

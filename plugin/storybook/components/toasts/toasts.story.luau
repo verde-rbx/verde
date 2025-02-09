@@ -13,35 +13,32 @@ local PHRASES = {
 -- Add toasts for example
 task.defer(function()
     for i = 0, 5 do
-        store.add(
+        store.shift(
             "Toasts",
             {
                 Message = `{PHRASES[Random.new():NextInteger(1, #PHRASES)]} #{i}`,
                 Lifetime = Random.new():NextInteger(5, 10),
-            } :: types.Toast,
-            1
+            } :: types.Toast
         )
         task.wait(0.5)
     end
 
     -- Add long toast
-    store.add(
+    store.shift(
         "Toasts",
         {
             Message = "I last a loooooooooong time.",
             Lifetime = 60,
-        } :: types.Toast,
-        1
+        } :: types.Toast
     )
 
     -- Add permanent toast
-    store.add(
+    store.shift(
         "Toasts",
         {
             Message = "Just like microplastics, I last forever.",
             Lifetime = 0,
-        } :: types.Toast,
-        1
+        } :: types.Toast
     )
 end)
 
