@@ -14,4 +14,10 @@ export type Toast = {
     Lifetime: number?,
 }
 
+-- API
+export type Result = {
+    success: boolean,
+    message: string?,
+}
+
 return nil
