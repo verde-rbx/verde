@@ -59,7 +59,7 @@ local Config = {
     Retrieves the setting from studio or creates a new setting
 ]]
 function get<T>(_key: string): T
-    local val = plugin:GetSetting(_key)
+    local val = plugin:GetSetting(`Verde{_key}`)
     if not val then
         local defaultValue = DEFAULT_SETTINGS[_key].Default
         set(_key, defaultValue)
